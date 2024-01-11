@@ -8,12 +8,11 @@ import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 public class Gyro extends SubsystemBase {
   
   //make a new pigeon
-WPI_PigeonIMU m_gyro = new WPI_PigeonIMU(Constants.gyroPort);
+WPI_PigeonIMU m_gyro = new WPI_PigeonIMU(0);
  
 //dislplay the yaw pitch and roll on the ShuffleBoard
 GenericEntry m_gyroDataEntry = Shuffleboard.getTab("gyro info").add("gyro Yaw Pitch and Roll data",
