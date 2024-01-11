@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -47,6 +49,10 @@ public class Gyro extends SubsystemBase {
 
     public void robotInit() {
         // ...
+    }
+
+    public Rotation2d getRotation2d() {
+        throw new UnsupportedOperationException("Unimplemented method 'getRotation2d'");
     }
 }
 

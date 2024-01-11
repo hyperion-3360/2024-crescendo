@@ -1,10 +1,20 @@
 package frc.robot.subsystems;
 
+import frc.robot.subsystems.Gyro;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveTrain extends SubsystemBase {
-    
+
+  private final Gyro m_gyro = new Gyro();
+  private SwerveDriveKinematics m_kinematics;
+  private final SwerveDrivePoseEstimator m_odometry =
+      new SwerveDrivePoseEstimator(
+          m_kinematics, m_gyro.getRotation2d(), this.getModulePositions(), new Pose2d());
+
       public DriveTrain() {}
 
   /**
@@ -33,7 +43,7 @@ public class DriveTrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+  
   }
 
   @Override
