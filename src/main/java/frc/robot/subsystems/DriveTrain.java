@@ -1,14 +1,12 @@
 package frc.robot.subsystems;
 
-import frc.robot.subsystems.WCPSwerveModule.WCPSwerveModule;
-import frc.robot.subsystems.Gyro;
-
 import static frc.robot.Constants.WCPSwerveModule.kLocations;
-
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -17,11 +15,18 @@ public class DriveTrain extends SubsystemBase {
   private final Gyro m_gyro = new Gyro();
   private SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(kLocations);
 
-  private final SwerveDrivePoseEstimator m_odometry =
-      new SwerveDrivePoseEstimator(
-          m_kinematics, m_gyro.getRotation2d(), this.getModulePosition(), new Pose2d());
+  private final SwerveDriveOdometry m_odometry = 
+  new SwerveDriveOdometry(m_kinematics, m_gyro.getRotation2d(), null/*TODO input the swerve module*/,
+   new Pose2d(0, 0/*random values will change*/, new Rotation2d()));
 
-      public DriveTrain() {}
+
+
+      public DriveTrain() {
+
+        //reset the gyro because odometry start is 0
+        m_gyro.gyroCalibrate();
+        m_gyro.gyroReset();
+      }
 
   /**
    * Example command factory method.
@@ -49,7 +54,13 @@ public class DriveTrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-  
+  // gets the rotation
+
+    //update the odometry positon
+    var m_odometryPose = m_odometry.update(m_gyro.getRotation2d(),
+     new SwerveModulePosition[] {
+      //TODO input swerve module
+     });
   }
 
   @Override
@@ -57,4 +68,21 @@ public class DriveTrain extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 
+public Command resetOdometryBlueSide() {
+   return this.runOnce(
+        () ->
+            m_odometry.resetPosition(
+                m_gyro.getRotation2d(),
+                getModulePositions(),/*in need of module position*/
+                new Pose2d(2.1, 5, Rotation2d.fromDegrees(180))));
+}
+
+public Command resetOdometryRedSide() {
+   return this.runOnce(
+        () ->
+            m_odometry.resetPosition(
+                m_gyro.getRotation2d(),
+                getModulePositions(),/*in need of module position*/
+                new Pose2d(14.4, 5, Rotation2d.fromDegrees(180))));
+}
 }

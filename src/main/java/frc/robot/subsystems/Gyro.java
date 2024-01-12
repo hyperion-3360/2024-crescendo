@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
+
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,6 +28,9 @@ public class Gyro extends SubsystemBase {
         // Sets the yaw,Pitch,Roll and the fuseHeading
         m_gyro.setYaw(0);
         m_gyro.setFusedHeading(0);
+
+        m_gyro.reset();
+        //may need to add a calibration
     }
 
     public double[] getYawPitchRoll() {
@@ -53,6 +59,14 @@ public class Gyro extends SubsystemBase {
 
     public Rotation2d getRotation2d() {
         return Rotation2d.fromDegrees(360);
+    }
+
+    public void gyroReset() {
+        m_gyro.reset();
+    }
+
+    public void gyroCalibrate() {
+        m_gyro.enterCalibrationMode(CalibrationMode.Temperature);
     }
 }
 
