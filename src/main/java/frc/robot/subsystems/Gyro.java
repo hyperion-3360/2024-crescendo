@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
-
+import frc.robot.Constants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -45,14 +45,16 @@ public class Gyro extends SubsystemBase {
     @Override
     public void simulationPeriodic() {
         // This method will be called once per scheduler run during simulation
+    
+    }
+    
+    public Rotation2d getRotation2d() {
+        double encoderDegrees = getEncoderDegrees();
+        return Rotation2d.fromDegrees(encoderDegrees % 360);
     }
 
     public void robotInit() {
         // ...
-    }
-
-    public Rotation2d getRotation2d() {
-        throw new UnsupportedOperationException("Unimplemented method 'getRotation2d'");
     }
 }
 
