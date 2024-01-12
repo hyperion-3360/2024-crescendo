@@ -2,6 +2,9 @@ package frc.robot.subsystems;
 
 import frc.robot.subsystems.WCPSwerveModule.WCPSwerveModule;
 import frc.robot.subsystems.Gyro;
+
+import static frc.robot.Constants.WCPSwerveModule.kLocations;
+
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -11,16 +14,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveTrain extends SubsystemBase {
 
-  //simulates swerve position from the center of the robot has test values
-  Translation2d m_frontLeftPosition = new Translation2d(0.381, 0.381);
-  Translation2d m_frontRightPosition = new Translation2d(0.381, -0.381);
-  Translation2d m_lowerLeftPosition = new Translation2d(-0.381, 0.381);
-  Translation2d m_lowerRightPosition = new Translation2d(-0.381, -0.381);
-
   private final Gyro m_gyro = new Gyro();
-  private SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-    m_frontLeftPosition, m_frontRightPosition, m_lowerLeftPosition, m_lowerRightPosition
-  );
+  private SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(kLocations);
 
   private final SwerveDrivePoseEstimator m_odometry =
       new SwerveDrivePoseEstimator(
