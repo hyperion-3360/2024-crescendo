@@ -43,8 +43,6 @@ public class RobotContainer {
   private void configureBindings() {
 
  
-    /* wpilib controller example */
-    m_driverController.b().whileTrue(m_driveTrain.exampleMethodCommand());
   }
 
   /**
