@@ -22,6 +22,7 @@ public interface SwerveModule {
    * @return Current module position
    */
   public SwerveModulePosition getPosition();
+  public SwerveModulePosition[] getPositions();
 
   /**
    * Sets the desired state for the module.
