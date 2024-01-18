@@ -24,12 +24,6 @@ import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 
 public class DriveTrain extends SubsystemBase {
 
-  public enum Mode {
-    New,
-    Last,
-    Disabled
-  }
-
   // Subsystem parameters
   public static final double kMaxModuleSpeed = 4.0;
 
@@ -57,8 +51,6 @@ public class DriveTrain extends SubsystemBase {
   public static final double scoringGridIncrements = (maxYScoringPos - minYScoringPos) / 8;
   public double YScoringPos = 2.75;
   public boolean m_hadRecentVision = false;
-
-  public Mode m_visionMode = Mode.Disabled;
 
   public static final int kPathServerPort = 5811;
 
