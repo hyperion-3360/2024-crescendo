@@ -1,9 +1,22 @@
 package frc;
 
+/**
+ * Singleton class to control the Shuffleboard / SmartDashboard display
+ */
 public class Shuffleboard {
 
-    public Shuffleboard(){
+    private Shuffleboard _instance;
+
+    private Shuffleboard(){
         // TODO
+    }
+
+    public static getInstance(){
+        if(this._instance == null){
+            this._instance = Shuffleboard();
+        }
+
+        return this._instance;
     }
 
     public void addTab(String title){
