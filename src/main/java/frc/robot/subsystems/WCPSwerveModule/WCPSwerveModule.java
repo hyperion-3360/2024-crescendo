@@ -108,19 +108,23 @@ public class WCPSwerveModule implements SwerveModule {
 
     final var encOkEntryName = String.format("Enc %d OK", config.m_magEncoderChannel);
     m_encOkEntry = Shuffleboard.getTab("Vitals").add(encOkEntryName, false).getEntry();
+
   }
 
   @Override
   public void periodic() {
     m_absAngleEntry.setDouble(m_magEncoder.getDistance());
     m_encOkEntry.setBoolean(m_magEncoder.isConnected());
+    
 
-    if (!m_homed) {
-      // Home on first periodic loop so sensors are fully initialized
-      m_encoderZero =
-          m_configZero + m_turnMotor.getRotorPosition().getValueAsDouble() - m_magEncoder.getDistance();
-      m_homed = true;
-    }
+    // if (!m_homed) {
+    //   // Home on first periodic loop so sensors are fully initialized
+
+    //   // TODO: problem suspected! .getRotorPosition() should be getting the sensors position
+    //   m_encoderZero =
+    //       m_configZero + m_turnMotor.getRotorPosition().getValueAsDouble() - m_magEncoder.getDistance();
+    //   m_homed = true;
+    //}
   }
 
   private Rotation2d getRotation() {
@@ -155,14 +159,12 @@ public class WCPSwerveModule implements SwerveModule {
     var setpointDegrees = getEncoderDegrees() + rotationDelta.getDegrees();
 
 
-    // TODO: set voltage. Method changed in Phoenix 6: https://pro.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/feature-replacements-guide.html#integral-zone-and-max-integral-accumulator
-    // m_driveMotor.set(ControlModeValue.VelocityVoltage, state.speedMetersPerSecond * kMeterPerSToTick);
-    // m_turnMotor.set(ControlModeValue.PositionVoltage, setpointDegrees * kDegToAnalog + m_encoderZero);
-
     // TODO: need to convert the state.speedMetersPerSecond * kMeterPerSToTick to RPS (revolution per seconds)
     m_driveMotor.setControl(m_velocityRequest.withVelocity(0));
+    m_driveMotor.set(state.speedMetersPerSecond * kMeterPerSToTick);
 
     // TODO: need to convert the setpointDegrees * kDegToAnalog + m_encoderZero to a new position and velocity using a profile (see p. 46 of the above link)
     m_turnMotor.setControl(m_angleRequest);
+    m_turnMotor.set(setpointDegrees * kDegToAnalog + m_encoderZero);
   }
 }

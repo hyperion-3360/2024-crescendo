@@ -27,32 +27,14 @@ public class DriveTrain extends SubsystemBase {
   // Subsystem parameters
   public static final double kMaxModuleSpeed = 4.0;
 
-  public static final double kMaxSpeedX = 4.0;
-  public static final double kMaxSpeedY = 4.0;
-  public static final double kMaxSpeedRot = 360.0;
+  public static final double kMaxSpeedX = 0.1; // was 4.0
+  public static final double kMaxSpeedY = 0.1; // was 4.0
+  public static final double kMaxSpeedRot = 1.0; // was 360.0
 
   public static final double kMaxAccTrans = 2.0 * kMaxModuleSpeed;
   public static final double kMaxAccRot = 4.0 * kMaxSpeedRot;
 
-  public static final double kJoystickDeadband = 0.15;
-
-  public static final double kHoloKP = 2.0;
-  public static final double kHoloKI = 0.0;
-  public static final double kHoloKD = 0.0;
-
-  public static final double kRotKP = 8.0;
-  public static final double kRotKI = 0.0;
-  public static final double kRotKD = 0.0;
-
-  public double filteredX = 0;
-  public static final double XScoringPos = 2;
-  public static final double minYScoringPos = 0.5;
-  public static final double maxYScoringPos = 5;
-  public static final double scoringGridIncrements = (maxYScoringPos - minYScoringPos) / 8;
-  public double YScoringPos = 2.75;
-  public boolean m_hadRecentVision = false;
-
-  public static final int kPathServerPort = 5811;
+  public static final double kJoystickDeadband = 0.05; // was 0.15
 
   // Member objects
   private final SwerveModuleFactory m_moduleFactory = new WCPSwerveModuleFactory();
