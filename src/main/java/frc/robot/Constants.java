@@ -15,8 +15,8 @@ public final class Constants {
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-    public static final int kCoDriverControllerport=1;
-    public static final int kPigeonPort = 0;
+    public static final int kCoDriverControllerPort = 1;
+        public static final int kPigeonPort = 0;
   }
 
   public static class WCPSwerveModule {
@@ -29,7 +29,7 @@ public final class Constants {
     };
     public static final Translation2d[] kLocations = {
       // these values will have to be verified/edited
-      new Translation2d(0.3525, 0.275),  
+      new Translation2d(0.3525, 0.275),
       new Translation2d(0.3525, -0.275),
       new Translation2d(-0.3525, -0.275),
       new Translation2d(-0.3525, 0.275)

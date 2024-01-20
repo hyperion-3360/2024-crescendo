@@ -5,8 +5,8 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.WCPSwerveModule;
 import frc.robot.subsystems.DriveTrain;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -25,10 +25,9 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
-    
-  private final CommandXboxController m_codriverController = 
-  new CommandXboxController(OperatorConstants.kCoDriverControllerport);
-  
+
+       private final CommandXboxController m_coDriverController =
+      new CommandXboxController(OperatorConstants.kCoDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -47,10 +46,10 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-
  
     /* wpilib controller example */
-    // m_driverController.b().whileTrue(m_driveTrain.exampleMethodCommand());
+    m_driverController.b().onTrue(m_driveTrain.exampleMethodCommand()); // this would be the shooter button
+    m_coDriverController.rightTrigger().whileTrue(exampleDriveTrainCommand + exampleMath); //this would be the gas button
   }
 
   /**
