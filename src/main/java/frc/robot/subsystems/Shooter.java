@@ -1,11 +1,20 @@
 package frc.robot.subsystems;
 
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Shooter extends SubsystemBase { 
+enum shoot {
+HIGH, 
+LOW
+}
+
+public class Shooter extends SubsystemBase {
 
     // Create new motors
     
@@ -34,10 +43,22 @@ public class Shooter extends SubsystemBase {
     }
 public void robotInit(){
 
+
 }
 
 @Override
 public void periodic() {
         
+}
+
+public void setSpeed(double rightMasterSpeed, double leftMasterSpeed) {
+
+    m_RightMaster.set(ControlMode.Velocity, rightMasterSpeed);
+    m_LeftMaster.set(ControlMode.Velocity, leftMasterSpeed);
+
+}
+public void highGoal(double setDistance) {
+
+
 }
 }
