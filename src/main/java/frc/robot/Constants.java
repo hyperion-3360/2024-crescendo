@@ -10,6 +10,10 @@ import frc.robot.subsystems.WCPSwerveModule.WCPSwerveModuleConfig;
 
 public final class Constants {
 
+  public static class SubsystemConstants {
+    // constants for climber, shooter, elevator, trap name example: kExamplePort, all ints if port
+  }
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kPigeonPort = 0;
