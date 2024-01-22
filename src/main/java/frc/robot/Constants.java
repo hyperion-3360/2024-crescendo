@@ -18,6 +18,20 @@ public final class Constants {
     public static final int kelevatorLeftId = 10;
   }
 
+  public static class ShooterConstants {
+
+    public static final int kRightMasterid = 13;
+    public static final int kRightFollowerid = 15;
+    public static final int kLeftMasterid = 14;
+    public static final int kLeftFollowerid = 16;
+
+    public static final double kI = 0.0;
+    public static final double kP = 0.0;
+    public static final double kD = 0.0;
+
+        
+  }
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kPigeonPort = 0;
@@ -58,4 +72,5 @@ public final class Constants {
     public static final double kDriveKf = 0.04625;
     public static final double kDriveIZone = 0.0;
   }
+
 }
