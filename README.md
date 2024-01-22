@@ -1,4 +1,4 @@
-Neo 550 and Neo motors are TalonSRX in code
+Neo 550 and Neo motors are CANSparkMax in code
 CODING STANDARDS:
 1. all constants start with a k (not capital)
 2. all members (ex motors, sensors, encoders, etc)
