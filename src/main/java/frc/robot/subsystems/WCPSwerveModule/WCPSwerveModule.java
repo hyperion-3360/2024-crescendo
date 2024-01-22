@@ -161,10 +161,8 @@ public class WCPSwerveModule implements SwerveModule {
 
     // TODO: need to convert the state.speedMetersPerSecond * kMeterPerSToTick to RPS (revolution per seconds)
     m_driveMotor.setControl(m_velocityRequest.withVelocity(0));
-    m_driveMotor.set(state.speedMetersPerSecond * kMeterPerSToTick);
 
     // TODO: need to convert the setpointDegrees * kDegToAnalog + m_encoderZero to a new position and velocity using a profile (see p. 46 of the above link)
     m_turnMotor.setControl(m_angleRequest);
-    m_turnMotor.set(setpointDegrees * kDegToAnalog + m_encoderZero);
   }
 }
