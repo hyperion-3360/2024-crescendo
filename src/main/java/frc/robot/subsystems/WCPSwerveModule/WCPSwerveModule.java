@@ -117,14 +117,14 @@ public class WCPSwerveModule implements SwerveModule {
     m_encOkEntry.setBoolean(m_magEncoder.isConnected());
     
 
-    // if (!m_homed) {
-    //   // Home on first periodic loop so sensors are fully initialized
+    if (!m_homed) {
+      // Home on first periodic loop so sensors are fully initialized
 
-    //   // TODO: problem suspected! .getRotorPosition() should be getting the sensors position
-    //   m_encoderZero =
-    //       m_configZero + m_turnMotor.getRotorPosition().getValueAsDouble() - m_magEncoder.getDistance();
-    //   m_homed = true;
-    //}
+      // TODO: problem suspected! .getRotorPosition() is not in same units as magEncoder
+      m_encoderZero =
+          m_configZero + m_turnMotor.getRotorPosition().getValueAsDouble() - m_magEncoder.getDistance();
+      m_homed = true;
+    }
   }
 
   private Rotation2d getRotation() {
