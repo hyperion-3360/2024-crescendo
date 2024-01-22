@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems;
 
-
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,8 +19,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.WCPSwerveModule.WCPSwerveModuleFactory;
 import java.util.function.DoubleSupplier;
-
-import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 
 public class DriveTrain extends SubsystemBase {
 
@@ -47,19 +45,14 @@ public class DriveTrain extends SubsystemBase {
       new SwerveDrivePoseEstimator(
           m_kinematics, m_gyro.getRotation2d(), this.getModulePositions(), new Pose2d());
 
-
   private final SlewRateLimiter m_xLimiter = new SlewRateLimiter(kMaxAccTrans);
   private final SlewRateLimiter m_yLimiter = new SlewRateLimiter(kMaxAccTrans);
   private final SlewRateLimiter m_zLimiter = new SlewRateLimiter(kMaxAccRot);
 
   private Field2d m_field = new Field2d();
 
-
-
-
   /** Creates a new DriveTrain. */
   public DriveTrain() {
-
 
     // Reset gyro on code startup (Required as odometry starts at 0)
     m_gyro.reset();
@@ -75,6 +68,7 @@ public class DriveTrain extends SubsystemBase {
       module.periodic();
     }
   }
+
   /**
    * Gets the current position of all modules
    *
@@ -180,7 +174,3 @@ public class DriveTrain extends SubsystemBase {
                         fieldRelative)));
   }
 }
-
-
- 
-

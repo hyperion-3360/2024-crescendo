@@ -14,7 +14,6 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -74,10 +73,10 @@ public class WCPSwerveModule implements SwerveModule {
 
     m_driveMotor.getConfigurator().apply(Slot0Configs, 0.05);
 
+    // m_driveMotor.config_IntegralZone(0, kDriveIZone); // Unnecessary in Phoenix 6
+    // https://pro.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/feature-replacements-guide.html#integral-zone-and-max-integral-accumulator
 
-    // m_driveMotor.config_IntegralZone(0, kDriveIZone); // Unnecessary in Phoenix 6 https://pro.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/feature-replacements-guide.html#integral-zone-and-max-integral-accumulator
-
-    final VoltageOut m_request= new VoltageOut(0);
+    final VoltageOut m_request = new VoltageOut(0);
     m_driveMotor.setControl(m_request.withOutput(kNominalVolt));
     m_velocityRequest.Slot = 0;
 
@@ -96,9 +95,10 @@ public class WCPSwerveModule implements SwerveModule {
     Slot1Configs.kI = kTurnKi;
     Slot1Configs.kD = kTurnKd;
 
-     m_turnMotor.getConfigurator().apply(Slot1Configs, 0.05);
-     m_angleRequest.Slot = 1;
-    // m_turnMotor.config_IntegralZone(0, kTurnIZone); // Unnecessary in Phoenix 6 https://pro.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/feature-replacements-guide.html#integral-zone-and-max-integral-accumulator
+    m_turnMotor.getConfigurator().apply(Slot1Configs, 0.05);
+    m_angleRequest.Slot = 1;
+    // m_turnMotor.config_IntegralZone(0, kTurnIZone); // Unnecessary in Phoenix 6
+    // https://pro.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/feature-replacements-guide.html#integral-zone-and-max-integral-accumulator
 
     m_configZero = config.m_analogZero;
 
@@ -108,21 +108,21 @@ public class WCPSwerveModule implements SwerveModule {
 
     final var encOkEntryName = String.format("Enc %d OK", config.m_magEncoderChannel);
     m_encOkEntry = Shuffleboard.getTab("Vitals").add(encOkEntryName, false).getEntry();
-
   }
 
   @Override
   public void periodic() {
     m_absAngleEntry.setDouble(m_magEncoder.getDistance());
     m_encOkEntry.setBoolean(m_magEncoder.isConnected());
-    
 
     if (!m_homed) {
       // Home on first periodic loop so sensors are fully initialized
 
       // TODO: problem suspected! .getRotorPosition() is not in same units as magEncoder
       m_encoderZero =
-          m_configZero + m_turnMotor.getRotorPosition().getValueAsDouble() - m_magEncoder.getDistance();
+          m_configZero
+              + m_turnMotor.getRotorPosition().getValueAsDouble()
+              - m_magEncoder.getDistance();
       m_homed = true;
     }
   }
@@ -158,11 +158,12 @@ public class WCPSwerveModule implements SwerveModule {
     var rotationDelta = state.angle.minus(this.getRotation());
     var setpointDegrees = getEncoderDegrees() + rotationDelta.getDegrees();
 
-
-    // TODO: need to convert the state.speedMetersPerSecond * kMeterPerSToTick to RPS (revolution per seconds)
+    // TODO: need to convert the state.speedMetersPerSecond * kMeterPerSToTick to RPS (revolution
+    // per seconds)
     m_driveMotor.setControl(m_velocityRequest.withVelocity(0));
 
-    // TODO: need to convert the setpointDegrees * kDegToAnalog + m_encoderZero to a new position and velocity using a profile (see p. 46 of the above link)
+    // TODO: need to convert the setpointDegrees * kDegToAnalog + m_encoderZero to a new position
+    // and velocity using a profile (see p. 46 of the above link)
     m_turnMotor.setControl(m_angleRequest);
   }
 }
