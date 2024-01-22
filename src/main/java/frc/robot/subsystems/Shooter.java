@@ -4,6 +4,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,11 +18,11 @@ LOW
 public class Shooter extends SubsystemBase {
 
     // Create new motors
-    
-    private TalonSRX m_RightMaster = new TalonSRX(Constants.ShooterConstants.kRightMasterid);
-    private TalonSRX m_RightFollower = new TalonSRX(Constants.ShooterConstants.kRightFollowerid);
-    private TalonSRX m_LeftMaster = new TalonSRX(Constants.ShooterConstants.kLeftMasterid);
-    private TalonSRX m_LeftFollower = new TalonSRX(Constants.ShooterConstants.kLeftFollowerid);
+
+    private CANSparkMax m_RightMaster = new CANSparkMax(Constants.ShooterConstants.kRightMasterid);
+    private CANSparkMax m_RightFollower = new CANSparkMax(Constants.ShooterConstants.kRightFollowerid);
+    private CANSparkMax m_LeftMaster = new CANSparkMax(Constants.ShooterConstants.kLeftMasterid);
+    private CANSparkMax m_LeftFollower = new CANSparkMax(Constants.ShooterConstants.kLeftFollowerid);
     
     public void Shooter() {
 
