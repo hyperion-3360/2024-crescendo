@@ -50,6 +50,7 @@ public class RobotContainer {
     /* wpilib controller example */
     m_driverController.b().onTrue(m_driveTrain.exampleMethodCommand()); // this would be the shooter button
     m_coDriverController.rightTrigger().whileTrue(exampleDriveTrainCommand + exampleMath); //this would be the gas button
+    m_coDriverController.
   }
 
   /**
