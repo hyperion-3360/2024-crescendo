@@ -13,6 +13,20 @@ import frc.robot.subsystems.WCPSwerveModule.WCPSwerveModuleConfig;
 
 public final class Constants {
 
+  public static class ShooterConstants {
+
+    public static final int kRightMasterid = 13;
+    public static final int kRightFollowerid = 15;
+    public static final int kLeftMasterid = 14;
+    public static final int kLeftFollowerid = 16;
+
+    public static final double kI = 0.0;
+    public static final double kP = 0.0;
+    public static final double kD = 0.0;
+
+        
+  }
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
@@ -52,35 +66,4 @@ public final class Constants {
     public static final double kDriveIZone = 0.0;
   }
 
-  public static class HyperionSwerveModule {
-
-    // public static final HyperionSwerveModuleConfig[] kConfigs = {
-    //   new HyperionSwerveModuleConfig(7, 6, 0, 455, InvertType.InvertMotorOutput, false),
-    //   new HyperionSwerveModuleConfig(8, 5, 1, 871, InvertType.InvertMotorOutput, true),
-    //   new HyperionSwerveModuleConfig(10, 9, 2, 721, InvertType.InvertMotorOutput, false)
-    // };
-
-    public static final Translation2d[] kLocations = {
-      new Translation2d(0.28, 0.0), new Translation2d(-0.28, 0.28), new Translation2d(-0.28, -0.28)
-    };
-
-    public static final double kAnalogToDeg = 360.0 / 1024;
-    public static final double kDegToAnalog = 1.0 / kAnalogToDeg;
-
-    public static final double kTickToMeter = 1.0 / 3243;
-    public static final double kTickToMeterPerS = 10.0 * kTickToMeter;
-
-    public static final double kMeterPerSToTick = 1.0 / kTickToMeterPerS;
-
-    public static final double kTurnKp = 10.0;
-    public static final double kTurnKi = 0.0;
-    public static final double kTurnKd = 0.0;
-    public static final double kTurnIZone = 0.0;
-
-    public static final double kDriveKp = 3.0;
-    public static final double kDriveKi = 0.0;
-    public static final double kDriveKd = 0.0;
-    public static final double kDriveKf = 0.0; // 0.5;
-    public static final double kDriveIZone = 0.0;
-  }
 }
