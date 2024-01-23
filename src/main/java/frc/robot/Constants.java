@@ -39,9 +39,9 @@ public final class Constants {
 
   public static class ElevatorConstants {
     //TODO change the values to suitable ones using april tag
-   public static final double highTarget = 4.2;
-   public static final double lowTarget = 2.2;
-   public static final double intakeTarget = 0;
+   public static final double khighTarget = 4.2;
+   public static final double klowTarget = 2.2;
+   public static final double kintakeTarget = 0;
   }
 
   public static class OperatorConstants {

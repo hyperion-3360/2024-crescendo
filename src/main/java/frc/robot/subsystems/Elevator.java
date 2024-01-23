@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -33,12 +34,11 @@ public class Elevator extends SubsystemBase{
         m_elevatorRight.restoreFactoryDefaults();
         m_elevatorLeft.setInverted(true);
         m_elevatorLeft.follow(m_elevatorRight);
-        m_elevatorTarget  =; // TODO set the elevator target to an encoder position
+        //m_elevatorTarget = ; // TODO set the elevator target to an meter unit
     }
     
     public void robotInit()
     {
-  
     }
     
     @Override
@@ -51,21 +51,21 @@ public void setElevator(elevatorLevel m_elevatorLevel) {
       
             switch (m_elevatorLevel) {
               case HIGH:
-              m_elevatorTarget = ElevatorConstants.highTarget;
+              m_elevatorTarget = ElevatorConstants.khighTarget;
                 break;
               case LOW:
-              m_elevatorTarget = ElevatorConstants.lowTarget;
+              m_elevatorTarget = ElevatorConstants.klowTarget;
                 break;
               case INTAKE:
-               m_elevatorTarget = ElevatorConstants.intakeTarget;
+               m_elevatorTarget = ElevatorConstants.kintakeTarget;
                 break;
-                default: m_elevatorTarget = ElevatorConstants.intakeTarget;
+                default: m_elevatorTarget = ElevatorConstants.kintakeTarget;
             }
           }
 
-         public void setElevatorSpeed(double elevatorSpeed) {
-      m_elevatorLeft.set(elevatorSpeed);
-      m_elevatorRight.set(elevatorSpeed);
+public void setElevatorSpeed(double m_elevatorSpeed) {
+      m_elevatorLeft.set(m_elevatorSpeed);
+      m_elevatorRight.set(m_elevatorSpeed);
     }
 
 public Command stop() {
