@@ -5,6 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import frc.ShuffleboardFactory;
+import frc.robot.Constants.OperatorConstants;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -25,6 +27,8 @@ public class RobotContainer {
   private final Swerve m_swerveDrive = new Swerve();
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
 
+  private final ShuffleboardFactory shuffleboard = new ShuffleboardFactory();
+  
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
