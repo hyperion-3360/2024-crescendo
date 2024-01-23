@@ -23,7 +23,7 @@ public class Shooter extends SubsystemBase {
   private CANSparkMax m_LeftFollower =
       new CANSparkMax(Constants.SubsystemConstants.kShooterLeftFollowerId, MotorType.kBrushless);
 
-  public void Shooter() {
+  public Shooter() {
 
     // Config motors
 

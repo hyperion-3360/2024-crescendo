@@ -48,6 +48,7 @@ public class WCPSwerveModule implements SwerveModule {
 
   private final GenericEntry m_absAngleEntry;
   private final GenericEntry m_encOkEntry;
+  private final GenericEntry m_motorEnc;
 
   private final VelocityVoltage m_velocityRequest = new VelocityVoltage(0);
   private final PositionVoltage m_angleRequest = new PositionVoltage(0);
@@ -87,7 +88,7 @@ public class WCPSwerveModule implements SwerveModule {
     m_turnMotor.setInverted(true);
 
     m_turnMotor.setControl(m_request.withOutput(kNominalVolt));
-    m_turnMotor.setNeutralMode(NeutralModeValue.Brake);
+    m_turnMotor.setNeutralMode(NeutralModeValue.Coast);
 
     var Slot1Configs = new Slot1Configs();
 
@@ -108,12 +109,16 @@ public class WCPSwerveModule implements SwerveModule {
 
     final var encOkEntryName = String.format("Enc %d OK", config.m_magEncoderChannel);
     m_encOkEntry = Shuffleboard.getTab("Vitals").add(encOkEntryName, false).getEntry();
+
+    final var motorEncoder = String.format("MotorEnc %d", config.m_turnMotorId);
+    m_motorEnc = Shuffleboard.getTab("WCP Swerve Module").add(motorEncoder, 0.0).getEntry();
   }
 
   @Override
   public void periodic() {
     m_absAngleEntry.setDouble(m_magEncoder.getDistance());
     m_encOkEntry.setBoolean(m_magEncoder.isConnected());
+    m_motorEnc.setDouble(m_turnMotor.getRotorPosition().getValueAsDouble());
 
     if (!m_homed) {
       // Home on first periodic loop so sensors are fully initialized

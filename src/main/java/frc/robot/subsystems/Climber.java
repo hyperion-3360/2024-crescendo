@@ -10,7 +10,7 @@ public class Climber extends SubsystemBase {
   private TalonSRX m_climberLeft = new TalonSRX(Constants.SubsystemConstants.kclimberLeftId);
 
   // declare 2 members, check fb for type and port, add port in constants
-  public void Climber() {
+  public Climber() {
 
     m_climberLeft.setInverted(true);
     m_climberLeft.configFactoryDefault();

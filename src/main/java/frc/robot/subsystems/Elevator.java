@@ -10,7 +10,7 @@ public class Elevator extends SubsystemBase {
   private TalonSRX m_elevatorLeft = new TalonSRX(Constants.SubsystemConstants.kelevatorLeftId);
 
   // same as climber.java
-  public void Elevator() {
+  public Elevator() {
 
     m_elevatorLeft.setInverted(true);
     m_elevatorLeft.configFactoryDefault();
