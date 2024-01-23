@@ -18,19 +18,21 @@ INTAKE
 
 public class Elevator extends SubsystemBase{
 
+  //making the limit switches
     DigitalInput topLimitSwitch = new DigitalInput(0);
     DigitalInput intakeLimitSwitch = new DigitalInput(1);
     DigitalInput lowLimitSwitch = new DigitalInput(2);
     
+    //instancing the motor controllers
     private CANSparkMax m_elevatorRight = new CANSparkMax(Constants.SubsystemConstants.kelevatorRightId, MotorType.kBrushless); 
     private CANSparkMax m_elevatorLeft = new CANSparkMax(Constants.SubsystemConstants.kelevatorLeftId, MotorType.kBrushless); 
     
-    private double m_elevatorTarget = ;
+    private double m_elevatorTarget;
 
-    // same as climber.java
+    //creating an elevator
     public void Elevator() {
         
-        //configures the controllers
+        //configures the CANSparkMax controllers
         m_elevatorLeft.restoreFactoryDefaults();
         m_elevatorRight.restoreFactoryDefaults();
         m_elevatorLeft.setInverted(true);
