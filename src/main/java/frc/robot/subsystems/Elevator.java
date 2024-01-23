@@ -24,6 +24,7 @@ public class Elevator extends SubsystemBase{
     // same as climber.java
     public void Elevator() {
         
+        //configures the controllers
         m_elevatorLeft.setInverted(true);
         m_elevatorLeft.addFollower(m_elevatorRight);
     }
@@ -39,24 +40,19 @@ public class Elevator extends SubsystemBase{
 
     }
 
-    public void setElevator(boolean high, boolean low, boolean ) 
-    {
-        switch () {
-            case 1:
-            while (lowLimitSwitch.isAnalogTrigger() == false &&) {
-                 m_elevatorLeft.set(0.1);
+public void setElevator(elevatorLevel m_elevatorLevel) {
+      {
+            switch (m_elevatorLevel) {
+              case HIGH:
+               
+                break;
+              case LOW:
+                 
+                break;
+              case INTAKE:
+               
+                break;
             }
-              break;
-            case 2:
-              while (topLimitSwitch.isAnalogTrigger() == false ) {
-                 m_elevatorLeft.set(0.1);
-            }
-              break;
-            case 3:
-               while (intakeLimitSwitch.isAnalogTrigger() == false) {
-                 m_elevatorLeft.set(0.1);
-            }
-              break;
-          }
     }
+  }
 }
