@@ -33,10 +33,10 @@ public class Shooter extends SubsystemBase {
     m_LeftMaster.setInverted(true);
     m_LeftFollower.setInverted(true);
 
-    // m_RightMaster.configFactoryDefault();
-    // m_RightFollower.configFactoryDefault();
-    // m_LeftMaster.configFactoryDefault();
-    // m_LeftFollower.configFactoryDefault();
+    m_RightMaster.restoreFactoryDefaults();
+     m_RightFollower.restoreFactoryDefaults();
+     m_LeftMaster.restoreFactoryDefaults();
+     m_LeftFollower.restoreFactoryDefaults();
 
     m_LeftFollower.follow(m_LeftMaster);
     m_RightFollower.follow(m_RightMaster);
@@ -56,8 +56,8 @@ public void periodic() {
 
 public void setSpeed(double rightMasterSpeed, double leftMasterSpeed) {
 
-    // m_RightMaster.set(ControlMode.Velocity, rightMasterSpeed);
-    // m_LeftMaster.set(ControlMode.Velocity, leftMasterSpeed);
+    m_RightMaster.set(rightMasterSpeed);
+    m_LeftMaster.set(leftMasterSpeed);
 
 }
 public void highGoal(double setDistance) {
