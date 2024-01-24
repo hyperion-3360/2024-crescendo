@@ -4,12 +4,19 @@
 
 package frc.robot;
 
+<<<<<<< HEAD
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.WCPSwerveModule;
 import frc.robot.subsystems.DriveTrain;
+=======
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+>>>>>>> elevator
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.OperatorConstants;
+//import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Elevator;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -19,18 +26,33 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  
-  private final DriveTrain m_driveTrain = new DriveTrain();
 
+  //private final DriveTrain m_drive = new DriveTrain();
+  private final Elevator elvt = new Elevator();
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  //private final CommandXboxController m_driverController =
+      // new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
        private final CommandXboxController m_coDriverController =
       new CommandXboxController(OperatorConstants.kCoDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    System.out.print("CONTA>INER");
+
+    // m_drive.setDefaultCommand(
+    //     m_drive.driveCommand(
+    //         () -> {
+    //           final var driverY = m_driverController.getLeftY();
+    //           return driverY;
+    //         },
+    //         () -> {
+    //           final var driverX = m_driverController.getLeftX();
+    //           return driverX;
+    //         },
+    //         () -> -m_driverController.getRightX(),
+    //         false));
     // Configure the trigger bindings
     configureBindings();
   }
@@ -46,7 +68,6 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
- 
     /* wpilib controller example */
     m_driverController.b().onTrue(m_driveTrain.exampleMethodCommand()); // this would be the shooter button
     m_coDriverController.rightTrigger().whileTrue(exampleDriveTrainCommand + exampleMath); //this would be the gas button

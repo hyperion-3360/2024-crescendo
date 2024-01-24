@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems;
 
-
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -20,39 +20,19 @@ import frc.robot.Constants;
 import frc.robot.subsystems.WCPSwerveModule.WCPSwerveModuleFactory;
 import java.util.function.DoubleSupplier;
 
-import com.ctre.phoenix.sensors.WPI_PigeonIMU;
-
 public class DriveTrain extends SubsystemBase {
 
   // Subsystem parameters
   public static final double kMaxModuleSpeed = 4.0;
 
-  public static final double kMaxSpeedX = 4.0;
-  public static final double kMaxSpeedY = 4.0;
-  public static final double kMaxSpeedRot = 360.0;
+  public static final double kMaxSpeedX = 0.1; // was 4.0
+  public static final double kMaxSpeedY = 0.1; // was 4.0
+  public static final double kMaxSpeedRot = 1.0; // was 360.0
 
   public static final double kMaxAccTrans = 2.0 * kMaxModuleSpeed;
   public static final double kMaxAccRot = 4.0 * kMaxSpeedRot;
 
-  public static final double kJoystickDeadband = 0.15;
-
-  public static final double kHoloKP = 2.0;
-  public static final double kHoloKI = 0.0;
-  public static final double kHoloKD = 0.0;
-
-  public static final double kRotKP = 8.0;
-  public static final double kRotKI = 0.0;
-  public static final double kRotKD = 0.0;
-
-  public double filteredX = 0;
-  public static final double XScoringPos = 2;
-  public static final double minYScoringPos = 0.5;
-  public static final double maxYScoringPos = 5;
-  public static final double scoringGridIncrements = (maxYScoringPos - minYScoringPos) / 8;
-  public double YScoringPos = 2.75;
-  public boolean m_hadRecentVision = false;
-
-  public static final int kPathServerPort = 5811;
+  public static final double kJoystickDeadband = 0.05; // was 0.15
 
   // Member objects
   private final SwerveModuleFactory m_moduleFactory = new WCPSwerveModuleFactory();
@@ -65,19 +45,14 @@ public class DriveTrain extends SubsystemBase {
       new SwerveDrivePoseEstimator(
           m_kinematics, m_gyro.getRotation2d(), this.getModulePositions(), new Pose2d());
 
-
   private final SlewRateLimiter m_xLimiter = new SlewRateLimiter(kMaxAccTrans);
   private final SlewRateLimiter m_yLimiter = new SlewRateLimiter(kMaxAccTrans);
   private final SlewRateLimiter m_zLimiter = new SlewRateLimiter(kMaxAccRot);
 
   private Field2d m_field = new Field2d();
 
-
-
-
   /** Creates a new DriveTrain. */
   public DriveTrain() {
-
 
     // Reset gyro on code startup (Required as odometry starts at 0)
     m_gyro.reset();
@@ -93,6 +68,7 @@ public class DriveTrain extends SubsystemBase {
       module.periodic();
     }
   }
+
   /**
    * Gets the current position of all modules
    *
@@ -198,7 +174,3 @@ public class DriveTrain extends SubsystemBase {
                         fieldRelative)));
   }
 }
-
-
- 
-
