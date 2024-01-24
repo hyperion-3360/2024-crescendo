@@ -16,7 +16,7 @@ public final class Constants {
     public static final int kclimberRightId = 11; // climber
     public static final int kclimberLeftId = 12;
     public static final int kelevatorRightId = 9; // elevator 9
-    public static final int kelevatorLeftId = 4; //10
+    public static final int kelevatorLeftId = 10; //10
     public static final int kShooterLeftMasterId = 0;
     public static final int kShooterRightMasterId = 0;
     public static final int kShooterLeftFollowerId = 0;
@@ -39,9 +39,9 @@ public final class Constants {
 
   public static class ElevatorConstants {
     //TODO change the values to suitable ones using april tag
-   public static final double khighTarget = 4.2;
-   public static final double klowTarget = 2.2;
-   public static final double kintakeTarget = 0;
+   public static final double kHighTarget = 4.2;
+   public static final double kLowTarget = 2.2;
+   public static final double kIntakeTarget = 0;
   }
 
   public static class OperatorConstants {

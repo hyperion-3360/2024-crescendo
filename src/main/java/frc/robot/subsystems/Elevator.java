@@ -6,8 +6,6 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -24,19 +22,19 @@ public class Elevator extends SubsystemBase{
   DigitalInput bottomlimitSwitch = new DigitalInput(1);
 
     //instancing the motor controllers
-    //private CANSparkMax m_elevatorRight = new CANSparkMax(Constants.SubsystemConstants.kelevatorRightId, MotorType.kBrushless); 
+    private CANSparkMax m_elevatorRight = new CANSparkMax(Constants.SubsystemConstants.kelevatorRightId, MotorType.kBrushless); 
     private CANSparkMax m_elevatorLeft = new CANSparkMax(Constants.SubsystemConstants.kelevatorLeftId, MotorType.kBrushless); 
     
-    private double m_elevatorTarget;
+    private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
 
     //creating an elevator
     public Elevator() {
         System.out.print("ELEVATOORit");
         //configures the CANSparkMax controllers
-        // m_elevatorLeft.restoreFactoryDefaults();
-       //m_elevatorRight.restoreFactoryDefaults();
+         m_elevatorLeft.restoreFactoryDefaults();
+       m_elevatorRight.restoreFactoryDefaults();
         m_elevatorLeft.setInverted(true);
-       // m_elevatorLeft.follow(m_elevatorRight);
+        m_elevatorLeft.follow(m_elevatorRight);
         //m_elevatorTarget = ; // TODO set the elevator target to an meter unit
     }
     
@@ -45,7 +43,7 @@ public class Elevator extends SubsystemBase{
       System.out.print("robot niit");
       // SmartDashboard.putData("motor test", setElevatorSpeedmmmm(0.1));
       // setElevatorSpeedmmmm(0.1);
-      m_elevatorLeft.set(0.1);
+      //m_elevatorLeft.set(0.1);
       System.out.print("it works");
     }
     
@@ -59,21 +57,23 @@ public void setElevator(elevatorLevel m_elevatorLevel) {
       
             switch (m_elevatorLevel) {
               case HIGH:
-              m_elevatorTarget = ElevatorConstants.khighTarget;
+              this.m_elevatorTarget = ElevatorConstants.kHighTarget + 
+              setelevatorAngleFineTuning(0.1);
                 break;
               case LOW:
-              m_elevatorTarget = ElevatorConstants.klowTarget;
+              this.m_elevatorTarget = ElevatorConstants.kLowTarget + 
+              setelevatorAngleFineTuning(0.1);
                 break;
               case INTAKE:
-               m_elevatorTarget = ElevatorConstants.kintakeTarget;
+               this.m_elevatorTarget = ElevatorConstants.kIntakeTarget;
                 break;
-                default: m_elevatorTarget = ElevatorConstants.kintakeTarget;
+                default: this.m_elevatorTarget = ElevatorConstants.kIntakeTarget;
             }
           }
 
 public void setElevatorSpeed(double m_elevatorSpeed) {
       m_elevatorLeft.set(m_elevatorSpeed);
-      //m_elevatorRight.set(m_elevatorSpeed);
+      m_elevatorRight.set(m_elevatorSpeed);
     }
 
     public Sendable setElevatorSpeedmmmm(double m_elevatorSpeedmmm) {
@@ -83,19 +83,25 @@ public void setElevatorSpeed(double m_elevatorSpeed) {
       };
     
 
-//public Command stop() {
-  //return this.runOnce(
-  //() -> {
-  //m_elevatorRight.stopMotor();
-    
-    //});
-    //}
+public Command stop() {
+  return this.runOnce(
+  () -> {
+  m_elevatorLeft.stopMotor();
+  m_elevatorRight.stopMotor();
+    });
+    }
     
 public void isAtBottom() {
-  if(!bottomlimitSwitch.equals(null));
+  if(bottomlimitSwitch.get()) {
   m_elevatorLeft.restoreFactoryDefaults();
-  //m_elevatorRight.restoreFactoryDefaults();
+  m_elevatorRight.restoreFactoryDefaults();
+  }
+  }
+
+public double setelevatorAngleFineTuning(double m_elevatorAngle) {
+  //TODO add aprilTag math when aprilTag done
+  return m_elevatorAngle ;
 }
 
-  }
+}
 
