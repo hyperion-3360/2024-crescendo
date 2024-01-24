@@ -15,8 +15,8 @@ public final class Constants {
     // constants for climber, shooter, elevator, trap name example: kExamplePort, all ints if port
     public static final int kclimberRightId = 11; // climber
     public static final int kclimberLeftId = 12;
-    public static final int kelevatorRightId = 9; // elevator 9
-    public static final int kelevatorLeftId = 10; //10
+    public static final int kelevatorRightId = 10; // elevator 9
+    public static final int kelevatorLeftId = 9; //10
     public static final int kShooterLeftMasterId = 0;
     public static final int kShooterRightMasterId = 0;
     public static final int kShooterLeftFollowerId = 0;
@@ -51,12 +51,12 @@ public final class Constants {
 
   public static class WCPSwerveModule {
 
-    // public static final WCPSwerveModuleConfig[] kConfigs = {
-    //   new WCPSwerveModuleConfig(2, 1, 0, 9650),
-    //   new WCPSwerveModuleConfig(4, 3, 1, 20756.0),
-    //   new WCPSwerveModuleConfig(6, 5, 2, 1072.0),
-    //   new WCPSwerveModuleConfig(8, 7, 3, 13555.0)
-    // };
+    public static final WCPSwerveModuleConfig[] kConfigs = {
+      new WCPSwerveModuleConfig(2, 1, 0, 9650),
+      new WCPSwerveModuleConfig(4, 3, 1, 20756.0),
+      new WCPSwerveModuleConfig(6, 5, 2, 1072.0),
+      new WCPSwerveModuleConfig(8, 7, 3, 13555.0)
+    };
     public static final Translation2d[] kLocations = {
       // these values will have to be verified/edited
       new Translation2d(0.3525, 0.275),
