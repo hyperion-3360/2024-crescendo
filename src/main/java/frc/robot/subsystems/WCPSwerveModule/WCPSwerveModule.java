@@ -116,9 +116,10 @@ public class WCPSwerveModule implements SwerveModule {
 
   @Override
   public void periodic() {
-    m_absAngleEntry.setDouble(m_magEncoder.getDistance());
+    m_absAngleEntry.setDouble(m_magEncoder.getAbsolutePosition());
     m_encOkEntry.setBoolean(m_magEncoder.isConnected());
-    m_motorEnc.setDouble(m_turnMotor.getRotorPosition().getValueAsDouble());
+    m_motorEnc.setDouble(
+        m_turnMotor.getRotorPosition().getValueAsDouble()); // 2046.8 is conversion rotor to steps
 
     if (!m_homed) {
       // Home on first periodic loop so sensors are fully initialized
@@ -126,7 +127,7 @@ public class WCPSwerveModule implements SwerveModule {
       // TODO: problem suspected! .getRotorPosition() is not in same units as magEncoder
       m_encoderZero =
           m_configZero
-              + m_turnMotor.getRotorPosition().getValueAsDouble()
+              + (m_turnMotor.getRotorPosition().getValueAsDouble() * 2048) // 2048 is rotor to steps
               - m_magEncoder.getDistance();
       m_homed = true;
     }
@@ -165,10 +166,13 @@ public class WCPSwerveModule implements SwerveModule {
 
     // TODO: need to convert the state.speedMetersPerSecond * kMeterPerSToTick to RPS (revolution
     // per seconds)
-    m_driveMotor.setControl(m_velocityRequest.withVelocity(0));
+    m_driveMotor.setControl(m_velocityRequest);
+    m_velocityRequest.withVelocity(
+        state.speedMetersPerSecond * kMeterPerSToTick / 204.8); // 204.8 is tick to rps
 
     // TODO: need to convert the setpointDegrees * kDegToAnalog + m_encoderZero to a new position
     // and velocity using a profile (see p. 46 of the above link)
     m_turnMotor.setControl(m_angleRequest);
+    m_angleRequest.withPosition(setpointDegrees * kDegToAnalog + m_encoderZero);
   }
 }
