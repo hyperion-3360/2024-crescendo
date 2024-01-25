@@ -19,10 +19,10 @@ INTAKE
 
 public class Elevator extends SubsystemBase{
     
-  DigitalInput bottomlimitSwitch = new DigitalInput(1);
+  //DigitalInput bottomlimitSwitch = new DigitalInput(1);
 
     //instancing the motor controllers
-    private CANSparkMax m_elevatorRight = new CANSparkMax(Constants.SubsystemConstants.kelevatorRightId, MotorType.kBrushless); 
+    //private CANSparkMax m_elevatorRight = new CANSparkMax(Constants.SubsystemConstants.kelevatorRightId, MotorType.kBrushless); 
     private CANSparkMax m_elevatorLeft = new CANSparkMax(Constants.SubsystemConstants.kelevatorLeftId, MotorType.kBrushless); 
     
     private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
@@ -31,9 +31,9 @@ public class Elevator extends SubsystemBase{
     public Elevator() {
         //configures the CANSparkMax controllers
          m_elevatorLeft.restoreFactoryDefaults();
-       m_elevatorRight.restoreFactoryDefaults();
+       //m_elevatorRight.restoreFactoryDefaults();
         m_elevatorLeft.setInverted(true);
-        m_elevatorLeft.follow(m_elevatorRight);
+        //m_elevatorLeft.follow(m_elevatorRight);
     }
     
     public void robotInit()
@@ -66,34 +66,32 @@ public void setElevator(elevatorLevel m_elevatorLevel) {
             }
           }
 
-public void setElevatorSpeed(double m_elevatorSpeed) {
-      m_elevatorLeft.set(m_elevatorSpeed);
-      m_elevatorRight.set(m_elevatorSpeed);
+public Command setElevatorSpeed(double m_elevatorSpeed) {
+  return this.run(
+    () -> {
+     m_elevatorLeft.set(m_elevatorSpeed);
+      //m_elevatorRight.set(m_elevatorSpeed);
+    });
     }
-
-    public void setElevatorSpeedmmmm(double m_elevatorSpeedmmm) {
-      m_elevatorLeft.set(m_elevatorSpeedmmm);
-      };
-    
 
 public Command stop() {
   return this.runOnce(
   () -> {
   m_elevatorLeft.stopMotor();
-  m_elevatorRight.stopMotor();
+  //m_elevatorRight.stopMotor();
     });
     }
     
-public void isAtBottom() {
-  if(bottomlimitSwitch.get()) {
-  m_elevatorLeft.restoreFactoryDefaults();
-  m_elevatorRight.restoreFactoryDefaults();
-    }
-  }
+// public void isAtBottom() {
+//   if(bottomlimitSwitch.get()) {
+//   m_elevatorLeft.restoreFactoryDefaults();
+//   m_elevatorRight.restoreFactoryDefaults();
+//     }
+//   }
 
 public double setelevatorAngleFineTuning(double m_elevatorAngle) {
   //TODO add aprilTag math when aprilTag done
-  return m_elevatorAngle ;
+  return m_elevatorAngle;
 }
 
 }

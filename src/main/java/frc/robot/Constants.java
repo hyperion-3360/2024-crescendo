@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.subsystems.WCPSwerveModule.WCPSwerveModuleConfig;
 
 public final class Constants {
 
@@ -52,12 +51,12 @@ public final class Constants {
 
   public static class WCPSwerveModule {
 
-    public static final WCPSwerveModuleConfig[] kConfigs = {
-      new WCPSwerveModuleConfig(2, 1, 0, 9650),
-      new WCPSwerveModuleConfig(4, 3, 1, 20756.0),
-      new WCPSwerveModuleConfig(6, 5, 2, 1072.0),
-      new WCPSwerveModuleConfig(8, 7, 3, 13555.0)
-    };
+    // public static final WCPSwerveModuleConfig[] kConfigs = {
+    //   new WCPSwerveModuleConfig(2, 1, 0, 9650),
+    //   new WCPSwerveModuleConfig(4, 3, 1, 20756.0),
+    //   new WCPSwerveModuleConfig(6, 5, 2, 1072.0),
+    //   new WCPSwerveModuleConfig(8, 7, 3, 13555.0)
+    // };
     public static final Translation2d[] kLocations = {
       // these values will have to be verified/edited
       new Translation2d(0.3525, 0.275),

@@ -46,10 +46,8 @@ public class Shooter extends SubsystemBase {
   public void periodic() {}
 
   public void setSpeed(double rightMasterSpeed, double leftMasterSpeed) {
-
     m_RightMaster.set(rightMasterSpeed);
     m_LeftMaster.set(leftMasterSpeed);
-
   }
 
   public void highGoal(double setDistance) {}

@@ -4,13 +4,9 @@
 
 package frc.robot;
 
-<<<<<<< HEAD
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.WCPSwerveModule;
-import frc.robot.subsystems.DriveTrain;
-=======
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
->>>>>>> elevator
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -28,10 +24,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   //private final DriveTrain m_drive = new DriveTrain();
-  private final Elevator elvt = new Elevator();
+  private final Elevator m_elevator = new Elevator();
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  //private final CommandXboxController m_driverController =
-      // new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController m_driverController =
+       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
        private final CommandXboxController m_coDriverController =
       new CommandXboxController(OperatorConstants.kCoDriverControllerPort);
@@ -68,10 +64,18 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
+    m_driverController.rightTrigger().
+    whileTrue(m_elevator.setElevatorSpeed(0.1).alongWith(m_elevator.setelevatorAngleFineTuning())
+    .onFalse(m_elevator.stop());
+
+    m_driverController.leftTrigger().
+    whileTrue(m_elevator.setElevatorSpeed(-0.1).alongWith(m_elevator.setelevatorAngleFineTuning()))
+    .onFalse(m_elevator.stop());
+
     /* wpilib controller example */
-    m_driverController.b().onTrue(m_driveTrain.exampleMethodCommand()); // this would be the shooter button
-    m_coDriverController.rightTrigger().whileTrue(exampleDriveTrainCommand + exampleMath); //this would be the gas button
-    m_coDriverController.
+    // m_driverController.b().onTrue(m_driveTrain.exampleMethodCommand()); // this would be the shooter button
+    // m_coDriverController.rightTrigger().whileTrue(exampleDriveTrainCommand + exampleMath); //this would be the gas button
+    // m_coDriverController.
   }
 
   /**
