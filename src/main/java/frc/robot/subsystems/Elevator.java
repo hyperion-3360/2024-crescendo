@@ -15,14 +15,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
 
-enum e_elevatorLevel {
+public class Elevator extends SubsystemBase{
+    
+public enum e_elevatorLevel {
 HIGH,
 LOW,
 INTAKE
 };
 
-public class Elevator extends SubsystemBase{
-    
   //DigitalInput bottomlimitSwitch = new DigitalInput(1);
 
     //instancing the motor controllers
@@ -41,11 +41,12 @@ Encoder m_encoder = new Encoder(9, 10, false, EncodingType.k2X);
        //m_elevatorRight.restoreFactoryDefaults();
         m_elevatorLeft.setInverted(true);
         //m_elevatorLeft.follow(m_elevatorRight);
+
+        m_encoder.reset();
     }
     
     public void robotInit()
-    {;
-      //SmartDashboard.putData("motor test", setElevatorSpeedmmmm(0.1));
+    {
       
     }
     
@@ -95,10 +96,15 @@ public Command stop() {
 //   }
 
 public double setelevatorAngleFineTuning() {
-  double m_elevatorAngle = 0.0;
+  //pulley diameter and increment of a belt
+  double m_elevatorAngle = 0.05445;
+  // TODO fine tune those values
+  for (int i = 0; i > 30; ++i) {
+    m_elevatorAngle = m_elevatorAngle + 0.00216;
+  }
   //TODO add aprilTag math when aprilTag done
   return m_elevatorAngle;
-  }//5,445cm + 2,16 mm
+  }                                                                                  //5,445cm + 2,16 mm these are the pulley diameter and belt thickness respectively
 
   public boolean onTarget() {
     return Math.abs(m_elevatorTarget - m_encoder.getDistancePerPulse()) < Constants.ElevatorConstants.kDeadzone;
@@ -109,13 +115,7 @@ public double setelevatorAngleFineTuning() {
         this.runOnce(
             () -> {
               this.setElevator(m_elevatorLevel);
-            }));
-        this.run(() -> {this.setElevator(m_elevatorLevel).until(this::onTarget)});
-    }
-
-
-
-  }
-
-
-
+            }),
+        this.run(() -> this.setElevator(m_elevatorLevel)).until(this::onTarget));
+      }
+}

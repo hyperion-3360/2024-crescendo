@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 //import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Elevator.e_elevatorLevel;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -73,13 +74,13 @@ public class RobotContainer {
     .onFalse(m_elevator.stop());
 
     m_driverController.a()
-    .toggleOnTrue(m_elevator.setElevator());
+    .toggleOnTrue(m_elevator.extendTheElevator(e_elevatorLevel.HIGH));
 
         m_driverController.b()
-    .toggleOnTrue(m_elevator.setElevator());
+    .toggleOnTrue(m_elevator.extendTheElevator(e_elevatorLevel.LOW));
 
         m_driverController.x()
-    .toggleOnTrue(m_elevator.setElevator());
+    .toggleOnTrue(m_elevator.extendTheElevator(e_elevatorLevel.INTAKE));
 
     /* wpilib controller example */
     // m_driverController.b().onTrue(m_driveTrain.exampleMethodCommand()); // this would be the shooter button
