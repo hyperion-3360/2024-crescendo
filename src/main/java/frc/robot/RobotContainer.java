@@ -74,14 +74,13 @@ public class RobotContainer {
     .onFalse(m_elevator.stop());
 
     m_driverController.a()
-    .toggleOnTrue(m_elevator.extendTheElevator(e_elevatorLevel.HIGH));
-    System.out.println("woerk");
+    .toggleOnTrue(m_elevator.extendTheElevator(e_elevatorLevel.HIGH).alongWith(m_elevator.woerk()));
 
         m_driverController.b()
-    .toggleOnTrue(m_elevator.extendTheElevator(e_elevatorLevel.LOW));
+    .toggleOnTrue(m_elevator.extendTheElevator(e_elevatorLevel.LOW).alongWith(m_elevator.woerk()));
 
         m_driverController.x()
-    .toggleOnTrue(m_elevator.extendTheElevator(e_elevatorLevel.INTAKE));
+    .toggleOnTrue(m_elevator.extendTheElevator(e_elevatorLevel.INTAKE).alongWith(m_elevator.woerk()));
 
     /* wpilib controller example */
     // m_driverController.b().onTrue(m_driveTrain.exampleMethodCommand()); // this would be the shooter button

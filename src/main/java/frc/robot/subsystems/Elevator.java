@@ -118,4 +118,10 @@ public double setelevatorAngleCorrection() {
         this.run(() -> this.setElevator(m_elevatorLevel)).until(this::onTarget));
       }
 
+      public Command woerk() {
+        return this.runOnce(() -> {
+        System.out.println("woerk");
+        });
+      }
+
 }
