@@ -59,17 +59,14 @@ Encoder m_encoder = new Encoder(9, 10, false, EncodingType.k2X);
 private void setElevator(e_elevatorLevel m_elevatorLevel) {
             switch (m_elevatorLevel) {
               case HIGH:
-              this.m_elevatorTarget = ElevatorConstants.kHighTarget + 
-              setelevatorAngleFineTuning();
+              this.m_elevatorTarget = ElevatorConstants.kHighTarget;
                 break;
               case LOW:
-              this.m_elevatorTarget = ElevatorConstants.kLowTarget + 
-              setelevatorAngleFineTuning();
+              this.m_elevatorTarget = ElevatorConstants.kLowTarget;
                 break;
               case INTAKE:
                this.m_elevatorTarget = ElevatorConstants.kIntakeTarget;
                 break;
-                default: this.m_elevatorTarget = ElevatorConstants.kIntakeTarget;
             }
           }
 
@@ -95,11 +92,12 @@ public Command stop() {
 //     }
 //   }
 
-public double setelevatorAngleFineTuning() {
-  //pulley diameter and increment of a belt
+public double setelevatorAngleCorrection() {
+  //pulley diameter
   double m_elevatorAngle = 0.05445;
   // TODO fine tune those values
-  for (int i = 0; i > 30; ++i) {
+  // while the encoder isn't stopped increase the diameter because of the belt
+  while (m_encoder.getStopped() == false) {
     m_elevatorAngle = m_elevatorAngle + 0.00216;
   }
   //TODO add aprilTag math when aprilTag done
@@ -107,7 +105,8 @@ public double setelevatorAngleFineTuning() {
   }                                                                                  //5,445cm + 2,16 mm these are the pulley diameter and belt thickness respectively
 
   public boolean onTarget() {
-    return Math.abs(m_elevatorTarget - m_encoder.getDistancePerPulse()) < Constants.ElevatorConstants.kDeadzone;
+    return Math.abs(m_elevatorTarget - setelevatorAngleCorrection())
+     < Constants.ElevatorConstants.kDeadzone;
   }
 
   public Command extendTheElevator(e_elevatorLevel m_elevatorLevel) {
@@ -118,4 +117,5 @@ public double setelevatorAngleFineTuning() {
             }),
         this.run(() -> this.setElevator(m_elevatorLevel)).until(this::onTarget));
       }
+
 }

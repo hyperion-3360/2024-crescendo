@@ -75,6 +75,7 @@ public class RobotContainer {
 
     m_driverController.a()
     .toggleOnTrue(m_elevator.extendTheElevator(e_elevatorLevel.HIGH));
+    System.out.println("woerk");
 
         m_driverController.b()
     .toggleOnTrue(m_elevator.extendTheElevator(e_elevatorLevel.LOW));
