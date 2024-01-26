@@ -1,17 +1,21 @@
 
 package frc.robot.subsystems;
 
+
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
 
-enum elevatorLevel {
+enum e_elevatorLevel {
 HIGH,
 LOW,
 INTAKE
@@ -25,8 +29,11 @@ public class Elevator extends SubsystemBase{
     //private CANSparkMax m_elevatorRight = new CANSparkMax(Constants.SubsystemConstants.kelevatorRightId, MotorType.kBrushless); 
     private CANSparkMax m_elevatorLeft = new CANSparkMax(Constants.SubsystemConstants.kelevatorLeftId, MotorType.kBrushless); 
     
+Encoder m_encoder = new Encoder(9, 10, false, EncodingType.k2X);
+
     private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
 
+    public e_elevatorLevel m_elevatorLevel;
     //creating an elevator
     public Elevator() {
         //configures the CANSparkMax controllers
@@ -48,16 +55,15 @@ public class Elevator extends SubsystemBase{
 
     }
 
-public void setElevator(elevatorLevel m_elevatorLevel) {
-      
+private void setElevator(e_elevatorLevel m_elevatorLevel) {
             switch (m_elevatorLevel) {
               case HIGH:
               this.m_elevatorTarget = ElevatorConstants.kHighTarget + 
-              setelevatorAngleFineTuning(0.1);
+              setelevatorAngleFineTuning();
                 break;
               case LOW:
               this.m_elevatorTarget = ElevatorConstants.kLowTarget + 
-              setelevatorAngleFineTuning(0.1);
+              setelevatorAngleFineTuning();
                 break;
               case INTAKE:
                this.m_elevatorTarget = ElevatorConstants.kIntakeTarget;
@@ -84,15 +90,32 @@ public Command stop() {
     
 // public void isAtBottom() {
 //   if(bottomlimitSwitch.get()) {
-//   m_elevatorLeft.restoreFactoryDefaults();
-//   m_elevatorRight.restoreFactoryDefaults();
+//  m_encoder.reset();
 //     }
 //   }
 
-public double setelevatorAngleFineTuning(double m_elevatorAngle) {
+public double setelevatorAngleFineTuning() {
+  double m_elevatorAngle = 0.0;
   //TODO add aprilTag math when aprilTag done
   return m_elevatorAngle;
-}
+  }//5,445cm + 2,16 mm
 
-}
+  public boolean onTarget() {
+    return Math.abs(m_elevatorTarget - m_encoder.getDistancePerPulse()) < Constants.ElevatorConstants.kDeadzone;
+  }
+
+  public Command extendTheElevator(e_elevatorLevel m_elevatorLevel) {
+      return new SequentialCommandGroup(
+        this.runOnce(
+            () -> {
+              this.setElevator(m_elevatorLevel);
+            }));
+        this.run(() -> {this.setElevator(m_elevatorLevel).until(this::onTarget)});
+    }
+
+
+
+  }
+
+
 

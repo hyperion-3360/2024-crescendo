@@ -37,10 +37,11 @@ public final class Constants {
   }
 
   public static class ElevatorConstants {
-    //TODO change the values to suitable ones using april tag
+    // TODO finetune the values
    public static final double kHighTarget = 4.2;
    public static final double kLowTarget = 2.2;
    public static final double kIntakeTarget = 0;
+   public static final double kDeadzone = 0.05;
   }
 
   public static class OperatorConstants {

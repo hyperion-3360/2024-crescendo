@@ -65,12 +65,21 @@ public class RobotContainer {
   private void configureBindings() {
 
     m_driverController.rightTrigger().
-    whileTrue(m_elevator.setElevatorSpeed(0.1).alongWith(m_elevator.setelevatorAngleFineTuning())
+    whileTrue(m_elevator.setElevatorSpeed(0.1))
     .onFalse(m_elevator.stop());
 
     m_driverController.leftTrigger().
-    whileTrue(m_elevator.setElevatorSpeed(-0.1).alongWith(m_elevator.setelevatorAngleFineTuning()))
+    whileTrue(m_elevator.setElevatorSpeed(-0.1))
     .onFalse(m_elevator.stop());
+
+    m_driverController.a()
+    .toggleOnTrue(m_elevator.setElevator());
+
+        m_driverController.b()
+    .toggleOnTrue(m_elevator.setElevator());
+
+        m_driverController.x()
+    .toggleOnTrue(m_elevator.setElevator());
 
     /* wpilib controller example */
     // m_driverController.b().onTrue(m_driveTrain.exampleMethodCommand()); // this would be the shooter button
