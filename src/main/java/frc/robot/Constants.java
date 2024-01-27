@@ -8,14 +8,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 public final class Constants {
 
- 
-
   public static class SubsystemConstants {
     // constants for climber, shooter, elevator, trap name example: kExamplePort, all ints if port
     public static final int kclimberRightId = 11; // climber
     public static final int kclimberLeftId = 12;
     public static final int kelevatorRightId = 10; // elevator 9
-    public static final int kelevatorLeftId = 9; //10
+    public static final int kelevatorLeftId = 9; // 10
     public static final int kShooterLeftMasterId = 0;
     public static final int kShooterRightMasterId = 0;
     public static final int kShooterLeftFollowerId = 0;
@@ -32,22 +30,20 @@ public final class Constants {
     public static final double kI = 0.0;
     public static final double kP = 0.0;
     public static final double kD = 0.0;
-
-        
   }
 
   public static class ElevatorConstants {
     // TODO finetune the values
-   public static final double kHighTarget = 1.2;
-   public static final double kLowTarget = 2.2;
-   public static final double kIntakeTarget = 0;
-   public static final double kDeadzone = 0.05;
+    public static final double kHighTarget = 1.2;
+    public static final double kLowTarget = 2.2;
+    public static final double kIntakeTarget = 0;
+    public static final double kDeadzone = 0.05;
   }
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kCoDriverControllerPort = 1;
-        public static final int kPigeonPort = 0;
+    public static final int kPigeonPort = 0;
   }
 
   public static class WCPSwerveModule {
@@ -85,5 +81,4 @@ public final class Constants {
     public static final double kDriveKf = 0.04625;
     public static final double kDriveIZone = 0.0;
   }
-
 }
