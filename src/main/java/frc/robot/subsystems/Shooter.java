@@ -15,31 +15,31 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public enum e_shoot {
-HIGH, 
-LOW
-}
 public class Shooter extends SubsystemBase {
-
+    public enum e_shoot {
+        HIGH, 
+        LOW
+    }
+    
     // Create new motors
-    private CANSparkMax m_rightMaster = new CANSparkMax(Constants.SubsystemConstants.kShooterRightMasterId, MotorType.kBrushless);
-    private CANSparkMax m_rightFollower = new CANSparkMax(Constants.SubsystemConstants.kShooterRightFollowerId, MotorType.kBrushless);
+   // private CANSparkMax m_rightMaster = new CANSparkMax(Constants.SubsystemConstants.kShooterRightMasterId, MotorType.kBrushless);
+   // private CANSparkMax m_rightFollower = new CANSparkMax(Constants.SubsystemConstants.kShooterRightFollowerId, MotorType.kBrushless);
     private CANSparkMax m_leftMaster = new CANSparkMax(Constants.SubsystemConstants.kShooterLeftMasterId, MotorType.kBrushless);
-    private CANSparkMax m_leftFollower = new CANSparkMax(Constants.SubsystemConstants.kShooterLeftFollowerId, MotorType.kBrushless);
+   // private CANSparkMax m_leftFollower = new CANSparkMax(Constants.SubsystemConstants.kShooterLeftFollowerId, MotorType.kBrushless);
     
     public Shooter() {
 
         // Config motors
+        //m_leftMaster.setInverted(true);
         m_leftMaster.setInverted(true);
-        m_leftFollower.setInverted(true);
 
-        m_rightMaster.restoreFactoryDefaults();
-        m_rightFollower.restoreFactoryDefaults();
+       // m_rightMaster.restoreFactoryDefaults();
+       // m_rightFollower.restoreFactoryDefaults();
         m_leftMaster.restoreFactoryDefaults();
-        m_leftFollower.restoreFactoryDefaults();
+      //  m_leftFollower.restoreFactoryDefaults();
 
-        m_leftFollower.follow(m_leftMaster);
-        m_rightFollower.follow(m_rightMaster);
+        // m_leftFollower.follow(m_leftMaster);
+        // m_rightFollower.follow(m_rightMaster);
         
     }
 
@@ -55,7 +55,7 @@ public class Shooter extends SubsystemBase {
 
     public Command setSpeed(double rightMasterSpeed, double leftMasterSpeed) {
         return this.runOnce(() -> {
-        m_rightMaster.set(rightMasterSpeed);
+       // m_rightMaster.set(rightMasterSpeed);
         m_leftMaster.set(leftMasterSpeed);
         });
     }
@@ -63,7 +63,7 @@ public class Shooter extends SubsystemBase {
     public Command Stop() {
     return this.runOnce(() -> {
         m_leftMaster.stopMotor();
-        m_rightMaster.stopMotor();
+      //  m_rightMaster.stopMotor();
      });
     }
     
@@ -77,12 +77,12 @@ public class Shooter extends SubsystemBase {
 
     case LOW:
     m_leftMaster.set(0.05);
-    m_rightMaster.set(0.05);
+   // m_rightMaster.set(0.05);
     break;
 
     case HIGH:
     m_leftMaster.set(0.8);
-    m_rightMaster.set(0.8);
+   // m_rightMaster.set(0.8);
     break;
      }
     }
