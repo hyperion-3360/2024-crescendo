@@ -7,9 +7,9 @@ public class ShuffleboardFactory {
     
     public ShuffleboardFactory(){
         Shuffleboard3360.getInstance()
-        .addTab("Autonomous mode")
-        .addBooleanWidget("Autonomous mode", "Intake mode", false)
-        .addPercentWidget("Autonomous mode", "Shooter Hight", 0.0f);
+        .addTab("Operator")
+        .addBooleanWidget("Operator", "Intake mode", false)
+        .addPercentWidget("Operator", "Shooter Height", 0.0f);
         
                  
     SendableChooser<String> autoChooser;
@@ -30,7 +30,7 @@ public class ShuffleboardFactory {
         autoChooser = new SendableChooser<>();
         autoChooser.setDefaultOption("Auto Mode 1", "AutoMode1");
         autoChooser.addOption("Auto Mode 2", "AutoMode2");
-        Shuffleboard.getTab("Autonomous")
+        Shuffleboard.getTab("Autonomous mode")
             .add("Auto Mode", autoChooser)
             .withPosition(2, 0);
    
@@ -39,10 +39,10 @@ public class ShuffleboardFactory {
     
             // Mettre en œuvre la logique autonome ici en fonction de la sélection
 
-            Shuffleboard.getTab("Operator")
+            /*Shuffleboard.getTab("Operator")
                 .add("Shooter Height", false)//need checked the defaultValue
                 .getEntry("Shooter Height");
-               // .setDouble(/* Lire la hauteur du shooter ici */);
+               // .setDouble(/* Lire la hauteur du shooter ici );*/
         
              // Mettre à jour les valeurs sur le tableau de bord Shuffleboard pendant le mode téléop
             /*Shuffleboard.getTab("Driver")
