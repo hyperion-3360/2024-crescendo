@@ -32,8 +32,6 @@ INTAKE
 Encoder m_encoder = new Encoder(9, 10, false, EncodingType.k2X);
 
     private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
-
-    public e_elevatorLevel m_elevatorLevel;
     //creating an elevator
     public Elevator() {
         //configures the CANSparkMax controllers
@@ -70,12 +68,9 @@ private void setElevator(e_elevatorLevel m_elevatorLevel) {
             }
           }
 
-public Command setElevatorSpeed(double m_elevatorSpeed) {
-  return this.run(
-    () -> {
+public void setElevatorSpeed(double m_elevatorSpeed) {
      m_elevatorLeft.set(m_elevatorSpeed);
       //m_elevatorRight.set(m_elevatorSpeed);
-    });
     }
 
 public Command stop() {
@@ -92,6 +87,10 @@ public Command stop() {
 //     }
 //   }
 
+private double encoderConversions() {
+  
+}
+
 public double setelevatorAngleCorrection() {
   //pulley diameter
   double m_elevatorAngle = 0.05445;
@@ -105,7 +104,7 @@ public double setelevatorAngleCorrection() {
   }                                                                                  //5,445cm + 2,16 mm these are the pulley diameter and belt thickness respectively
 
   public boolean onTarget() {
-    return Math.abs(m_elevatorTarget - setelevatorAngleCorrection())
+    return Math.abs(this.m_elevatorTarget - setelevatorAngleCorrection())
      < Constants.ElevatorConstants.kDeadzone;
   }
 
@@ -115,13 +114,7 @@ public double setelevatorAngleCorrection() {
             () -> {
               this.setElevator(m_elevatorLevel);
             }),
-        this.run(() -> this.setElevator(m_elevatorLevel)).until(this::onTarget));
+        this.run(() -> this.setElevatorSpeed(0.05)).until(this::onTarget));
       }
-
-      public Command woerk() {
-        return this.runOnce(() -> {
-        System.out.println("woerk");
-        });
-      }
-
+    
 }
