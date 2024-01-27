@@ -1,60 +1,49 @@
 package frc;
 
+import java.text.DecimalFormat;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
+/**
+ * Singleton class to control the Shuffleboard / SmartDashboard display
+ */
 public class ShuffleboardFactory {
-    
-    public ShuffleboardFactory(){
-        Shuffleboard3360.getInstance()
-        .addTab("Operator")
-        .addBooleanWidget("Operator", "Intake mode", false)
-        .addPercentWidget("Operator", "Shooter Height", 0.0f);
+
+    public ShuffleboardFactory addTab(String title){
+        Shuffleboard.getTab(title);
+        return this;
+    }
+
+    public ShuffleboardFactory addBooleanWidget(String tabId, String widgetId, boolean defaultValue){
+        Shuffleboard.getTab(tabId).add(widgetId, defaultValue)
+            .withWidget(BuiltInWidgets.kBooleanBox);
+
+        return this;
+    }
+    public ShuffleboardFactory addPercentWidget(String tabId, String widgetId, Float defaultValue) {
+        Shuffleboard.getTab(tabId).add(widgetId, new DecimalFormat("##0.00").format(defaultValue)+" %")
+            .withWidget(BuiltInWidgets.kTextView);
+
+        return this;
+
+    }
+
+    public ShuffleboardFactory addSelector(String tabId, String widgetId, String[] options){
+        if(options.length > 0){
+            Integer c = 0; // Ensure we have unique ids for each option
+
+            SendableChooser<String> chooser = new SendableChooser<>();
+
+            chooser.setDefaultOption(options[0], options[0].replaceAll("\\s+","") + (c++).toString());
+
+            for(int i=1; i < options.length; ++i){
+                chooser.addOption(options[i], options[i].replaceAll("\\s+","") + (c++).toString());    
+            }
         
-                 
-    SendableChooser<String> autoChooser;
-    
-        // Initialiser les objets ici.
-
-        /* Initialiser le tableau de bord Shuffleboard
-        Shuffleboard.getTab("Driver")
-            .add("LeftEncoder Status", /* Ajoutez l'encodeur ici  )
-            .withPosition(0, 0);
-
-             // Initialiser le tableau de bord Shuffleboard
-        Shuffleboard.getTab("Driver")
-            .add("RightEncoder Status", /* Ajoutez l'encodeur ici  )
-            .withPosition(0, 0);*/
-
-        // Initialiser le sélecteur autonome
-        autoChooser = new SendableChooser<>();
-        autoChooser.setDefaultOption("Auto Mode 1", "AutoMode1");
-        autoChooser.addOption("Auto Mode 2", "AutoMode2");
-        Shuffleboard.getTab("Autonomous mode")
-            .add("Auto Mode", autoChooser)
-            .withPosition(2, 0);
-   
-            // Récupérer le mode autonome sélectionné
-            String selectedAuto = autoChooser.getSelected();
-    
-            // Mettre en œuvre la logique autonome ici en fonction de la sélection
-
-            /*Shuffleboard.getTab("Operator")
-                .add("Shooter Height", false)//need checked the defaultValue
-                .getEntry("Shooter Height");
-               // .setDouble(/* Lire la hauteur du shooter ici );*/
-        
-             // Mettre à jour les valeurs sur le tableau de bord Shuffleboard pendant le mode téléop
-            /*Shuffleboard.getTab("Driver")
-                .add("LeftENcoder Status",true)// to be checked
-                .getEntry("LeftEncoder Status")
-                .setDouble(Lire la valeur de l'encodeur ici );
-      
-             // Mettre à jour les valeurs sur le tableau de bord Shuffleboard pendant le mode téléop
-             Shuffleboard.getTab("Driver")
-                .getEntry("RightEncoder Status")
-                .setDouble( Lire la valeur de l'encodeur ici );*/
+            Shuffleboard.getTab(tabId).add(widgetId, chooser);
         }
-}
 
-    
+        return this;
+    }
+}

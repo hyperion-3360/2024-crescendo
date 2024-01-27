@@ -1,51 +1,84 @@
 package frc;
 
-import java.text.DecimalFormat;
-import java.util.Map;
-//import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-//import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.shuffleboard.*;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-
-/**
- * Singleton class to control the Shuffleboard / SmartDashboard display
- */
 public class Shuffleboard3360 {
-    private static Shuffleboard3360 _instance;
-
-    private Shuffleboard3360(){
-        // TODO
+    
+    private static class Tabs{
+        protected static String drivers = "Operator";
+        protected static String auto = "Auto mode";
     }
+
+    private static Shuffleboard3360 m_instance;
 
     public static Shuffleboard3360 getInstance(){
-        if(_instance == null){
-            _instance = new Shuffleboard3360();
+        if(m_instance == null){
+            m_instance = new Shuffleboard3360();
         }
 
-        return _instance;
+        return m_instance;
     }
 
-    public Shuffleboard3360 addTab(String title){
-        Shuffleboard.getTab(title);
-        return _instance;
-    }
+    private Shuffleboard3360(){
+        ShuffleboardFactory shuffleboard = new ShuffleboardFactory();
+    
+        shuffleboard.addTab(Tabs.drivers)
+        .addBooleanWidget(Tabs.drivers, "Intake mode", false)
+        .addPercentWidget(Tabs.drivers, "Shooter Height", 0.0f)
+        .addBooleanWidget(Tabs.drivers, "Note", false);
 
-    public Shuffleboard3360 addBooleanWidget(String tabId, String widgetId, boolean defaultValue){
-        Shuffleboard.getTab(tabId).add(widgetId, defaultValue)
-        .withWidget(BuiltInWidgets.kBooleanBox);
+        shuffleboard.addTab(Tabs.auto)
+        .addSelector(Tabs.auto, "Auto mode", new String[]{
+            "Mode auto 1",
+            "Mode auto 2",
+        });
 
-        return _instance;
-    }
-    public Shuffleboard3360 addPercentWidget(String tabId, String widgetId, Float defaultValue) {
-        Shuffleboard.getTab(tabId).add(widgetId, new DecimalFormat("##0.00").format(defaultValue)+" %")
-        .withWidget(BuiltInWidgets.kTextView);
 
-        return _instance;
+        
+                 
+    // SendableChooser<String> autoChooser;
+    
+        // Initialiser les objets ici.
 
-    }
+        /* Initialiser le tableau de bord Shuffleboard
+        Shuffleboard.getTab("Driver")
+            .add("LeftEncoder Status", /* Ajoutez l'encodeur ici  )
+            .withPosition(0, 0);
+
+             // Initialiser le tableau de bord Shuffleboard
+        Shuffleboard.getTab("Driver")
+            .add("RightEncoder Status", /* Ajoutez l'encodeur ici  )
+            .withPosition(0, 0);*/
+
+        // Initialiser le sélecteur autonome
+        // autoChooser = new SendableChooser<>();
+        // autoChooser.setDefaultOption("Auto Mode 1", "AutoMode1");
+        // autoChooser.addOption("Auto Mode 2", "AutoMode2");
+        // Shuffleboard.getTab(Tabs.auto)
+        //     .add("Auto Mode", autoChooser)
+        //     .withPosition(2, 0);
+   
+        //     // Récupérer le mode autonome sélectionné
+        //     String selectedAuto = autoChooser.getSelected();
+    
+            // Mettre en œuvre la logique autonome ici en fonction de la sélection
+
+            /*Shuffleboard.getTab("Operator")
+                .add("Shooter Height", false)//need checked the defaultValue
+                .getEntry("Shooter Height");
+               // .setDouble(/* Lire la hauteur du shooter ici );*/
+        
+             // Mettre à jour les valeurs sur le tableau de bord Shuffleboard pendant le mode téléop
+            /*Shuffleboard.getTab("Driver")
+                .add("LeftENcoder Status",true)// to be checked
+                .getEntry("LeftEncoder Status")
+                .setDouble(Lire la valeur de l'encodeur ici );
+      
+             // Mettre à jour les valeurs sur le tableau de bord Shuffleboard pendant le mode téléop
+             Shuffleboard.getTab("Driver")
+                .getEntry("RightEncoder Status")
+                .setDouble( Lire la valeur de l'encodeur ici );*/
+        }
+
+
 
 
     public void displayData(String title, String widgetId, int[] data){
@@ -67,8 +100,8 @@ public class Shuffleboard3360 {
         SmartDashboard.putNumber("Right Drive Encoder", drivetrain.getRightEncoder());*/
     }
     public void hasNote() {
-            Shuffleboard3360.getInstance()
-                .addTab("Drivers")
-                .addBooleanWidget("Drivers", "Note", false);
+            
         }
 }
+
+    
