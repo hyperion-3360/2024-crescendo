@@ -34,10 +34,10 @@ public final class Constants {
 
   public static class ElevatorConstants {
     // TODO finetune the values
-    public static final double kHighTarget = 1.2;
-    public static final double kLowTarget = 2.2;
-    public static final double kIntakeTarget = 0;
-    public static final double kDeadzone = 0.05;
+    public static final double kHighTarget = 0.3;
+    public static final double kLowTarget = 0.15;
+    public static final double kIntakeTarget = 0.0;
+    public static final double kDeadzone = 0.015;
   }
 
   public static class OperatorConstants {

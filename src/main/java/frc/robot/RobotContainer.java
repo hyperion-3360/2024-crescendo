@@ -62,8 +62,12 @@ public class RobotContainer {
   private void configureBindings() {
 
     m_driverController
-        .a() // .onTrue(m_elevator.woerk());
+        .a() 
         .onTrue(m_elevator.extendTheElevator(e_elevatorLevel.HIGH));
+
+        m_driverController
+        .b() 
+        .onTrue(m_elevator.extendTheElevator(e_elevatorLevel.INTAKE));
 
     /* wpilib controller example */
     // m_driverController.b().onTrue(m_driveTrain.exampleMethodCommand()); // this would be the

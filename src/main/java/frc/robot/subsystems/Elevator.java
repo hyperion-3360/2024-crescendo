@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.math.CurveFunction;
 
 public class Elevator extends SubsystemBase {
 
@@ -29,6 +30,10 @@ public class Elevator extends SubsystemBase {
 
   private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
 
+  private double exponentialFactor;
+
+  private CurveFunction m_curve = new CurveFunction();
+
   // creating an elevator
   public Elevator() {
     // configures the CANSparkMax controllers
@@ -38,18 +43,19 @@ public class Elevator extends SubsystemBase {
     // m_elevatorLeft.follow(m_elevatorRight);
 
     m_encoder.setPosition(0.0);
+
   }
 
   public void robotInit() {}
 
   @Override
   public void periodic() {
-
-    System.out.println("position " + encoderConversions());
-    System.out.println(m_elevatorLeft.getEncoder().getPosition());
-    System.out.println("target " + m_elevatorTarget);
-
     encoderConversions();
+
+    Double adjustedSpeed = m_curve.adjustPeriodic();
+    if(adjustedSpeed != null){
+      m_elevatorLeft.set(adjustedSpeed);
+    }
   }
 
   private void setElevator(e_elevatorLevel m_elevatorLevel) {
@@ -67,11 +73,14 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setElevatorSpeed(double m_elevatorSpeed) {
+    m_elevatorSpeed = m_curve.getMotorSpeed(m_elevatorSpeed);
+
     m_elevatorLeft.set(m_elevatorSpeed);
-    // m_elevatorRight.set(m_elevatorSpeed);
+// m_elevatorRight.set(m_elevatorSpeed);
   }
 
   public Command stop() {
+    m_curve.stop();
     return this.runOnce(
         () -> {
           m_elevatorLeft.stopMotor();
@@ -85,7 +94,7 @@ public class Elevator extends SubsystemBase {
   //   }
 
   private double encoderConversions() {
-    double m_pulleyDiameter = 0.05445;
+    double m_pulleyDiameter = 0.01445; //0.05445
     double m_beltRampUp = 0.0;
     while (m_encoder.getVelocity() > 0.0 == false) {
       /*add 0.00216 while the wheels are turning to the encoder wheel distance per pulse
@@ -97,20 +106,28 @@ public class Elevator extends SubsystemBase {
     }
 
     /*get the wheel distance per pulse
-     * 1/42 is the ticks per revolution of the encoder
+     * m_encoder.getPosition is the count per revolution of the encoder
      * 8.2 is the encoder rotation per mechanism rotation
      * pi * 0.05445 is the wheel circumference
      * the equation below is the wheel distance per pulse of the encoder
      */
     double m_encoderPosition =
-        m_encoder.getPosition() / 8.2 * (Math.PI * m_pulleyDiameter) + m_beltRampUp;
+        m_encoder.getPosition() / 12.2 * (Math.PI * m_pulleyDiameter) + m_beltRampUp;
 
     return m_encoderPosition;
-  } // 5,445cm + 2,16 mm these are the pulley diameter and belt thickness respectively
-
+  } 
   public boolean onTarget() {
     return Math.abs(this.m_elevatorTarget - encoderConversions())
         < Constants.ElevatorConstants.kDeadzone;
+  }
+
+  //checks if the target is lower than the motors, if it is, lowers the motors
+  private void targetChecker() {
+    if (encoderConversions() > m_elevatorTarget) {
+      setElevatorSpeed(-0.15);
+    }else {
+      setElevatorSpeed(0.15);
+    }
   }
 
   public Command extendTheElevator(e_elevatorLevel m_elevatorLevel) {
@@ -119,7 +136,8 @@ public class Elevator extends SubsystemBase {
             () -> {
               this.setElevator(m_elevatorLevel);
             }),
-        this.run(() -> this.setElevatorSpeed(0.15))
+        this.run(() ->
+            this.targetChecker())
             .until(this::onTarget)
             .andThen(() -> this.setElevatorSpeed(0.0)));
   }
