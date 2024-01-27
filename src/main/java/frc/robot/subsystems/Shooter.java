@@ -15,11 +15,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-enum e_shoot {
+public enum e_shoot {
 HIGH, 
 LOW
 }
-
 public class Shooter extends SubsystemBase {
 
     // Create new motors
@@ -77,8 +76,8 @@ public class Shooter extends SubsystemBase {
     switch(shoot) {
 
     case LOW:
-    m_leftMaster.set(0.3);
-    m_rightMaster.set(0.3);
+    m_leftMaster.set(0.05);
+    m_rightMaster.set(0.05);
     break;
 
     case HIGH:

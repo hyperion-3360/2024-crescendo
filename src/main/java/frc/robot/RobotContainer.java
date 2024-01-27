@@ -57,7 +57,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.a().onTrue(m_shooter.shooting());
+    m_driverController.a()
+    .onTrue(m_shooter.shooting(e_shoot.LOW));
  
     /* wpilib controller example */
     // m_driverController.b().whileTrue(m_driveTrain.exampleMethodCommand());
