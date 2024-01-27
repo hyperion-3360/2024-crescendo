@@ -32,6 +32,8 @@ INTAKE
 Encoder m_encoder = new Encoder(9, 10, false, EncodingType.k2X);
 
     private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
+
+    private double m_encoderPosition = m_encoder.getDistancePerPulse();
     //creating an elevator
     public Elevator() {
         //configures the CANSparkMax controllers
@@ -88,23 +90,29 @@ public Command stop() {
 //   }
 
 private double encoderConversions() {
-  
-}
-
-public double setelevatorAngleCorrection() {
-  //pulley diameter
-  double m_elevatorAngle = 0.05445;
-  // TODO fine tune those values
-  // while the encoder isn't stopped increase the diameter because of the belt
+  double m_pulleyDiameter = 0.05445;
+  double m_beltRampUp = 0.0;
   while (m_encoder.getStopped() == false) {
-    m_elevatorAngle = m_elevatorAngle + 0.00216;
+  /*add 0.00216 while the wheels are turning to the encoder wheel distance per pulse 
+   * this is because the belt is 0.00216 in thickness so we need to add it to the wheel circumference
+   */
+    m_beltRampUp = m_pulleyDiameter + 0.00216;
+    return m_beltRampUp;
   }
-  //TODO add aprilTag math when aprilTag done
-  return m_elevatorAngle;
-  }                                                                                  //5,445cm + 2,16 mm these are the pulley diameter and belt thickness respectively
+
+  /*get the wheel distance per pulse
+   * 1/42 is the ticks per revolution of the encoder
+   * 8.2 is the encoder rotation per mechanism rotation
+   * pi * 0.05445 is the wheel circumference
+   * the equation below is the wheel distance per pulse of the encoder
+  */
+  m_encoderPosition = (1/ 42)/(8.2) * Math.PI * m_pulleyDiameter + m_beltRampUp;
+
+  return m_encoderPosition;
+}                                                                     //5,445cm + 2,16 mm these are the pulley diameter and belt thickness respectively
 
   public boolean onTarget() {
-    return Math.abs(this.m_elevatorTarget - setelevatorAngleCorrection())
+    return Math.abs(this.m_elevatorTarget - encoderConversions())
      < Constants.ElevatorConstants.kDeadzone;
   }
 
