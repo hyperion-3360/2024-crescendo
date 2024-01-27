@@ -11,10 +11,11 @@ import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-enum shoot {
+enum e_shoot {
 HIGH, 
 LOW
 }
@@ -22,14 +23,12 @@ LOW
 public class Shooter extends SubsystemBase {
 
     // Create new motors
-
-    private static final double stopMotorShooter = 0;
     private CANSparkMax m_rightMaster = new CANSparkMax(Constants.SubsystemConstants.kShooterRightMasterId, MotorType.kBrushless);
     private CANSparkMax m_rightFollower = new CANSparkMax(Constants.SubsystemConstants.kShooterRightFollowerId, MotorType.kBrushless);
     private CANSparkMax m_leftMaster = new CANSparkMax(Constants.SubsystemConstants.kShooterLeftMasterId, MotorType.kBrushless);
     private CANSparkMax m_leftFollower = new CANSparkMax(Constants.SubsystemConstants.kShooterLeftFollowerId, MotorType.kBrushless);
     
-    public void Shooter() {
+    public Shooter() {
 
         // Config motors
         m_leftMaster.setInverted(true);
@@ -55,57 +54,48 @@ public class Shooter extends SubsystemBase {
             
     }
 
-    public void setSpeed(double rightMasterSpeed, double leftMasterSpeed) {
+    public Command setSpeed(double rightMasterSpeed, double leftMasterSpeed) {
+        return this.runOnce(() -> {
         m_rightMaster.set(rightMasterSpeed);
         m_leftMaster.set(leftMasterSpeed);
-
-    }
-
-    public void highGoal(double setDistance) {
-
-
+        });
     }
 
     public Command Stop() {
-        
-        if() {
-
-         m_leftMaster.set(stopMotorShooter);
-         m_rightMaster.set(stopMotorShooter);
-
-
-    } else {
-
-        return null;
+    return this.runOnce(() -> {
+        m_leftMaster.stopMotor();
+        m_rightMaster.stopMotor();
+     });
+    }
+    
+    
 
 
     
-    }
-    }
-
-
-    
-    public void level(shoot) {
+    private void setShootingLevel(e_shoot shoot) {
         
-
     switch(shoot) {
 
     case LOW:
-
     m_leftMaster.set(0.3);
     m_rightMaster.set(0.3);
-
     break;
 
     case HIGH:
-
     m_leftMaster.set(0.8);
     m_rightMaster.set(0.8);
-
-
+    break;
+     }
     }
 
-
+    public Command shooting(e_shoot shoot) {
+        return new SequentialCommandGroup(
+        this.runOnce(
+            () -> {
+                setShootingLevel(shoot);
+            }).andThen(setSpeed(0, 0))
+            //run(() -> setShootingLevel(shoot)).unless(null) //TODO add elevator not at position condition
+        );
     }
 
 }
