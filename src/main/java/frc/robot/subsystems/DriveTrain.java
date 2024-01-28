@@ -100,9 +100,11 @@ public class DriveTrain extends SubsystemBase {
                 : new ChassisSpeeds(xSpeed, ySpeed, rotSpeed));
 
     SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, kMaxModuleSpeed);
-    for (int i = 0; i < m_modules.length; ++i) {
-      m_modules[i].setDesiredState(moduleStates[i]);
-    }
+    // for (int i = 0; i < m_modules.length; ++i) {
+    //   m_modules[i].setDesiredState(moduleStates[i]);
+    // }
+    m_modules[0].setDesiredState(moduleStates[0]);
+    System.out.println(moduleStates[0].angle.getRotations());
   }
 
   /**

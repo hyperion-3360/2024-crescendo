@@ -29,17 +29,7 @@ public class RobotContainer {
   public RobotContainer() {
 
     m_drive.setDefaultCommand(
-        m_drive.driveCommand(
-            () -> {
-              final var driverY = m_driverController.getLeftY();
-              return driverY;
-            },
-            () -> {
-              final var driverX = m_driverController.getLeftX();
-              return driverX;
-            },
-            () -> -m_driverController.getRightX(),
-            false));
+        m_drive.driveCommand(() -> 0, () -> 0, () -> -m_driverController.getRightX(), false));
     // Configure the trigger bindings
     configureBindings();
   }

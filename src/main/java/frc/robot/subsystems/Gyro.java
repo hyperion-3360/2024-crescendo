@@ -39,7 +39,7 @@ public class Gyro extends SubsystemBase {
     // This method will be called once per scheduler run
 
     // Send the gyro data to shuffleboard
-    m_gyroDataEntry.setDoubleArray(getYawPitchRoll());
+    // m_gyroDataEntry.setDoubleArray(getYawPitchRoll());
   }
 
   @Override
