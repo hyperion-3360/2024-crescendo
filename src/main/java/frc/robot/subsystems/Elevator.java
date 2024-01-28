@@ -52,9 +52,13 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     encoderConversions();
 
-    Double adjustedSpeed = m_curve.adjustPeriodic();
-    if(adjustedSpeed != null){
-      m_elevatorLeft.set(adjustedSpeed);
+    if(this.onTarget()){
+      this.stop();
+    }else{
+      Double adjustedSpeed = m_curve.adjustPeriodic();
+      if(adjustedSpeed != null){
+        m_elevatorLeft.set(adjustedSpeed);
+      }
     }
   }
 
@@ -74,18 +78,15 @@ public class Elevator extends SubsystemBase {
 
   public void setElevatorSpeed(double m_elevatorSpeed) {
     m_elevatorSpeed = m_curve.getMotorSpeed(m_elevatorSpeed);
-
     m_elevatorLeft.set(m_elevatorSpeed);
 // m_elevatorRight.set(m_elevatorSpeed);
   }
 
-  public Command stop() {
+  public void stop() {
     m_curve.stop();
-    return this.runOnce(
-        () -> {
+    
           m_elevatorLeft.stopMotor();
           // m_elevatorRight.stopMotor();
-        });
   }
 
   // public void isAtBottom() {
@@ -117,12 +118,13 @@ public class Elevator extends SubsystemBase {
     return m_encoderPosition;
   } 
   public boolean onTarget() {
+    System.out.println("ENCODER VALUE: " + encoderConversions());
     return Math.abs(this.m_elevatorTarget - encoderConversions())
         < Constants.ElevatorConstants.kDeadzone;
   }
 
   //checks if the target is lower than the motors, if it is, lowers the motors
-  private void targetChecker() {
+  private void goToTarget() {
     if (encoderConversions() > m_elevatorTarget) {
       setElevatorSpeed(-0.15);
     }else {
@@ -135,10 +137,9 @@ public class Elevator extends SubsystemBase {
         this.runOnce(
             () -> {
               this.setElevator(m_elevatorLevel);
+              
             }),
-        this.run(() ->
-            this.targetChecker())
-            .until(this::onTarget)
-            .andThen(() -> this.setElevatorSpeed(0.0)));
+            runOnce(() -> this.goToTarget()).until(this::onTarget)
+      );
   }
 }

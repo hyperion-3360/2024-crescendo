@@ -76,16 +76,6 @@ public class RobotContainer {
     // would be the gas button
     // m_coDriverController.
   }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    /* how to get autonomous commands */
-    // return Autos.exampleAuto(m_exampleSubsystem);
-    return null;
   }
-}
+
+  
