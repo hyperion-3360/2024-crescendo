@@ -17,7 +17,10 @@ public class CurveFunction{
   private double m_eps = 0.001;
 
   public Double adjustPeriodic() {
-    if (isRunning() && m_speed < (m_target-m_eps)){ //TODO epsilon ?
+    //checks if the exponential function has reached the target or including if the speed is negative
+    if (isRunning() && (m_speed < (m_target - m_eps) ||
+      (m_speed < 0 && m_speed > (m_target + m_eps))))
+     {
        System.out.println("speed curve " + m_speed);
         exponentialCurveMath();
         return m_speed;

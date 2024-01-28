@@ -30,8 +30,6 @@ public class Elevator extends SubsystemBase {
 
   private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
 
-  private double exponentialFactor;
-
   private CurveFunction m_curve = new CurveFunction();
 
   // creating an elevator
