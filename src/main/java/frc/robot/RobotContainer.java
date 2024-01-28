@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.e_shoot;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -20,6 +24,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   // private final DriveTrain m_drive = new DriveTrain();
+
+ 
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -27,8 +34,8 @@ public class RobotContainer {
   private final CommandXboxController m_coDriverController =
       new CommandXboxController(OperatorConstants.kCoDriverControllerPort);
 
-  private final Elevator m_elevator = new Elevator();
-
+  //private final Elevator m_elevator = new Elevator();
+  private final Shooter m_shooter = new Shooter();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -61,11 +68,25 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    m_driverController.a()
-    .onTrue(
-    Sequences.switchToHigh(m_elevator)
-    );
+    
+    // m_driverController.a()
+    // .onTrue(
+    // Sequences.switchToHigh(m_elevator)
+    // );
 
+    // m_driverController.b()
+    // .onTrue(
+    // Sequences.switchToIntakeMode(m_elevator)
+    // );
+
+    // m_driverController.a()
+    // .onTrue(
+    // Sequences.switchToLow(m_elevator)
+    // );
+
+    m_driverController.b()
+    .onTrue(m_shooter.shooting(e_shoot.LOW));
+ 
     /* wpilib controller example */
     // m_driverController.b().onTrue(m_driveTrain.exampleMethodCommand()); // this would be the
     // shooter button

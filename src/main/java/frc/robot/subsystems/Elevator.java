@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,11 +20,11 @@ public class Elevator extends SubsystemBase {
     INTAKE
   };
 
-  // DigitalInput bottomlimitSwitch = new DigitalInput(1);
+   DigitalInput bottomlimitSwitch = new DigitalInput(1);
 
-  // instancing the motor controllers
-  // private CANSparkMax m_elevatorRight = new
-  // CANSparkMax(Constants.SubsystemConstants.kelevatorRightId, MotorType.kBrushless);
+  // instancing the motor controllers m_elevatorLeft is the master motor
+   private CANSparkMax m_elevatorRight = new
+   CANSparkMax(Constants.SubsystemConstants.kelevatorRightId, MotorType.kBrushless);
   private CANSparkMax m_elevatorLeft =
       new CANSparkMax(Constants.SubsystemConstants.kelevatorLeftId, MotorType.kBrushless);
 
@@ -40,9 +42,9 @@ public class Elevator extends SubsystemBase {
   public Elevator() {
     // configures the CANSparkMax controllers
     m_elevatorLeft.restoreFactoryDefaults();
-    // m_elevatorRight.restoreFactoryDefaults();
+     m_elevatorRight.restoreFactoryDefaults();
     m_elevatorLeft.setInverted(true);
-    // m_elevatorLeft.follow(m_elevatorRight);
+    m_elevatorRight.follow(m_elevatorLeft);
 
     m_encoder.setPosition(0.0);
 
@@ -88,13 +90,13 @@ public class Elevator extends SubsystemBase {
     m_curve.stop();
     
           m_elevatorLeft.stopMotor();
-          // m_elevatorRight.stopMotor();
+           m_elevatorRight.stopMotor();
   }
 
-  // public void isAtBottom() {
-  //   if(bottomlimitSwitch.get()) {
-  //     }
-  //   }
+  public void isAtBottom() {
+    if(bottomlimitSwitch.get()) {
+      }
+    }
 
   private double encoderConversions() {
     // while (m_encoder.getVelocity() > 0.0 == false) {
