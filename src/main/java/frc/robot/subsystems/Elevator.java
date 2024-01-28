@@ -32,6 +32,10 @@ public class Elevator extends SubsystemBase {
 
   private CurveFunction m_curve = new CurveFunction();
 
+  // private double m_pulleyDiameter = 0.05445;
+
+   // private double m_beltRampUp = 0.0;
+
   // creating an elevator
   public Elevator() {
     // configures the CANSparkMax controllers
@@ -93,16 +97,14 @@ public class Elevator extends SubsystemBase {
   //   }
 
   private double encoderConversions() {
-    double m_pulleyDiameter = 0.01445; //0.05445
-    double m_beltRampUp = 0.0;
-    while (m_encoder.getVelocity() > 0.0 == false) {
-      /*add 0.00216 while the wheels are turning to the encoder wheel distance per pulse
-         * this is because the belt is 0.00216 in thickness so we need to add it to the wheel
-      circumference
-         */
-      m_beltRampUp = m_pulleyDiameter + 0.00216;
-      return m_beltRampUp;
-    }
+    // while (m_encoder.getVelocity() > 0.0 == false) {
+    //   /*add 0.00216 while the wheels are turning to the encoder wheel distance per pulse
+    //      * this is because the belt is 0.00216 in thickness so we need to add it to the wheel
+    //   circumference
+    //      */
+    //   // m_beltRampUp = m_pulleyDiameter + 0.00216;
+    //   // return m_beltRampUp;
+    // }
 
     /*get the wheel distance per pulse
      * m_encoder.getPosition is the count per revolution of the encoder
@@ -111,22 +113,38 @@ public class Elevator extends SubsystemBase {
      * the equation below is the wheel distance per pulse of the encoder
      */
     double m_encoderPosition =
-        m_encoder.getPosition() / 12.2 * (Math.PI * m_pulleyDiameter) + m_beltRampUp;
+        m_encoder.getPosition() / 360; //* 1/m_encoder.getCountsPerRevolution() * 
+        // m_pulleyDiameter + m_beltRampUp * 3.14159265358979323846;
 
     return m_encoderPosition;
   } 
+
+  private boolean negativeTargetChecker() {
+     if (encoderConversions() > m_elevatorTarget) 
+     {
+      return true;
+      }
+    return false;
+  }
+
   public boolean onTarget() {
     System.out.println("ENCODER VALUE: " + encoderConversions());
+    
+    if (negativeTargetChecker() == false ) {
+
     return Math.abs(this.m_elevatorTarget - encoderConversions())
+        < Constants.ElevatorConstants.kDeadzone;
+    }
+      return Math.abs(this.m_elevatorTarget + encoderConversions())
         < Constants.ElevatorConstants.kDeadzone;
   }
 
   //checks if the target is lower than the motors, if it is, lowers the motors
   private void goToTarget() {
     if (encoderConversions() > m_elevatorTarget) {
-      setElevatorSpeed(-0.15);
+      setElevatorSpeed(-0.10);
     }else {
-      setElevatorSpeed(0.15);
+      setElevatorSpeed(0.10);
     }
   }
 
@@ -135,7 +153,6 @@ public class Elevator extends SubsystemBase {
         this.runOnce(
             () -> {
               this.setElevator(m_elevatorLevel);
-              
             }),
             runOnce(() -> this.goToTarget()).until(this::onTarget)
       );

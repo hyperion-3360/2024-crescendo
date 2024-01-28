@@ -7,12 +7,25 @@ import frc.robot.subsystems.Elevator.e_elevatorLevel;
 
 public class Sequences {
   
-  public static Command switchToIntakeMode(
-    Elevator m_elevator)
+  public static Command switchToIntakeMode(Elevator m_elevator)
   {
     return Commands.sequence(
       m_elevator.extendTheElevator(e_elevatorLevel.INTAKE)
     );
   }
 
-}
+    public static Command switchToHigh(Elevator m_elevator)
+  {
+    return Commands.sequence(
+      m_elevator.extendTheElevator(e_elevatorLevel.HIGH)
+    );
+  }
+
+     public static Command switchToLow(Elevator m_elevator)
+  {
+    return Commands.sequence(
+      m_elevator.extendTheElevator(e_elevatorLevel.LOW)
+    );
+  }
+ }
+
