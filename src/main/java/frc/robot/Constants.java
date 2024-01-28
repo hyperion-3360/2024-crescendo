@@ -29,10 +29,14 @@ public final class Constants {
   public static class WCPSwerveModule {
 
     public static final WCPSwerveModuleConfig[] kConfigs = {
-      new WCPSwerveModuleConfig(2, 1, 3, 9650),
-      new WCPSwerveModuleConfig(4, 3, 0, 20756.0),
-      new WCPSwerveModuleConfig(6, 5, 2, 1072.0),
-      new WCPSwerveModuleConfig(8, 7, 1, 13555.0)
+      new WCPSwerveModuleConfig(2, 1, 3, 0.9620),
+      new WCPSwerveModuleConfig(4, 3, 0, 0.28142),
+      new WCPSwerveModuleConfig(6, 5, 2, 0.3517),
+      new WCPSwerveModuleConfig(8, 7, 1, 0.1828)
+      //      new WCPSwerveModuleConfig(2, 1, 3, 9650),
+      //      new WCPSwerveModuleConfig(4, 3, 0, 20756.0),
+      //      new WCPSwerveModuleConfig(6, 5, 2, 1072.0),
+      //      new WCPSwerveModuleConfig(8, 7, 1, 13555.0)
     };
     public static final Translation2d[] kLocations = {
       // these values will have to be verified/edited

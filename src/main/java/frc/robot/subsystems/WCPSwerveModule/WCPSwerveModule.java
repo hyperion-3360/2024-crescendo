@@ -40,17 +40,17 @@ public class WCPSwerveModule implements SwerveModule {
 
   private double m_encoderZero = 0.0;
   private boolean m_homed = false;
-  // private final double m_configZero;
+  private final double m_configZero;
 
   private final TalonFX m_turnMotor;
   // private final TalonFX m_driveMotor;
   private final DutyCycleEncoder m_magEncoder;
 
   private final GenericEntry m_absAngleEntry;
-  private final GenericEntry m_encOkEntry;
+  //  private final GenericEntry m_encOkEntry;
   private final GenericEntry m_motorEnc;
-  private final GenericEntry m_desiredRotation;
-  private final GenericEntry m_state;
+  //  private final GenericEntry m_desiredRotation;
+  // private final GenericEntry m_state;
 
   // private final VelocityVoltage m_velocityRequest = new VelocityVoltage(0);
   private final PositionVoltage m_angleRequest = new PositionVoltage(0);
@@ -88,14 +88,15 @@ public class WCPSwerveModule implements SwerveModule {
     m_turnMotor = new TalonFX(config.m_turnMotorId);
     var angleFxConfig = new TalonFXConfiguration();
     angleFxConfig.Feedback.SensorToMechanismRatio = angleGearRatio;
-    // angleFxConfig.ClosedLoopGeneral.ContinuousWrap = true;
+    angleFxConfig.ClosedLoopGeneral.ContinuousWrap = true;
     m_turnMotor.getConfigurator().apply(angleFxConfig);
     m_turnMotor.setInverted(true);
-    m_turnMotor.setNeutralMode(NeutralModeValue.Brake);
+    //    m_turnMotor.setNeutralMode(NeutralModeValue.Brake);
+    m_turnMotor.setNeutralMode(NeutralModeValue.Coast);
 
     var Slot1Configs = new Slot1Configs();
 
-    Slot1Configs.kP = 25.0;
+    Slot1Configs.kP = 20.0;
     Slot1Configs.kI = 0.0;
     Slot1Configs.kD = 0.0;
 
@@ -107,49 +108,52 @@ public class WCPSwerveModule implements SwerveModule {
     // m_turnMotor.config_IntegralZone(0, kTurnIZone); // Unnecessary in Phoenix 6
     // https://pro.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/feature-replacements-guide.html#integral-zone-and-max-integral-accumulator
 
-    // m_configZero = config.m_analogZero;
+    m_configZero = config.m_analogZero;
 
-    final var absAngleEntryName = String.format("Abs Ch %d", config.m_magEncoderChannel);
+    final var absAngleEntryName =
+        String.format("Magnetic encoder Ch %d", config.m_magEncoderChannel);
     m_absAngleEntry =
         Shuffleboard.getTab("WCP Swerve Module").add(absAngleEntryName, 0.0).getEntry();
 
-    final var encOkEntryName = String.format("Enc %d OK", config.m_magEncoderChannel);
-    m_encOkEntry = Shuffleboard.getTab("Vitals").add(encOkEntryName, false).getEntry();
+    //    final var encOkEntryName = String.format("Enc %d OK", config.m_magEncoderChannel);
+    //   m_encOkEntry = Shuffleboard.getTab("Vitals").add(encOkEntryName, false).getEntry();
 
-    final var motorEncoder = String.format("state degrees %d", config.m_turnMotorId);
-    m_motorEnc = Shuffleboard.getTab("Vitals").add(motorEncoder, false).getEntry();
+    final var motorEncoder = String.format("Relative encoder ch %d", config.m_turnMotorId);
+    m_motorEnc = Shuffleboard.getTab("WCP Swerve Module").add(motorEncoder, 0.0).getEntry();
 
-    final var desiredRotation = String.format("Desired rotation %d", config.m_turnMotorId);
-    m_desiredRotation =
-        Shuffleboard.getTab("WCP Swerve Module").add(desiredRotation, 0.0).getEntry();
+    //    final var desiredRotation = String.format("Desired rotation %d", config.m_turnMotorId);
+    //   m_desiredRotation =
+    //      Shuffleboard.getTab("WCP Swerve Module").add(desiredRotation, 0.0).getEntry();
 
-    final var stateTab = String.format("state rotation %d", config.m_turnMotorId);
-    m_state = Shuffleboard.getTab("WCP Swerve Module").add(stateTab, 0).getEntry();
+    //    final var stateTab = String.format("state rotation %d", config.m_turnMotorId);
+    //   m_state = Shuffleboard.getTab("WCP Swerve Module").add(stateTab, 0).getEntry();
+    resetToAbsolute();
+  }
+
+  public void resetToAbsolute() {
+    double absolutePosition = m_magEncoder.getAbsolutePosition() - m_configZero;
+    m_turnMotor.setPosition(absolutePosition);
   }
 
   @Override
   public void periodic() {
-    // m_absAngleEntry.setDouble(m_magEncoder.getAbsolutePosition());
+    m_absAngleEntry.setDouble(m_magEncoder.getAbsolutePosition());
     // m_encOkEntry.setBoolean(m_magEncoder.isConnected());
-    // m_motorEnc.setDouble(this.m_angleRequest.Position);
-    // m_absAngleEntry.setDouble(m_magEncoder.getAbsolutePosition());
-    // if (!m_homed) {
-    // Home on first periodic loop so sensors are fully initialized
+    m_motorEnc.setDouble(m_turnMotor.getPosition().getValueAsDouble());
 
-    // TODO: problem suspected! .getRotorPosition() is not in same units as magEncoder
-    // m_encoderZero =
-    // m_configZero
-    // + (m_turnMotor.getRotorPosition().getValueAsDouble() * 2048) // 2048 is rotor to steps
-    // - m_magEncoder.getDistance();
-    // m_homed = true;
-    // }
+    if (!m_homed) {
+      // Home on first periodic loop so sensors are fully initialized
+
+      m_encoderZero =
+          m_configZero
+              + (m_turnMotor.getRotorPosition().getValueAsDouble() * 2048) // 2048 is rotor to steps
+              - m_magEncoder.getDistance();
+      m_homed = true;
+    }
   }
 
   private Rotation2d getRotation() {
-
-    // double encoderDegrees = getEncoderDegrees();
-    return Rotation2d.fromRotations(
-        m_turnMotor.getRotorPosition().getValueAsDouble()); // * angleGearRatio);
+    return Rotation2d.fromRotations(m_turnMotor.getPosition().getValueAsDouble());
   }
 
   @Override
@@ -163,34 +167,13 @@ public class WCPSwerveModule implements SwerveModule {
   @Override
   public SwerveModulePosition getPosition() {
 
-    // return new SwerveModulePosition(
+    return new SwerveModulePosition(0, this.getRotation());
     // m_driveMotor.getRotorPosition().getValueAsDouble() * kTickToMeter, this.getRotation());
-    return new SwerveModulePosition();
-  }
-
-  private double getEncoderDegrees() {
-
-    var rotation = m_turnMotor.getRotorPosition().getValueAsDouble() * angleGearRatio;
-
-    return (rotation - m_encoderZero) / 360;
   }
 
   @Override
   public void setDesiredState(SwerveModuleState desiredState) {
     var state = SwerveModuleState.optimize(desiredState, this.getRotation());
-    // var rotationDelta = state.angle.minus(this.getRotation());
-    // var setpointDegrees = getEncoderDegrees() + rotationDelta.getDegrees();
-
-    // TODO: need to convert the state.speedMetersPerSecond * kMeterPerSToTick to RPS (revolution
-    // per seconds)
-    // m_velocityRequest.withVelocity(
-    // state.speedMetersPerSecond * kMeterPerSToTick / 204.8); // 204.8 is tick to rps
-    // m_driveMotor.setControl(m_velocityRequest);
-
-    // m_angleRequest.withPosition(m_desiredRotation.getDouble(1));
-    // m_turnMotor.setControl(m_angleRequest);
-    // m_angleRequest.withPosition(state.angle.getRotations() * angleGearRatio);
-    m_turnMotor.setControl(m_angleRequest.withPosition(state.angle.getRotations()));
-    // m_state.setDouble(state.angle.getRotations());
+    //    m_turnMotor.setControl(m_angleRequest.withPosition(state.angle.getRotations()));
   }
 }

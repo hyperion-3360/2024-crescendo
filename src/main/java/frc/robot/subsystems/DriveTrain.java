@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -103,8 +104,7 @@ public class DriveTrain extends SubsystemBase {
     // for (int i = 0; i < m_modules.length; ++i) {
     //   m_modules[i].setDesiredState(moduleStates[i]);
     // }
-    m_modules[0].setDesiredState(moduleStates[0]);
-    System.out.println(moduleStates[0].angle.getRotations());
+    m_modules[3].setDesiredState(moduleStates[3]);
   }
 
   /**
@@ -169,10 +169,18 @@ public class DriveTrain extends SubsystemBase {
         .andThen(
             this.run(
                 () ->
+                    //                     this.drive(
+                    //                         DriveTrain.scaleJoystickInput(xSpeed, kMaxSpeedX,
+                    // m_xLimiter),
+                    //                       DriveTrain.scaleJoystickInput(ySpeed, kMaxSpeedY,
+                    // m_yLimiter),
+                    //                     DriveTrain.scaleJoystickInput(rotSpeed, kMaxSpeedRot,
+                    // m_zLimiter),
+                    //                   fieldRelative)));
                     this.drive(
-                        DriveTrain.scaleJoystickInput(xSpeed, kMaxSpeedX, m_xLimiter),
-                        DriveTrain.scaleJoystickInput(ySpeed, kMaxSpeedY, m_yLimiter),
-                        DriveTrain.scaleJoystickInput(rotSpeed, kMaxSpeedRot, m_zLimiter),
+                        MathUtil.applyDeadband(xSpeed.getAsDouble(), kJoystickDeadband),
+                        MathUtil.applyDeadband(ySpeed.getAsDouble(), kJoystickDeadband),
+                        MathUtil.applyDeadband(rotSpeed.getAsDouble(), kJoystickDeadband),
                         fieldRelative)));
   }
 }
