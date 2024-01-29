@@ -20,7 +20,8 @@ public class Elevator extends SubsystemBase {
     INTAKE
   };
 
-   DigitalInput bottomlimitSwitch = new DigitalInput(1);
+  // instanciate a limit switch
+  // DigitalInput bottomlimitSwitch = new DigitalInput(1);
 
   // instancing the motor controllers m_elevatorLeft is the master motor
    private CANSparkMax m_elevatorRight = new
@@ -34,6 +35,7 @@ public class Elevator extends SubsystemBase {
 
   private CurveFunction m_curve = new CurveFunction();
 
+  // just in case
   // private double m_pulleyDiameter = 0.05445;
 
    // private double m_beltRampUp = 0.0;
@@ -43,9 +45,8 @@ public class Elevator extends SubsystemBase {
     // configures the CANSparkMax controllers
     m_elevatorLeft.restoreFactoryDefaults();
      m_elevatorRight.restoreFactoryDefaults();
-    m_elevatorLeft.setInverted(true);
-    m_elevatorRight.follow(m_elevatorLeft);
-
+          m_elevatorRight.setInverted(true);
+          m_elevatorLeft.setInverted(false);
     m_encoder.setPosition(0.0);
 
   }
@@ -56,16 +57,19 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     encoderConversions();
 
+    //checks if the motor is running or at max speed for the exponential function
     if(this.onTarget()){
       this.stop();
     }else{
       Double adjustedSpeed = m_curve.adjustPeriodic();
       if(adjustedSpeed != null){
         m_elevatorLeft.set(adjustedSpeed);
+        m_elevatorRight.set(adjustedSpeed);
       }
     }
   }
 
+  //switch case statement for configuring elevator height
   private void setElevator(e_elevatorLevel m_elevatorLevel) {
     switch (m_elevatorLevel) {
       case HIGH:
@@ -80,23 +84,26 @@ public class Elevator extends SubsystemBase {
     }
   }
 
+  // setting the elevator speed according to the exponential function
   public void setElevatorSpeed(double m_elevatorSpeed) {
     m_elevatorSpeed = m_curve.getMotorSpeed(m_elevatorSpeed);
     m_elevatorLeft.set(m_elevatorSpeed);
-// m_elevatorRight.set(m_elevatorSpeed);
+    m_elevatorRight.set(m_elevatorSpeed);
   }
 
+  // stops the motors
   public void stop() {
     m_curve.stop();
     
-          m_elevatorLeft.stopMotor();
-           m_elevatorRight.stopMotor();
+         m_elevatorLeft.stopMotor();
+          m_elevatorRight.stopMotor();
   }
 
-  public void isAtBottom() {
-    if(bottomlimitSwitch.get()) {
-      }
-    }
+  // check if the limit switch is triggered
+  // public void isAtBottom() {
+  //   if(bottomlimitSwitch.get()) {
+  //     }
+  //   }
 
   private double encoderConversions() {
     // while (m_encoder.getVelocity() > 0.0 == false) {
@@ -122,7 +129,7 @@ public class Elevator extends SubsystemBase {
   } 
 
   private boolean negativeTargetChecker() {
-     if (encoderConversions() > m_elevatorTarget) 
+     if (encoderConversions() < m_elevatorTarget) 
      {
       return true;
       }
@@ -130,23 +137,22 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean onTarget() {
-    System.out.println("ENCODER VALUE: " + encoderConversions());
     
     if (negativeTargetChecker() == false ) {
 
-    return Math.abs(this.m_elevatorTarget - encoderConversions())
+    return Math.abs(this.m_elevatorTarget + encoderConversions())
         < Constants.ElevatorConstants.kDeadzone;
     }
-      return Math.abs(this.m_elevatorTarget + encoderConversions())
+      return Math.abs(this.m_elevatorTarget - encoderConversions())
         < Constants.ElevatorConstants.kDeadzone;
   }
 
   //checks if the target is lower than the motors, if it is, lowers the motors
   private void goToTarget() {
-    if (encoderConversions() > m_elevatorTarget) {
-      setElevatorSpeed(-0.10);
+    if (encoderConversions() < m_elevatorTarget) {
+      setElevatorSpeed(0.20);
     }else {
-      setElevatorSpeed(0.10);
+      setElevatorSpeed(-0.20);
     }
   }
 
@@ -156,7 +162,7 @@ public class Elevator extends SubsystemBase {
             () -> {
               this.setElevator(m_elevatorLevel);
             }),
-            runOnce(() -> this.goToTarget()).until(this::onTarget)
+            run(() -> this.goToTarget()).until(this::onTarget)
       );
   }
 }
