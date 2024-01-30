@@ -13,7 +13,7 @@ public final class Constants {
     public static final int kclimberRightId = 11; // climber
     public static final int kclimberLeftId = 12;
     public static final int kelevatorRightId = 9; //elevator is 9
-    public static final int kelevatorLeftId = 10; //10
+    public static final int kelevatorLeftId = 2; //10
     public static final int kShooterLeftMasterId = 0;
     public static final int kShooterRightMasterId = 0;
     public static final int kShooterLeftFollowerId = 0;

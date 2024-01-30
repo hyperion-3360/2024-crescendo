@@ -1,10 +1,15 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,14 +31,21 @@ public class Elevator extends SubsystemBase {
   // instancing the motor controllers m_elevatorLeft is the master motor
    private CANSparkMax m_elevatorRight = new
    CANSparkMax(Constants.SubsystemConstants.kelevatorRightId, MotorType.kBrushless);
-  private CANSparkMax m_elevatorLeft =
+  private CANSparkMax m_elevatorLeftMaster =
       new CANSparkMax(Constants.SubsystemConstants.kelevatorLeftId, MotorType.kBrushless);
 
-  private RelativeEncoder m_encoder = m_elevatorLeft.getEncoder();
+  private RelativeEncoder m_encoder = m_elevatorLeftMaster.getEncoder();
+
+  private final double kp = 5.0;
+  private final double m_velocity = 1.2;
+  private final double m_acceleration = 2.0;
 
   private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
 
   private CurveFunction m_curve = new CurveFunction();
+
+  // private final ProfiledPIDController m_pid = 
+  // new ProfiledPIDController(kp, 0.0 ,0.0, new Constraints(m_velocity, m_acceleration));
 
   // just in case
   // private double m_pulleyDiameter = 0.05445;
@@ -43,10 +55,18 @@ public class Elevator extends SubsystemBase {
   // creating an elevator
   public Elevator() {
     // configures the CANSparkMax controllers
-    m_elevatorLeft.restoreFactoryDefaults();
+    m_elevatorLeftMaster.restoreFactoryDefaults();
      m_elevatorRight.restoreFactoryDefaults();
-          m_elevatorRight.setInverted(true);
-          m_elevatorLeft.setInverted(false);
+
+    m_elevatorRight.follow(m_elevatorLeftMaster, true);
+
+    m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
+      m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
+
+
+    m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
+      m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
+
     m_encoder.setPosition(0.0);
 
   }
@@ -57,14 +77,19 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     encoderConversions();
 
+     if (DriverStation.isDisabled()) {
+      m_elevatorTarget = m_encoder.getPosition();
+      // m_pid.reset(m_elevatorTarget);
+    }
+    m_elevatorLeftMaster.set(0.0);
+
     //checks if the motor is running or at max speed for the exponential function
     if(this.onTarget()){
       this.stop();
     }else{
       Double adjustedSpeed = m_curve.adjustPeriodic();
       if(adjustedSpeed != null){
-        m_elevatorLeft.set(adjustedSpeed);
-        m_elevatorRight.set(adjustedSpeed);
+        m_elevatorLeftMaster.set(adjustedSpeed);
       }
     }
   }
@@ -87,16 +112,14 @@ public class Elevator extends SubsystemBase {
   // setting the elevator speed according to the exponential function
   public void setElevatorSpeed(double m_elevatorSpeed) {
     m_elevatorSpeed = m_curve.getMotorSpeed(m_elevatorSpeed);
-    m_elevatorLeft.set(m_elevatorSpeed);
-    m_elevatorRight.set(m_elevatorSpeed);
+    m_elevatorLeftMaster.set(m_elevatorSpeed);
   }
 
   // stops the motors
   public void stop() {
     m_curve.stop();
     
-         m_elevatorLeft.stopMotor();
-          m_elevatorRight.stopMotor();
+         m_elevatorLeftMaster.stopMotor();
   }
 
   // check if the limit switch is triggered
@@ -106,21 +129,7 @@ public class Elevator extends SubsystemBase {
   //   }
 
   private double encoderConversions() {
-    // while (m_encoder.getVelocity() > 0.0 == false) {
-    //   /*add 0.00216 while the wheels are turning to the encoder wheel distance per pulse
-    //      * this is because the belt is 0.00216 in thickness so we need to add it to the wheel
-    //   circumference
-    //      */
-    //   // m_beltRampUp = m_pulleyDiameter + 0.00216;
-    //   // return m_beltRampUp;
-    // }
-
-    /*get the wheel distance per pulse
-     * m_encoder.getPosition is the count per revolution of the encoder
-     * 8.2 is the encoder rotation per mechanism rotation
-     * pi * 0.05445 is the wheel circumference
-     * the equation below is the wheel distance per pulse of the encoder
-     */
+   
     double m_encoderPosition =
         m_encoder.getPosition() / 360; //* 1/m_encoder.getCountsPerRevolution() * 
         // m_pulleyDiameter + m_beltRampUp * 3.14159265358979323846;
@@ -150,7 +159,7 @@ public class Elevator extends SubsystemBase {
   //checks if the target is lower than the motors, if it is, lowers the motors
   private void goToTarget() {
     if (encoderConversions() < m_elevatorTarget) {
-      setElevatorSpeed(0.20);
+      setElevatorSpeed(0.40);
     }else {
       setElevatorSpeed(-0.20);
     }
@@ -160,8 +169,10 @@ public class Elevator extends SubsystemBase {
     return new SequentialCommandGroup(
         this.runOnce(
             () -> {
+              // this.m_pid.reset(m_encoder.getPosition());
               this.setElevator(m_elevatorLevel);
-            }),
+        }
+      ),
             run(() -> this.goToTarget()).until(this::onTarget)
       );
   }
