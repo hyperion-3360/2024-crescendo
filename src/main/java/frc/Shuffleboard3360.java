@@ -2,9 +2,15 @@ package frc;
 
 public class Shuffleboard3360 {
     
-    private static class Tabs{
-        protected static String drivers = "Operator";
-        protected static String auto = "Auto mode";
+    public static class Tabs {
+        public static final String drivers = "Operator";
+        public static final String auto = "Auto mode";
+    }
+
+    public static class Widgets {
+        public static final String intakeMode = "Intake mode";
+        public static final String shooterHeight = "Shooter height";
+        public static final String hasNote = "Has note";
     }
 
     private static Shuffleboard3360 m_instance;
@@ -21,9 +27,9 @@ public class Shuffleboard3360 {
         ShuffleboardFactory shuffleboard = new ShuffleboardFactory();
     
         shuffleboard.addTab(Tabs.drivers)
-        .addBooleanWidget(Tabs.drivers, "Intake mode", false)
-        .addPercentWidget(Tabs.drivers, "Shooter Height", 0.0f)
-        .addBooleanWidget(Tabs.drivers, "Note", false);
+        .addBooleanWidget(Tabs.drivers, Widgets.intakeMode, false)
+        .addPercentWidget(Tabs.drivers, Widgets.shooterHeight, 0.0f)
+        .addBooleanWidget(Tabs.drivers, Widgets.hasNote, false);
 
         shuffleboard.addTab(Tabs.auto)
         .addSelector(Tabs.auto, "Auto mode", new String[]{
