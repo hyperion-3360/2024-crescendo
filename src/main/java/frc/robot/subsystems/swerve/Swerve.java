@@ -6,6 +6,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -95,23 +96,22 @@ public class Swerve extends SubsystemBase {
   //        return Rotation2d.fromDegrees(gyro.getYaw().getValue());
   //    }
 
-  //    public void resetModulesToAbsolute(){
-  //        for(SwerveModule mod : mSwerveMods){
-  //            mod.resetToAbsolute();
-  //        }
-  //    }
+  public void resetModulesToAbsolute() {
+    for (SwerveModule mod : mSwerveMods) {
+      mod.resetToAbsolute();
+    }
+  }
 
   @Override
   public void periodic() {
     //        swerveOdometry.update(getGyroYaw(), getModulePositions());
-    //
-    //        for(SwerveModule mod : mSwerveMods){
-    //            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder",
-    // mod.getCANcoder().getDegrees());
-    //            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle",
-    // mod.getPosition().angle.getDegrees());
-    //            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity",
-    // mod.getState().speedMetersPerSecond);
-    //        }
+    for (SwerveModule mod : mSwerveMods) {
+      SmartDashboard.putNumber(
+          "Mod " + mod.moduleNumber + " CANcoder", mod.getMagEncoderPos().getDegrees());
+      SmartDashboard.putNumber(
+          "Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
+      SmartDashboard.putNumber(
+          "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+    }
   }
 }

@@ -3,12 +3,12 @@ package frc.robot.subsystems.swerve;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.lib.math.Conversions;
 import frc.lib.util.SwerveModuleConstants;
 import frc.robot.Constants;
@@ -20,7 +20,7 @@ public class SwerveModule {
 
   private TalonFX mAngleMotor;
   private TalonFX mDriveMotor;
-  private CANcoder angleEncoder;
+  private DutyCycleEncoder angleEncoder;
 
   private final SimpleMotorFeedforward driveFeedForward =
       new SimpleMotorFeedforward(
@@ -38,13 +38,14 @@ public class SwerveModule {
     this.angleOffset = moduleConstants.angleOffset;
 
     /* Angle Encoder Config */
-    //        angleEncoder = new CANcoder(moduleConstants.cancoderID);
-    //       angleEncoder.getConfigurator().apply(Robot.ctreConfigs.swerveCANcoderConfig);
+    angleEncoder = new DutyCycleEncoder(moduleConstants.magEncoderID);
+    angleEncoder.setDutyCycleRange(
+        RobotContainer.ctreConfigs.dutyCycleRangeMin, RobotContainer.ctreConfigs.dutyCycleRangeMax);
 
     /* Angle Motor Config */
     mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
     mAngleMotor.getConfigurator().apply(RobotContainer.ctreConfigs.swerveAngleFXConfig);
-    //        resetToAbsolute();
+    resetToAbsolute();
 
     /* Drive Motor Config */
     mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
@@ -71,14 +72,14 @@ public class SwerveModule {
     }
   }
 
-  //    public Rotation2d getCANcoder(){
-  //        return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValue());
-  //    }
-  //
-  //    public void resetToAbsolute(){
-  //        double absolutePosition = getCANcoder().getRotations() - angleOffset.getRotations();
-  //        mAngleMotor.setPosition(absolutePosition);
-  //    }
+  public Rotation2d getMagEncoderPos() {
+    return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition());
+  }
+
+  public void resetToAbsolute() {
+    double absolutePosition = getMagEncoderPos().getRotations() - angleOffset.getRotations();
+    mAngleMotor.setPosition(absolutePosition);
+  }
 
   public SwerveModuleState getState() {
     return new SwerveModuleState(

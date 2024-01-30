@@ -1,17 +1,17 @@
 package frc.robot.subsystems.swerve;
 
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import frc.robot.Constants;
 
 public final class CTREConfigs {
   public TalonFXConfiguration swerveAngleFXConfig = new TalonFXConfiguration();
   public TalonFXConfiguration swerveDriveFXConfig = new TalonFXConfiguration();
-  public CANcoderConfiguration swerveCANcoderConfig = new CANcoderConfiguration();
+  public double dutyCycleRangeMin, dutyCycleRangeMax;
 
   public CTREConfigs() {
-    /** Swerve CANCoder Configuration */
-    swerveCANcoderConfig.MagnetSensor.SensorDirection = Constants.Swerve.cancoderInvert;
+    /** Swerve Absolute Encoder Configurations */
+    dutyCycleRangeMin = Constants.Swerve.dutyCycleMin;
+    dutyCycleRangeMax = Constants.Swerve.dutyCycleMax;
 
     /** Swerve Angle Motor Configurations */
     /* Motor Inverts and Neutral Mode */
