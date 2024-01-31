@@ -186,7 +186,11 @@ if "$cygwin" || "$msys" ; then
         then
             arg=$( cygpath --path --ignore --mixed "$arg" )
         fi
-        # Roll the args list around exactly as many times as the number of
+        # Roll the args l# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+ist around exactly as many times as the number of
         # args, so each arg winds up back in the position where it started, but
         # possibly modified.
         #
@@ -247,3 +251,7 @@ eval "set -- $(
     )" '"$@"'
 
 exec "$JAVACMD" "$@"
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll

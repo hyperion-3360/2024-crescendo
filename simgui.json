@@ -4,16 +4,6 @@
       "/FMSInfo": "FMSInfo"
     }
   },
-  "NetworkTables": {
-    "Transitory Values": {
-      "open": false
-    },
-    "retained": {
-      "limelight": {
-        "open": true
-      }
-    }
-  },
   "NetworkTables Info": {
     "visible": true
   }

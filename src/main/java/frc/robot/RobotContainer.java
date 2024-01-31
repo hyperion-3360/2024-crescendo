@@ -4,11 +4,15 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
+import frc.Shuffleboard3360;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.TeleopSwerve;
+import frc.robot.subsystems.swerve.CTREConfigs;
+import frc.robot.subsystems.swerve.Swerve;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -18,29 +22,32 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  
-  private final DriveTrain m_drive = new DriveTrain();
 
+  private final Swerve m_swerveDrive = new Swerve();
+  public static final CTREConfigs ctreConfigs = new CTREConfigs();
+  
+  private final Shuffleboard3360 shuffleboard = Shuffleboard3360.getInstance();
+  
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+  private final int translationAxis = XboxController.Axis.kLeftY.value;
+  private final int strafeAxis = XboxController.Axis.kLeftX.value;
+  private final int rotationAxis = XboxController.Axis.kRightX.value;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    m_drive.setDefaultCommand(
-        m_drive.driveCommand(
-            () -> {
-              final var driverY = m_driverController.getLeftY();
-              return driverY;
-            },
-            () -> {
-              final var driverX = m_driverController.getLeftX();
-              return driverX;
-            },
-            () -> -m_driverController.getRightX(),
-            false));
-    // Configure the trigger bindings
+    m_swerveDrive.resetModulesToAbsolute();
+
+    m_swerveDrive.setDefaultCommand(
+        new TeleopSwerve(
+            m_swerveDrive,
+            () -> -m_driverController.getRawAxis(translationAxis),
+            () -> -m_driverController.getRawAxis(strafeAxis),
+            () -> -m_driverController.getRawAxis(rotationAxis),
+            () -> false));
     configureBindings();
   }
 
@@ -55,9 +62,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
- 
     /* wpilib controller example */
-    // m_driverController.b().whileTrue(m_driveTrain.exampleMethodCommand());
+    //    m_driverController.b().onTrue(new ResetZeroAbsolute(m_swerveDrive));
   }
 
   /**
