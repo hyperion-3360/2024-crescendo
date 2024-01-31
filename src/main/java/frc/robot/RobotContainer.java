@@ -39,6 +39,8 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
+    m_swerveDrive.resetModulesToAbsolute();
+
     m_swerveDrive.setDefaultCommand(
         new TeleopSwerve(
             m_swerveDrive,
@@ -61,7 +63,7 @@ public class RobotContainer {
   private void configureBindings() {
 
     /* wpilib controller example */
-    // m_driverController.b().whileTrue(m_driveTrain.exampleMethodCommand());
+    //    m_driverController.b().onTrue(new ResetZeroAbsolute(m_swerveDrive));
   }
 
   /**

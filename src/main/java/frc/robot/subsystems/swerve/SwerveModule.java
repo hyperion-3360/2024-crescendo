@@ -45,7 +45,6 @@ public class SwerveModule {
     /* Angle Motor Config */
     mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
     mAngleMotor.getConfigurator().apply(RobotContainer.ctreConfigs.swerveAngleFXConfig);
-    resetToAbsolute();
 
     /* Drive Motor Config */
     mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
@@ -77,6 +76,11 @@ public class SwerveModule {
   }
 
   public void resetToAbsolute() {
+    double magRotations = getMagEncoderPos().getRotations();
+    System.out.println(
+        String.format(
+            "Module : %d -> magRotations = %f, angle=%f",
+            this.moduleNumber, magRotations, angleOffset.getRotations()));
     double absolutePosition = getMagEncoderPos().getRotations() - angleOffset.getRotations();
     mAngleMotor.setPosition(absolutePosition);
   }
