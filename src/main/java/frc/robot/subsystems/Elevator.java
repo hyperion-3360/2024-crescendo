@@ -36,10 +36,6 @@ public class Elevator extends SubsystemBase {
 
   private RelativeEncoder m_encoder = m_elevatorLeftMaster.getEncoder();
 
-  private final double kp = 5.0;
-  private final double m_velocity = 1.2;
-  private final double m_acceleration = 2.0;
-
   private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
 
   private CurveFunction m_curve = new CurveFunction();
@@ -57,6 +53,8 @@ public class Elevator extends SubsystemBase {
     // configures the CANSparkMax controllers
     m_elevatorLeftMaster.restoreFactoryDefaults();
      m_elevatorRight.restoreFactoryDefaults();
+
+     m_elevatorLeftMaster.setInverted(true);
 
     m_elevatorRight.follow(m_elevatorLeftMaster, true);
 
@@ -159,7 +157,8 @@ public class Elevator extends SubsystemBase {
   //checks if the target is lower than the motors, if it is, lowers the motors
   private void goToTarget() {
     if (encoderConversions() < m_elevatorTarget) {
-      setElevatorSpeed(0.40);
+      setElevatorSpeed(0.50);
+
     }else {
       setElevatorSpeed(-0.20);
     }
@@ -173,7 +172,8 @@ public class Elevator extends SubsystemBase {
               this.setElevator(m_elevatorLevel);
         }
       ),
-            run(() -> this.goToTarget()).until(this::onTarget)
+            run(() -> this.goToTarget()).until(this::onTarget).andThen
+            (run(() -> m_elevatorLeftMaster.set(0.03)))
       );
   }
 }
