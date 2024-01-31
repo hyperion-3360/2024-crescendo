@@ -78,12 +78,16 @@ public class RobotContainer {
   private void configureBindings() {
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     // m_driverController.y()
     // .onTrue(
     // Sequences.switchToHigh(m_elevator)
     // );
 =======
     m_driverController.a().onTrue(m_shooter.shoot(shootSpeed.HIGH));
+=======
+    m_driverController.a().onTrue(m_shooter.shoot(shootSpeed.INTAKE));
+>>>>>>> f83db79 (working shooter, missing curve)
  
   }
 >>>>>>> 053d3e4 (most likely working shooter, need to modify speed values)

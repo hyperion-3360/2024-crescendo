@@ -5,6 +5,7 @@
 package frc.robot;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -21,6 +22,8 @@ import frc.lib.util.SwerveModuleConstants;
 
 >>>>>>> 053d3e4 (most likely working shooter, need to modify speed values)
 
+=======
+>>>>>>> f83db79 (working shooter, missing curve)
 public final class Constants {
 
   public static final double stickDeadband = 0.1;
@@ -150,6 +153,7 @@ public final class Constants {
     }
   }
 
+<<<<<<< HEAD
   public static class SubsystemConstants {
     // constants for climber, shooter, elevator, trap name example: kExamplePort, all ints if port
     public static final int kclimberRightId = 11; //  climber
@@ -229,3 +233,11 @@ public final class Constants {
 =======
 }
 >>>>>>> 053d3e4 (most likely working shooter, need to modify speed values)
+=======
+  public static final int kRightMasterId = 16;
+  public static final int kLeftMasterId = 14;
+  public static final int kLeftFollowerId = 13;
+  public static final int kRightFollowerId = 15;
+
+}
+>>>>>>> f83db79 (working shooter, missing curve)

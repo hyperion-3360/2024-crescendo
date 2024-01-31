@@ -3,12 +3,17 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+<<<<<<< HEAD
 import frc.robot.Constants;
 
 enum shoot {
   HIGH,
   LOW
 }
+=======
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants;
+>>>>>>> f83db79 (working shooter, missing curve)
 
 public class Shooter extends SubsystemBase {
 
@@ -36,6 +41,7 @@ public class Shooter extends SubsystemBase {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   public void robotInit() {}
 
   @Override
@@ -51,17 +57,20 @@ public class Shooter extends SubsystemBase {
 }
 =======
   private static double highSpeed = 0.2;
+=======
+  private static double highSpeed = 0.1;
+>>>>>>> f83db79 (working shooter, missing curve)
   private static double lowSpeed = 0.05;
-  private static double intakeSpeed = -0;
+  private static double intakeSpeed = 1.0;
   private static double trapSpeed = 0;
   private static double stopSpeed = 0;
 
   private double m_speed = 0;
 
-  private CANSparkMax m_leftMaster = new CANSparkMax(2, MotorType.kBrushless);
-  private CANSparkMax m_rightMaster = new CANSparkMax(0, MotorType.kBrushless);
-  private CANSparkMax m_leftFollower = new CANSparkMax(0, MotorType.kBrushless);
-  private CANSparkMax m_rightFollower = new CANSparkMax(0, MotorType.kBrushless);
+  private CANSparkMax m_leftMaster = new CANSparkMax(Constants.kLeftMasterId, MotorType.kBrushless);
+  private CANSparkMax m_rightMaster = new CANSparkMax(Constants.kRightMasterId, MotorType.kBrushless);
+  private CANSparkMax m_leftFollower = new CANSparkMax(Constants.kLeftFollowerId, MotorType.kBrushless);
+  private CANSparkMax m_rightFollower = new CANSparkMax(Constants.kRightFollowerId, MotorType.kBrushless);
 
   public Shooter() {
     m_leftMaster.restoreFactoryDefaults();
@@ -76,9 +85,9 @@ public class Shooter extends SubsystemBase {
     m_rightFollower.follow(m_rightMaster);
 
     m_rightMaster.burnFlash();
-    m_leftMaster.burnFlash();
     m_leftFollower.burnFlash();
     m_rightFollower.burnFlash();
+    m_leftMaster.burnFlash();
     
   }
 
@@ -86,6 +95,7 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
         m_leftMaster.set(m_speed);
         m_rightMaster.set(m_speed);
+        // System.out.println("encoder " + m_rightMaster.getEncoder().getPosition() + " applied output " + m_leftMaster.getAppliedOutput());
   }
 
   private void setShootingLevel(shootSpeed shoot) {
