@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -19,13 +18,6 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-  
-
-
-  private Spark leftMotor1 = new Spark(0);
-  private Spark leftMotor2 = new Spark(1);
-  private Spark rightMotor1 = new Spark(2);
-  private Spark rightMotor2 = new Spark(3);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -89,9 +81,7 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-    leftMotor1.set(0.5);
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {

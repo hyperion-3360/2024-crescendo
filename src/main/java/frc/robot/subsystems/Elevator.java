@@ -3,8 +3,6 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,8 +22,8 @@ public class Elevator extends SubsystemBase {
   // DigitalInput bottomlimitSwitch = new DigitalInput(1);
 
   // instancing the motor controllers m_elevatorLeft is the master motor
-   private CANSparkMax m_elevatorRight = new
-   CANSparkMax(Constants.SubsystemConstants.kelevatorRightId, MotorType.kBrushless);
+  private CANSparkMax m_elevatorRight =
+      new CANSparkMax(Constants.SubsystemConstants.kelevatorRightId, MotorType.kBrushless);
   private CANSparkMax m_elevatorLeft =
       new CANSparkMax(Constants.SubsystemConstants.kelevatorLeftId, MotorType.kBrushless);
 
@@ -38,17 +36,16 @@ public class Elevator extends SubsystemBase {
   // just in case
   // private double m_pulleyDiameter = 0.05445;
 
-   // private double m_beltRampUp = 0.0;
+  // private double m_beltRampUp = 0.0;
 
   // creating an elevator
   public Elevator() {
     // configures the CANSparkMax controllers
     m_elevatorLeft.restoreFactoryDefaults();
-     m_elevatorRight.restoreFactoryDefaults();
-          m_elevatorRight.setInverted(true);
-          m_elevatorLeft.setInverted(false);
+    m_elevatorRight.restoreFactoryDefaults();
+    m_elevatorRight.setInverted(true);
+    m_elevatorLeft.setInverted(false);
     m_encoder.setPosition(0.0);
-
   }
 
   public void robotInit() {}
@@ -57,19 +54,19 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     encoderConversions();
 
-    //checks if the motor is running or at max speed for the exponential function
-    if(this.onTarget()){
+    // checks if the motor is running or at max speed for the exponential function
+    if (this.onTarget()) {
       this.stop();
-    }else{
+    } else {
       Double adjustedSpeed = m_curve.adjustPeriodic();
-      if(adjustedSpeed != null){
+      if (adjustedSpeed != null) {
         m_elevatorLeft.set(adjustedSpeed);
         m_elevatorRight.set(adjustedSpeed);
       }
     }
   }
 
-  //switch case statement for configuring elevator height
+  // switch case statement for configuring elevator height
   private void setElevator(e_elevatorLevel m_elevatorLevel) {
     switch (m_elevatorLevel) {
       case HIGH:
@@ -94,9 +91,9 @@ public class Elevator extends SubsystemBase {
   // stops the motors
   public void stop() {
     m_curve.stop();
-    
-         m_elevatorLeft.stopMotor();
-          m_elevatorRight.stopMotor();
+
+    m_elevatorLeft.stopMotor();
+    m_elevatorRight.stopMotor();
   }
 
   // check if the limit switch is triggered
@@ -122,36 +119,35 @@ public class Elevator extends SubsystemBase {
      * the equation below is the wheel distance per pulse of the encoder
      */
     double m_encoderPosition =
-        m_encoder.getPosition() / 360; //* 1/m_encoder.getCountsPerRevolution() * 
-        // m_pulleyDiameter + m_beltRampUp * 3.14159265358979323846;
+        m_encoder.getPosition() / 360; // * 1/m_encoder.getCountsPerRevolution() *
+    // m_pulleyDiameter + m_beltRampUp * 3.14159265358979323846;
 
     return m_encoderPosition;
-  } 
+  }
 
   private boolean negativeTargetChecker() {
-     if (encoderConversions() < m_elevatorTarget) 
-     {
+    if (encoderConversions() < m_elevatorTarget) {
       return true;
-      }
+    }
     return false;
   }
 
   public boolean onTarget() {
-    
-    if (negativeTargetChecker() == false ) {
 
-    return Math.abs(this.m_elevatorTarget + encoderConversions())
-        < Constants.ElevatorConstants.kDeadzone;
+    if (negativeTargetChecker() == false) {
+
+      return Math.abs(this.m_elevatorTarget + encoderConversions())
+          < Constants.ElevatorConstants.kDeadzone;
     }
-      return Math.abs(this.m_elevatorTarget - encoderConversions())
+    return Math.abs(this.m_elevatorTarget - encoderConversions())
         < Constants.ElevatorConstants.kDeadzone;
   }
 
-  //checks if the target is lower than the motors, if it is, lowers the motors
+  // checks if the target is lower than the motors, if it is, lowers the motors
   private void goToTarget() {
     if (encoderConversions() < m_elevatorTarget) {
       setElevatorSpeed(0.20);
-    }else {
+    } else {
       setElevatorSpeed(-0.20);
     }
   }
@@ -162,7 +158,6 @@ public class Elevator extends SubsystemBase {
             () -> {
               this.setElevator(m_elevatorLevel);
             }),
-            run(() -> this.goToTarget()).until(this::onTarget)
-      );
+        run(() -> this.goToTarget()).until(this::onTarget));
   }
 }
