@@ -10,6 +10,7 @@ import frc.robot.Constants.OperatorConstants;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
@@ -61,20 +62,15 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    
+    m_driverController.y()
+    .onTrue(
+    Sequences.switchToHigh(m_elevator)
+    );
 
     /* wpilib controller example */
     //    m_driverController.b().onTrue(new ResetZeroAbsolute(m_swerveDrive));
   }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    /* how to get autonomous commands */
-    // return Autos.exampleAuto(m_exampleSubsystem);
-    return null;
-  }
 }
+
+  
