@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+<<<<<<< HEAD
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -13,6 +14,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
+=======
+/* ****************************************
+ * TODO: remove unnecessary stuff
+ * ****************************************/
+
+>>>>>>> 053d3e4 (most likely working shooter, need to modify speed values)
 
 public final class Constants {
 
@@ -179,6 +186,7 @@ public final class Constants {
     public static final int kservoBlockerId = 5;
   }
 
+<<<<<<< HEAD
   public static class WCPSwerveModule {
     public static final Translation2d[] kLocations = {
       new Translation2d(0.3525, 0.275),
@@ -218,3 +226,6 @@ public final class Constants {
     public static final double kangleFingerscoreNote = 155.0;
   }
 }
+=======
+}
+>>>>>>> 053d3e4 (most likely working shooter, need to modify speed values)

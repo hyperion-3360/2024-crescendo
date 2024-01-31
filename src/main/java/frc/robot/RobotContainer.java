@@ -4,7 +4,14 @@
 
 package frc.robot;
 
+<<<<<<< HEAD
 import edu.wpi.first.wpilibj.XboxController;
+=======
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.shootSpeed;
+import edu.wpi.first.wpilibj2.command.Command;
+>>>>>>> 053d3e4 (most likely working shooter, need to modify speed values)
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.Shuffleboard3360;
@@ -23,6 +30,7 @@ import frc.robot.subsystems.swerve.Swerve;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+<<<<<<< HEAD
 
   private final Swerve m_swerveDrive = new Swerve();
   private final Trap m_trap = new Trap();
@@ -30,6 +38,10 @@ public class RobotContainer {
 
   private final Shuffleboard3360 shuffleboard = Shuffleboard3360.getInstance();
   public static final Elevator m_elevator = new Elevator();
+=======
+  private Shooter m_shooter = new Shooter();
+  
+>>>>>>> 053d3e4 (most likely working shooter, need to modify speed values)
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -65,10 +77,16 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
+<<<<<<< HEAD
     // m_driverController.y()
     // .onTrue(
     // Sequences.switchToHigh(m_elevator)
     // );
+=======
+    m_driverController.a().onTrue(m_shooter.shoot(shootSpeed.HIGH));
+ 
+  }
+>>>>>>> 053d3e4 (most likely working shooter, need to modify speed values)
 
     /* wpilib controller example */
     //    m_driverController.b().onTrue(new ResetZeroAbsolute(m_swerveDrive));
