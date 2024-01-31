@@ -165,4 +165,10 @@ public class WCPSwerveModule implements SwerveModule {
     // TODO: need to convert the setpointDegrees * kDegToAnalog + m_encoderZero to a new position and velocity using a profile (see p. 46 of the above link)
     m_turnMotor.setControl(m_angleRequest);
   }
+
+  @Override
+  public SwerveModulePosition[] getPositions() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'getPositions'");
+  }
 }
