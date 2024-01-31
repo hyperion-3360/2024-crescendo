@@ -42,6 +42,7 @@ public class Shooter extends SubsystemBase {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   public void robotInit() {}
 
   @Override
@@ -60,8 +61,11 @@ public class Shooter extends SubsystemBase {
 =======
   private static double highSpeed = 0.1;
 >>>>>>> f83db79 (working shooter, missing curve)
+=======
+  private static double highSpeed = 0.7;
+>>>>>>> df58f2a (modify speeeeeed)
   private static double lowSpeed = 0.05;
-  private static double intakeSpeed = 1.0;
+  private static double intakeSpeed = 0.4;
   private static double trapSpeed = 0;
   private static double stopSpeed = 0;
 
@@ -95,6 +99,7 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
         m_leftMaster.set(m_speed);
         m_rightMaster.set(m_speed);
+        
         // System.out.println("encoder " + m_rightMaster.getEncoder().getPosition() + " applied output " + m_leftMaster.getAppliedOutput());
   }
 
