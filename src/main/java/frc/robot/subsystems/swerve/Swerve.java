@@ -30,13 +30,8 @@ public class Swerve extends SubsystemBase {
   new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, m_gyro.getRotation2d(),getModulePositions(),
    new Pose2d(0, 0, new Rotation2d()));
 
-
-  //    public Pigeon2 gyro;
-
   public Swerve() {
-    //       gyro = new Pigeon2(Constants.Swerve.pigeonID);
-    //       gyro.getConfigurator().apply(new Pigeon2Configuration());
-    //       gyro.setYaw(0);
+
     m_gyro.gyroCalibrate();
     m_gyro.gyroReset();
 
@@ -88,31 +83,31 @@ public class Swerve extends SubsystemBase {
     return positions;
   }
 
-  //    public Pose2d getPose() {
-  //       return swerveOdometry.getPoseMeters();
-  //  }
+     public Pose2d getPose() {
+        return swerveOdometry.getPoseMeters();
+   }
 
-  //    public void setPose(Pose2d pose) {
-  // swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(), pose);
-  // }
+     public void setPose(Pose2d pose) {
+  swerveOdometry.resetPosition(getRotation2d(), getModulePositions(), pose);
+  }
 
-  //    public Rotation2d getHeading(){
-  //       return getPose().getRotation();
-  //  }
+     public Rotation2d getHeading(){
+        return getPose().getRotation();
+   }
 
-  //    public void setHeading(Rotation2d heading){
-  //        swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(), new
-  // Pose2d(getPose().getTranslation(), heading));
-  //    }
+     public void setHeading(Rotation2d heading){
+         swerveOdometry.resetPosition(getRotation2d(), getModulePositions(), new
+  Pose2d(getPose().getTranslation(), heading));
+     }
 
-  //    public void zeroHeading(){
-  //        swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(), new
-  // Pose2d(getPose().getTranslation(), new Rotation2d()));
-  //    }
-  //
-  //    public Rotation2d getGyroYaw() {
-  //        return Rotation2d.fromDegrees(gyro.getYaw().getValue());
-  //    }
+     public void zeroHeading(){
+         swerveOdometry.resetPosition(getRotation2d(), getModulePositions(), new
+  Pose2d(getPose().getTranslation(), new Rotation2d()));
+     }
+  
+     public Rotation2d getRotation2d() {
+         return Rotation2d.fromDegrees(m_gyro.getRotation2d().getDegrees());
+     }
 
   public void resetModulesToAbsolute() {
     for (SwerveModule mod : mSwerveMods) {
@@ -137,7 +132,7 @@ public class Swerve extends SubsystemBase {
      getModulePositions());
 
      //Renews the field periodically
-    m_field2d.setRobotPose(m_odometry.getPoseMeters());
+    m_field2d.setRobotPose(m_odometryPose);
   }
 
   public Command resetOdometryBlueSide() {
