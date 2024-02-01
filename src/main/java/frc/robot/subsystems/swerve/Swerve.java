@@ -1,18 +1,35 @@
 package frc.robot.subsystems.swerve;
 
+import static frc.robot.Constants.WCPSwerveModule.kLocations;
+
+import com.ctre.phoenix.sensors.PigeonIMU;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.Gyro;
 
 public class Swerve extends SubsystemBase {
   public SwerveDriveOdometry swerveOdometry;
   public SwerveModule[] mSwerveMods;
+
+  private final Gyro m_gyro = new Gyro();
+
+  private final Field2d m_field2d = new Field2d();
+  private final SwerveDriveOdometry m_odometry = 
+  new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, m_gyro.getRotation2d(),getModulePositions(),
+   new Pose2d(0, 0, new Rotation2d()));
+
 
   //    public Pigeon2 gyro;
 
@@ -20,6 +37,9 @@ public class Swerve extends SubsystemBase {
     //       gyro = new Pigeon2(Constants.Swerve.pigeonID);
     //       gyro.getConfigurator().apply(new Pigeon2Configuration());
     //       gyro.setYaw(0);
+    m_gyro.gyroCalibrate();
+    m_gyro.gyroReset();
+
 
     mSwerveMods =
         new SwerveModule[] {
@@ -29,8 +49,6 @@ public class Swerve extends SubsystemBase {
           new SwerveModule(3, Constants.Swerve.Mod3.constants)
         };
 
-    //        swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics,
-    // getGyroYaw(), getModulePositions());
   }
 
   public void drive(
@@ -113,5 +131,34 @@ public class Swerve extends SubsystemBase {
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
     }
+
+     //updates the odometry positon
+     var m_odometryPose = m_odometry.update(m_gyro.getRotation2d(),
+     getModulePositions());
+
+     //Renews the field periodically
+    m_field2d.setRobotPose(m_odometry.getPoseMeters());
+  }
+
+  public Command resetOdometryBlueSide() {
+   return this.runOnce(
+        () ->
+            m_odometry.resetPosition(
+                m_gyro.getRotation2d(),
+                getModulePositions(),
+                new Pose2d(2.1, 5, Rotation2d.fromDegrees(180))));
+}
+
+public Command resetOdometryRedSide() {
+   return this.runOnce(
+        () ->
+            m_odometry.resetPosition(
+                m_gyro.getRotation2d(),
+                getModulePositions(),
+                new Pose2d(14.4, 5, Rotation2d.fromDegrees(180))));
+  }
+
+public void robotInit() {
+  SmartDashboard.putData("Field" ,m_field2d);
   }
 }
