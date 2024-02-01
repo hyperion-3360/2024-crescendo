@@ -20,21 +20,24 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Gyro;
 
 public class Swerve extends SubsystemBase {
-  public SwerveDriveOdometry swerveOdometry;
   public SwerveModule[] mSwerveMods;
 
-  private final Gyro m_gyro = new Gyro();
+  public SwerveModulePosition[] positions;
 
-  private final Field2d m_field2d = new Field2d();
-  private final SwerveDriveOdometry m_odometry = 
-  new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, m_gyro.getRotation2d(),getModulePositions(),
-   new Pose2d(0, 0, new Rotation2d()));
+      private final Gyro m_gyro;
+
+  private final Field2d m_field2d;
+
+  public SwerveDriveOdometry m_odometry;
 
   public Swerve() {
 
+   m_gyro = new Gyro();
+
+   m_field2d = new Field2d();
+
     m_gyro.gyroCalibrate();
     m_gyro.gyroReset();
-
 
     mSwerveMods =
         new SwerveModule[] {
@@ -42,7 +45,17 @@ public class Swerve extends SubsystemBase {
           new SwerveModule(1, Constants.Swerve.Mod1.constants),
           new SwerveModule(2, Constants.Swerve.Mod2.constants),
           new SwerveModule(3, Constants.Swerve.Mod3.constants)
+          
         };
+
+        positions = new SwerveModulePosition[4];
+    for (SwerveModule mod : mSwerveMods) {
+      positions[mod.moduleNumber] = mod.getPosition();
+    };
+
+         m_odometry = 
+  new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, m_gyro.getRotation2d(), positions,
+   new Pose2d(14, 15, new Rotation2d()));
 
   }
 
@@ -84,11 +97,11 @@ public class Swerve extends SubsystemBase {
   }
 
      public Pose2d getPose() {
-        return swerveOdometry.getPoseMeters();
+        return m_odometry.getPoseMeters();
    }
 
      public void setPose(Pose2d pose) {
-  swerveOdometry.resetPosition(getRotation2d(), getModulePositions(), pose);
+  m_odometry.resetPosition(getRotation2d(), getModulePositions(), pose);
   }
 
      public Rotation2d getHeading(){
@@ -96,12 +109,12 @@ public class Swerve extends SubsystemBase {
    }
 
      public void setHeading(Rotation2d heading){
-         swerveOdometry.resetPosition(getRotation2d(), getModulePositions(), new
+         m_odometry.resetPosition(getRotation2d(), getModulePositions(), new
   Pose2d(getPose().getTranslation(), heading));
      }
 
      public void zeroHeading(){
-         swerveOdometry.resetPosition(getRotation2d(), getModulePositions(), new
+         m_odometry.resetPosition(getRotation2d(), getModulePositions(), new
   Pose2d(getPose().getTranslation(), new Rotation2d()));
      }
   
