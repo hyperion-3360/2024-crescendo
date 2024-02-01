@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -160,7 +161,6 @@ public final class Constants {
     public static final double kLowTarget = 0.10;
     public static final double kIntakeTarget = 0.0;
   }
-
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
