@@ -4,6 +4,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -21,7 +23,7 @@ public class Elevator extends SubsystemBase {
   };
 
   // instanciate a limit switch
-  // DigitalInput bottomlimitSwitch = new DigitalInput(1);
+  DigitalInput bottomlimitSwitch = new DigitalInput(1);
 
   // instancing the motor controllers m_elevatorLeft is the master motor
   private CANSparkMax m_elevatorRight =
@@ -70,7 +72,7 @@ public class Elevator extends SubsystemBase {
 
     if (DriverStation.isDisabled()) {
       m_elevatorTarget = m_encoder.getPosition();
-      // m_pid.reset(m_elevatorTarget);
+
     }
     m_elevatorLeftMaster.set(0.0);
 
@@ -81,7 +83,12 @@ public class Elevator extends SubsystemBase {
       Double adjustedSpeed = m_curve.adjustPeriodic();
       if (adjustedSpeed != null) {
         m_elevatorLeftMaster.set(adjustedSpeed);
+
       }
+    }
+
+    if (isAtBottom()) {
+      m_encoder.setPosition(0.0);
     }
   }
 
@@ -114,10 +121,13 @@ public class Elevator extends SubsystemBase {
   }
 
   // check if the limit switch is triggered
-  // public void isAtBottom() {
-  //   if(bottomlimitSwitch.get()) {
-  //     }
-  //   }
+  public boolean isAtBottom() {
+    if(bottomlimitSwitch.get()) {
+
+      return true;
+      }
+      return false;
+    }
 
   private double encoderConversions() {
 
