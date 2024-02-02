@@ -3,8 +3,8 @@
 
 ### Gradle ###
 .gradle
-#**/build/
-#!src/**/build/
+**/build/
+!src/**/build/
 
 ### C++ ###
 # Prerequisites
