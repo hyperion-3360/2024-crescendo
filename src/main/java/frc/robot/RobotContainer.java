@@ -5,11 +5,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
-import frc.Shuffleboard3360;
-import frc.robot.Constants.OperatorConstants;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.Shuffleboard3360;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Elevator;
@@ -27,10 +26,10 @@ public class RobotContainer {
 
   private final Swerve m_swerveDrive = new Swerve();
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
-  
+
   private final Shuffleboard3360 shuffleboard = Shuffleboard3360.getInstance();
   public static final Elevator m_elevator = new Elevator();
-  
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -74,5 +73,3 @@ public class RobotContainer {
     //    m_driverController.b().onTrue(new ResetZeroAbsolute(m_swerveDrive));
   }
 }
-
-  
