@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Neo 550 and Neo motors are CANSparkMax in code
 CODING STANDARDS:
 1. all constants start with a k (not capital)
