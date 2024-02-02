@@ -168,6 +168,33 @@ public final class Constants {
     public static final int kPigeonPort = 0;
   }
 
+  public static class TrapConstants {
+
+    public static final int kservoShoulderId = 9; // servo ports + limit switch
+    public static final int kservoElbowId = 8;
+    public static final int kservoWristId = 7;
+    public static final int kservoFingerId = 6;
+    public static final int kfingerlimitswitchId = 6;
+
+    public static final double kfingerClosed = 180.0; // angle of finger servo when closed/opened
+    public static final double kfingerOpened = 90.0;
+
+    public static final double kangleShouldersetZero =
+        7.0; // angles servos in SETZERO   //lower number = lower
+    public static final double kangleElbowsetZero = 145.5; // higher number = lower
+    public static final double kangleWristsetZero = 155.0; // higher number = lower
+
+    public static final double kangleShouldergrabPosition = 70.0; // angles servos in GRABPOSITION
+    public static final double kangleElbowgrabPosition = 105.0;
+    public static final double kangleWristgrabPosition = 75.0;
+
+    public static final double kangleShoulderscoreNote = 7.0; // angles servos in SCORENOTE
+    public static final double kangleElbowscoreNote = 145.5;
+    public static final double kangleWristscoreNote = 155.0;
+    public static final double kangleFingerscoreNote = 155.0;
+  }
+  ;
+
   public static class WCPSwerveModule {
 
     // public static final WCPSwerveModuleConfig[] kConfigs = {

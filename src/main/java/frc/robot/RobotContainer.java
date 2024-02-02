@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.Shuffleboard3360;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -25,6 +25,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final Swerve m_swerveDrive = new Swerve();
+  private final Trap m_trap = new Trap();
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
 
   private final Shuffleboard3360 shuffleboard = Shuffleboard3360.getInstance();
@@ -63,7 +64,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    
+
     // m_driverController.y()
     // .onTrue(
     // Sequences.switchToHigh(m_elevator)

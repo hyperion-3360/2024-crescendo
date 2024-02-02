@@ -4,7 +4,6 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -72,7 +71,6 @@ public class Elevator extends SubsystemBase {
 
     if (DriverStation.isDisabled()) {
       m_elevatorTarget = m_encoder.getPosition();
-
     }
     m_elevatorLeftMaster.set(0.0);
 
@@ -83,7 +81,6 @@ public class Elevator extends SubsystemBase {
       Double adjustedSpeed = m_curve.adjustPeriodic();
       if (adjustedSpeed != null) {
         m_elevatorLeftMaster.set(adjustedSpeed);
-
       }
     }
 
@@ -122,12 +119,12 @@ public class Elevator extends SubsystemBase {
 
   // check if the limit switch is triggered
   public boolean isAtBottom() {
-    if(bottomlimitSwitch.get()) {
+    if (bottomlimitSwitch.get()) {
 
       return true;
-      }
-      return false;
     }
+    return false;
+  }
 
   private double encoderConversions() {
 

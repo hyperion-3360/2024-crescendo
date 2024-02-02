@@ -1,8 +1,7 @@
 package frc.robot.subsystems.swerve;
 
-import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
-
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -22,7 +21,7 @@ public class Swerve extends SubsystemBase {
 
   public SwerveModulePosition[] positions;
 
-      private final WPI_PigeonIMU m_gyro;
+  private final WPI_PigeonIMU m_gyro;
 
   private final Field2d m_field2d;
 
@@ -30,9 +29,9 @@ public class Swerve extends SubsystemBase {
 
   public Swerve() {
 
-   m_gyro = new WPI_PigeonIMU(0);
+    m_gyro = new WPI_PigeonIMU(0);
 
-   m_field2d = new Field2d();
+    m_field2d = new Field2d();
 
     m_gyro.reset();
     m_gyro.enterCalibrationMode(CalibrationMode.Temperature);
@@ -43,18 +42,20 @@ public class Swerve extends SubsystemBase {
           new SwerveModule(1, Constants.Swerve.Mod1.constants),
           new SwerveModule(2, Constants.Swerve.Mod2.constants),
           new SwerveModule(3, Constants.Swerve.Mod3.constants)
-          
         };
 
-        positions = new SwerveModulePosition[4];
+    positions = new SwerveModulePosition[4];
     for (SwerveModule mod : mSwerveMods) {
       positions[mod.moduleNumber] = mod.getPosition();
-    };
+    }
+    ;
 
-         m_odometry = 
-  new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, m_gyro.getRotation2d(), positions,
-   new Pose2d(0, 0, new Rotation2d()));
-
+    m_odometry =
+        new SwerveDriveOdometry(
+            Constants.Swerve.swerveKinematics,
+            m_gyro.getRotation2d(),
+            positions,
+            new Pose2d(0, 0, new Rotation2d()));
   }
 
   public void drive(
@@ -94,31 +95,33 @@ public class Swerve extends SubsystemBase {
     return positions;
   }
 
-     public Pose2d getPose() {
-        return m_odometry.getPoseMeters();
-   }
-
-     public void setPose(Pose2d pose) {
-  m_odometry.resetPosition(getRotation2d(), getModulePositions(), pose);
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
   }
 
-     public Rotation2d getHeading(){
-        return getPose().getRotation();
-   }
+  public void setPose(Pose2d pose) {
+    m_odometry.resetPosition(getRotation2d(), getModulePositions(), pose);
+  }
 
-     public void setHeading(Rotation2d heading){
-         m_odometry.resetPosition(getRotation2d(), getModulePositions(), new
-  Pose2d(getPose().getTranslation(), heading));
-     }
+  public Rotation2d getHeading() {
+    return getPose().getRotation();
+  }
 
-     public void zeroHeading(){
-         m_odometry.resetPosition(getRotation2d(), getModulePositions(), new
-  Pose2d(getPose().getTranslation(), new Rotation2d()));
-     }
-  
-     public Rotation2d getRotation2d() {
-         return Rotation2d.fromDegrees(m_gyro.getRotation2d().getDegrees());
-     }
+  public void setHeading(Rotation2d heading) {
+    m_odometry.resetPosition(
+        getRotation2d(), getModulePositions(), new Pose2d(getPose().getTranslation(), heading));
+  }
+
+  public void zeroHeading() {
+    m_odometry.resetPosition(
+        getRotation2d(),
+        getModulePositions(),
+        new Pose2d(getPose().getTranslation(), new Rotation2d()));
+  }
+
+  public Rotation2d getRotation2d() {
+    return Rotation2d.fromDegrees(m_gyro.getRotation2d().getDegrees());
+  }
 
   public void resetModulesToAbsolute() {
     for (SwerveModule mod : mSwerveMods) {
@@ -140,27 +143,26 @@ public class Swerve extends SubsystemBase {
 
     m_gyro.getRotation2d();
 
-     //updates the odometry positon
-     var m_odometryPose = m_odometry.update(m_gyro.getRotation2d(),
-     getModulePositions());
+    // updates the odometry positon
+    var m_odometryPose = m_odometry.update(m_gyro.getRotation2d(), getModulePositions());
 
-     //Renews the field periodically
+    // Renews the field periodically
     m_field2d.setRobotPose(m_odometryPose);
 
     SmartDashboard.putData(m_field2d);
   }
 
   public Command resetOdometryBlueSide() {
-   return this.runOnce(
+    return this.runOnce(
         () ->
             m_odometry.resetPosition(
                 m_gyro.getRotation2d(),
                 getModulePositions(),
                 new Pose2d(2.1, 5, Rotation2d.fromDegrees(180))));
-}
+  }
 
-public Command resetOdometryRedSide() {
-   return this.runOnce(
+  public Command resetOdometryRedSide() {
+    return this.runOnce(
         () ->
             m_odometry.resetPosition(
                 m_gyro.getRotation2d(),
@@ -168,7 +170,5 @@ public Command resetOdometryRedSide() {
                 new Pose2d(14.4, 5, Rotation2d.fromDegrees(180))));
   }
 
-public void robotInit() {
-
-  }
+  public void robotInit() {}
 }
