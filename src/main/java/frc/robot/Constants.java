@@ -18,7 +18,7 @@ public final class Constants {
     public static final int kShooterRightMasterId = 0;
     public static final int kShooterLeftFollowerId = 0;
     public static final int kShooterRightFollowerId = 0;
-
+    public static final int kBeamBreakChannel = 0;
   }
 
   public static class ElevatorConstants {

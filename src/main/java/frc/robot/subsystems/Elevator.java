@@ -50,7 +50,7 @@ public class Elevator extends SubsystemBase {
   // just in case
   // private double m_pulleyDiameter = 0.05445;
 
-   // private double m_beltRampUp = 0.0;
+  // private double m_beltRampUp = 0.0;
 
   // creating an elevator
   public Elevator() {
@@ -68,7 +68,6 @@ public class Elevator extends SubsystemBase {
       m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
 
     m_encoder.setPosition(0.0);
-
   }
 
   public void robotInit() {}
@@ -83,10 +82,16 @@ public class Elevator extends SubsystemBase {
     }
     m_elevatorLeftMaster.set(0.0);
 
-    //checks if the motor is running or at max speed for the exponential function
-    if(this.onTarget()){
+     if (DriverStation.isDisabled()) {
+      m_elevatorTarget = m_encoder.getPosition();
+      // m_pid.reset(m_elevatorTarget);
+    }
+    m_elevatorLeftMaster.set(0.0);
+
+    // checks if the motor is running or at max speed for the exponential function
+    if (this.onTarget()) {
       this.stop();
-    }else{
+    } else {
       Double adjustedSpeed = m_curve.adjustPeriodic();
       if(adjustedSpeed != null){
         m_elevatorLeftMaster.set(adjustedSpeed);
@@ -94,7 +99,7 @@ public class Elevator extends SubsystemBase {
     }
   }
 
-  //switch case statement for configuring elevator height
+  // switch case statement for configuring elevator height
   private void setElevator(e_elevatorLevel m_elevatorLevel) {
     switch (m_elevatorLevel) {
       case HIGH:
@@ -131,32 +136,31 @@ public class Elevator extends SubsystemBase {
   private double encoderConversions() {
    
     double m_encoderPosition =
-        m_encoder.getPosition() / 360; //* 1/m_encoder.getCountsPerRevolution() * 
-        // m_pulleyDiameter + m_beltRampUp * 3.14159265358979323846;
+        m_encoder.getPosition() / 360; // * 1/m_encoder.getCountsPerRevolution() *
+    // m_pulleyDiameter + m_beltRampUp * 3.14159265358979323846;
 
     return m_encoderPosition;
-  } 
+  }
 
   private boolean negativeTargetChecker() {
-     if (encoderConversions() < m_elevatorTarget) 
-     {
+    if (encoderConversions() < m_elevatorTarget) {
       return true;
-      }
+    }
     return false;
   }
 
   public boolean onTarget() {
-    
-    if (negativeTargetChecker() == false ) {
 
-    return Math.abs(this.m_elevatorTarget + encoderConversions())
-        < Constants.ElevatorConstants.kDeadzone;
+    if (negativeTargetChecker() == false) {
+
+      return Math.abs(this.m_elevatorTarget + encoderConversions())
+          < Constants.ElevatorConstants.kDeadzone;
     }
-      return Math.abs(this.m_elevatorTarget - encoderConversions())
+    return Math.abs(this.m_elevatorTarget - encoderConversions())
         < Constants.ElevatorConstants.kDeadzone;
   }
 
-  //checks if the target is lower than the motors, if it is, lowers the motors
+  // checks if the target is lower than the motors, if it is, lowers the motors
   private void goToTarget() {
     if (encoderConversions() < m_elevatorTarget) {
       setElevatorSpeed(0.40);
