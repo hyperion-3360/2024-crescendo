@@ -2,7 +2,7 @@
 # If you remove items from this file, intellisense might break.
 
 ### Gradle ###
-#.gradle
+.gradle
 **/build/
 !src/**/build/
 
