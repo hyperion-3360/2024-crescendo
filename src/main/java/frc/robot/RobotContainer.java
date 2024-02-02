@@ -65,10 +65,10 @@ public class RobotContainer {
    */
   private void configureBindings() {
     
-    m_driverController.y()
-    .onTrue(
-    Sequences.switchToHigh(m_elevator)
-    );
+    // m_driverController.y()
+    // .onTrue(
+    // Sequences.switchToHigh(m_elevator)
+    // );
 
     /* wpilib controller example */
     //    m_driverController.b().onTrue(new ResetZeroAbsolute(m_swerveDrive));

@@ -3,6 +3,8 @@ package frc.robot.subsystems.swerve;
 import static frc.robot.Constants.WCPSwerveModule.kLocations;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,19 +14,19 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Gyro;
 
 public class Swerve extends SubsystemBase {
   public SwerveModule[] mSwerveMods;
 
   public SwerveModulePosition[] positions;
 
-      private final Gyro m_gyro;
+      private final WPI_PigeonIMU m_gyro;
 
   private final Field2d m_field2d;
 
@@ -32,12 +34,12 @@ public class Swerve extends SubsystemBase {
 
   public Swerve() {
 
-   m_gyro = new Gyro();
+   m_gyro = new WPI_PigeonIMU(0);
 
    m_field2d = new Field2d();
 
-    m_gyro.gyroCalibrate();
-    m_gyro.gyroReset();
+    m_gyro.reset();
+    m_gyro.enterCalibrationMode(CalibrationMode.Temperature);
 
     mSwerveMods =
         new SwerveModule[] {
@@ -55,7 +57,7 @@ public class Swerve extends SubsystemBase {
 
          m_odometry = 
   new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, m_gyro.getRotation2d(), positions,
-   new Pose2d(14, 15, new Rotation2d()));
+   new Pose2d(0, 0, new Rotation2d()));
 
   }
 
@@ -140,12 +142,16 @@ public class Swerve extends SubsystemBase {
           "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
     }
 
+    m_gyro.getRotation2d();
+
      //updates the odometry positon
      var m_odometryPose = m_odometry.update(m_gyro.getRotation2d(),
      getModulePositions());
 
      //Renews the field periodically
     m_field2d.setRobotPose(m_odometryPose);
+
+    SmartDashboard.putData(m_field2d);
   }
 
   public Command resetOdometryBlueSide() {
@@ -167,6 +173,6 @@ public Command resetOdometryRedSide() {
   }
 
 public void robotInit() {
-  SmartDashboard.putData("Field" ,m_field2d);
+
   }
 }
