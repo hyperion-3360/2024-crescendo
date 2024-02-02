@@ -74,6 +74,12 @@ public class Elevator extends SubsystemBase {
     }
     m_elevatorLeftMaster.set(0.0);
 
+     if (DriverStation.isDisabled()) {
+      m_elevatorTarget = m_encoder.getPosition();
+      // m_pid.reset(m_elevatorTarget);
+    }
+    m_elevatorLeftMaster.set(0.0);
+
     // checks if the motor is running or at max speed for the exponential function
     if (this.onTarget()) {
       this.stop();

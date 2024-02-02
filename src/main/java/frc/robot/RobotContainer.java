@@ -14,6 +14,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.subsystems.Shooter;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -39,6 +40,10 @@ public class RobotContainer {
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
+  // private final Elevator m_elevator = new Elevator();
+  private final Shooter m_shooter = new Shooter();
+
+  // private final Shooter m_shooter = new Shooter();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -70,7 +75,14 @@ public class RobotContainer {
     // Sequences.switchToHigh(m_elevator)
     // );
 
-    /* wpilib controller example */
-    //    m_driverController.b().onTrue(new ResetZeroAbsolute(m_swerveDrive));
+
+    // m_driverController.y().onTrue(Sequences.switchToHigh(m_elevator));
+
+    // m_driverController.b().onTrue(Sequences.switchToIntakeMode(m_elevator));
+
+    // m_driverController.a().onTrue(Sequences.switchToLow(m_elevator));
+
+    // m_driverController.b()
+    // .onTrue(m_shooter.shooting(e_shoot.LOW));
   }
 }

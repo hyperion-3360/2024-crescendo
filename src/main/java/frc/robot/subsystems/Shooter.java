@@ -1,55 +1,69 @@
 package frc.robot.subsystems;
 
+// import edu.wpi.first.wpilibj.DigitalInput;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-
-enum shoot {
-  HIGH,
-  LOW
-}
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class Shooter extends SubsystemBase {
+  public enum shootSpeed {
+    HIGH,
+    LOW,
+    INTAKE,
+    TRAP,
+    STOP
+  }
 
-  // Create new motors
+  private static double highSpeed = 0.05;
+  private static double lowSpeed = 0.05;
+  private static double intakeSpeed = -0;
+  private static double trapSpeed = 0;
+  private static double stopSpeed = 0;
 
-  private CANSparkMax m_RightMaster =
-      new CANSparkMax(Constants.SubsystemConstants.kShooterRightMasterId, MotorType.kBrushless);
-  private CANSparkMax m_RightFollower =
-      new CANSparkMax(Constants.SubsystemConstants.kShooterRightFollowerId, MotorType.kBrushless);
-  private CANSparkMax m_LeftMaster =
-      new CANSparkMax(Constants.SubsystemConstants.kShooterLeftMasterId, MotorType.kBrushless);
-  private CANSparkMax m_LeftFollower =
-      new CANSparkMax(Constants.SubsystemConstants.kShooterLeftFollowerId, MotorType.kBrushless);
+  private double m_speed = 0;
+
+  private CANSparkMax m_leftMaster = new CANSparkMax(9, MotorType.kBrushless);
 
   public Shooter() {
-
-    // Config motors
-
-    m_LeftMaster.setInverted(true);
-    m_LeftFollower.setInverted(true);
-
-    // m_RightMaster.configFactoryDefault();
-    // m_RightFollower.configFactoryDefault();
-    // m_LeftMaster.configFactoryDefault();
-    // m_LeftFollower.configFactoryDefault();
-
-    m_LeftFollower.follow(m_LeftMaster);
-    m_RightFollower.follow(m_RightMaster);
+    m_leftMaster.restoreFactoryDefaults();
+    m_leftMaster.setInverted(true);
+    m_leftMaster.burnFlash();
   }
-
-  public void robotInit() {}
 
   @Override
-  public void periodic() {}
-
-  public void setSpeed(double rightMasterSpeed, double leftMasterSpeed) {
-
-    // m_RightMaster.set(ControlMode.Velocity, rightMasterSpeed);
-    // m_LeftMaster.set(ControlMode.Velocity, leftMasterSpeed);
-
+  public void periodic() {
+    m_leftMaster.set(0.05);
   }
 
-  public void highGoal(double setDistance) {}
+  private void setShootingLevel(shootSpeed shoot) {
+
+    switch (shoot) {
+      case LOW:
+        m_speed = lowSpeed;
+        break;
+
+      case HIGH:
+        m_speed = highSpeed;
+        break;
+
+      case STOP:
+        m_speed = stopSpeed;
+        break;
+
+      case TRAP:
+        m_speed = trapSpeed;
+        break;
+
+      case INTAKE:
+        m_speed = intakeSpeed;
+        break;
+    }
+  }
+
+  public Command shoot(shootSpeed shootSpeed) {
+    return this.runOnce(() -> setShootingLevel(shootSpeed))
+        .andThen(new WaitCommand(5).andThen(() -> setShootingLevel(shootSpeed.STOP)));
+  }
 }
