@@ -1,0 +1,200 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.0355428084107916,
+        "y": 5.596634378091745
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.229932794218735,
+        "y": 5.566293178559914
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.6791022400335884,
+        "y": 5.596634378091745
+      },
+      "prevControl": {
+        "x": 2.521570681608365,
+        "y": 5.594666245358495
+      },
+      "nextControl": {
+        "x": 2.836633798458812,
+        "y": 5.598602510824995
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.0355428084107916,
+        "y": 5.596634378091745
+      },
+      "prevControl": {
+        "x": 2.3278839257088477,
+        "y": 5.573878390845725
+      },
+      "nextControl": {
+        "x": 1.7432016911127355,
+        "y": 5.6193903653377655
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.859449351765836,
+        "y": 6.958718881052272
+      },
+      "prevControl": {
+        "x": 2.6835381596353227,
+        "y": 6.668161241698358
+      },
+      "nextControl": {
+        "x": 3.0353605438963496,
+        "y": 7.249276520406187
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.0355428084107916,
+        "y": 5.596634378091745
+      },
+      "prevControl": {
+        "x": 2.2092598671648394,
+        "y": 5.848115980650668
+      },
+      "nextControl": {
+        "x": 1.952336977653935,
+        "y": 5.476181408124032
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.5123817407272053,
+        "y": 4.143902593885826
+      },
+      "prevControl": {
+        "x": 2.47205802521089,
+        "y": 4.341201984895421
+      },
+      "nextControl": {
+        "x": 2.545702294474956,
+        "y": 3.980868883366919
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.0216772309637276,
+        "y": 5.6022518080329
+      },
+      "prevControl": {
+        "x": 2.0456932155942544,
+        "y": 5.419330741688144
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "1st shot",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "1st take",
+      "waypointRelativePos": 1.1,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "2nd shot",
+      "waypointRelativePos": 2.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "2nd take",
+      "waypointRelativePos": 3.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "3rd shot",
+      "waypointRelativePos": 4.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "3rd take",
+      "waypointRelativePos": 5.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "4rth shot",
+      "waypointRelativePos": 6.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}

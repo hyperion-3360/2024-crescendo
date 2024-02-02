@@ -5,6 +5,14 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Shooter;
+
+import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.Shuffleboard3360;
@@ -30,6 +38,9 @@ public class RobotContainer {
 
   private final Shuffleboard3360 shuffleboard = Shuffleboard3360.getInstance();
   public static final Elevator m_elevator = new Elevator();
+  
+  private final DriveTrain m_driveTrain = new DriveTrain();
+  private final Shooter m_shooter = new Shooter();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -52,6 +63,12 @@ public class RobotContainer {
             () -> -m_driverController.getRawAxis(rotationAxis),
             () -> false));
     configureBindings();
+
+    String shoot ="shoot";
+    NamedCommands.registerCommand(shoot, highGoal());
+    String take ="take";
+    NamedCommands.registerCommand(take, takeNote());
+    
   }
 
   /**
@@ -72,5 +89,16 @@ public class RobotContainer {
 
     /* wpilib controller example */
     //    m_driverController.b().onTrue(new ResetZeroAbsolute(m_swerveDrive));
+  }
+
+  public Command highGoal(){
+    return Commands.runOnce(()->{
+      m_shooter.highGoal(0.5);
+    });
+  }
+  public Command takeNote(){
+return Commands.runOnce(()->{
+  m_shooter.takeNote();
+}    );
   }
 }
