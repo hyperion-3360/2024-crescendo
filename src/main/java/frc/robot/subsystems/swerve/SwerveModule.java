@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -29,6 +30,7 @@ public class SwerveModule {
   /* drive motor control requests */
   private final DutyCycleOut driveDutyCycle = new DutyCycleOut(0);
   private final VelocityVoltage driveVelocity = new VelocityVoltage(0);
+  private final VoltageOut m_voltageOutControl = new VoltageOut(0.0);
 
   /* angle motor control requests */
   private final PositionVoltage anglePosition = new PositionVoltage(0);
@@ -69,6 +71,11 @@ public class SwerveModule {
       driveVelocity.FeedForward = driveFeedForward.calculate(desiredState.speedMetersPerSecond);
       mDriveMotor.setControl(driveVelocity);
     }
+  }
+
+  public void setDriveVoltage(double voltage) {
+    m_voltageOutControl.withOutput(voltage);
+    mDriveMotor.setControl(m_voltageOutControl);
   }
 
   public Rotation2d getMagEncoderPos() {
