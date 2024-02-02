@@ -158,7 +158,7 @@ public class Swerve extends SubsystemBase {
             m_odometry.resetPosition(
                 m_gyro.getRotation2d(),
                 getModulePositions(),
-                new Pose2d(2.1, 5, Rotation2d.fromDegrees(180))));
+                new Pose2d(2.1, 5, Rotation2d.fromDegrees(-180))));
   }
 
   public Command resetOdometryRedSide() {
