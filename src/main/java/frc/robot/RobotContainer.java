@@ -4,19 +4,17 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.Shooter;
-
 import com.pathplanner.lib.auto.NamedCommands;
-
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.Shuffleboard3360;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
@@ -60,11 +58,10 @@ public class RobotContainer {
             () -> false));
     configureBindings();
 
-    String shoot ="shoot";
+    String shoot = "shoot";
     NamedCommands.registerCommand(shoot, highGoal());
-    String take ="take";
+    String take = "take";
     NamedCommands.registerCommand(take, takeNote());
-    
   }
 
   /**
@@ -87,14 +84,17 @@ public class RobotContainer {
     //    m_driverController.b().onTrue(new ResetZeroAbsolute(m_swerveDrive));
   }
 
-  public Command highGoal(){
-    return Commands.runOnce(()->{
-      m_shooter.highGoal(0.5);
-    });
+  public Command highGoal() {
+    return Commands.runOnce(
+        () -> {
+          m_shooter.highGoal(0.5);
+        });
   }
-  public Command takeNote(){
-return Commands.runOnce(()->{
-  m_shooter.takeNote();
-}    );
+
+  public Command takeNote() {
+    return Commands.runOnce(
+        () -> {
+          m_shooter.takeNote();
+        });
   }
 }
