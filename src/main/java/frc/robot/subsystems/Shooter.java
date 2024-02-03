@@ -14,29 +14,29 @@ public class Shooter extends SubsystemBase {
 
   // Create new motors
 
-  // private CANSparkMax m_RightMaster =
-  //     new CANSparkMax(Constants.SubsystemConstants.kShooterRightMasterId, MotorType.kBrushless);
-  // private CANSparkMax m_RightFollower =
-  //     new CANSparkMax(Constants.SubsystemConstants.kShooterRightFollowerId, MotorType.kBrushless);
-  // private CANSparkMax m_LeftMaster =
-  //     new CANSparkMax(Constants.SubsystemConstants.kShooterLeftMasterId, MotorType.kBrushless);
-  // private CANSparkMax m_LeftFollower =
-  //     new CANSparkMax(Constants.SubsystemConstants.kShooterLeftFollowerId, MotorType.kBrushless);
+  private CANSparkMax m_RightMaster =
+      new CANSparkMax(Constants.SubsystemConstants.kShooterRightMasterId, MotorType.kBrushless);
+  private CANSparkMax m_RightFollower =
+      new CANSparkMax(Constants.SubsystemConstants.kShooterRightFollowerId, MotorType.kBrushless);
+  private CANSparkMax m_LeftMaster =
+      new CANSparkMax(Constants.SubsystemConstants.kShooterLeftMasterId, MotorType.kBrushless);
+  private CANSparkMax m_LeftFollower =
+      new CANSparkMax(Constants.SubsystemConstants.kShooterLeftFollowerId, MotorType.kBrushless);
 
   public void Shooter() {
 
     // Config motors
 
-    // m_LeftMaster.setInverted(true);
-    // m_LeftFollower.setInverted(true);
+    m_LeftMaster.setInverted(true);
+    m_LeftFollower.setInverted(true);
 
     // m_RightMaster.configFactoryDefault();
     // m_RightFollower.configFactoryDefault();
     // m_LeftMaster.configFactoryDefault();
     // m_LeftFollower.configFactoryDefault();
 
-    // m_LeftFollower.follow(m_LeftMaster);
-    // m_RightFollower.follow(m_RightMaster);
+    m_LeftFollower.follow(m_LeftMaster);
+    m_RightFollower.follow(m_RightMaster);
   }
 
   public void robotInit() {}
