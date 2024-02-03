@@ -29,7 +29,7 @@ public class Swerve extends SubsystemBase {
 
   public Swerve() {
 
-    m_gyro = new WPI_PigeonIMU(0);
+    m_gyro = new WPI_PigeonIMU(Constants.Swerve.pigeonID);
 
     m_field2d = new Field2d();
 
