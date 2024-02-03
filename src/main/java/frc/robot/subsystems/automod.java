@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -12,34 +13,57 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.subsystems.swerve.Swerve;
+
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /** Add your docs here. */
 public class automod extends SubsystemBase {
-  private Supplier<Pose2d> getPose;
-  private Consumer<Pose2d> resetPose;
+  private Supplier<Pose2d> m_poseSupplier;
+  private Consumer<Pose2d> m_poseResetConsumer;
   private Supplier<ChassisSpeeds> getRobotRelativeSpeeds;
   private Consumer<ChassisSpeeds> driveRobotRelative;
 
-  public automod() {
-    // All other subsystem initialization
-    // ...
+  // TODO Changer pour avoir les bons noms de fichiers
+  public enum Mode {
+    RED_AUTO1("Left 1.auto"),
+    RED_AUTO2("Center 1.auto"),
+    RED_AUTO3(""),
+    BLUE_AUTO1(""),
+    BLUE_AUTO2(""),
+    BLUE_AUTO3("");
+
+    private String m_path;
+    private Mode(String path){
+      m_path = path;
+    }
+
+    public String toString(){
+      return m_path;
+    }
+  }
+
+  public automod(Swerve drivetrain, PIDConstants swervesPid, PIDConstants rotationPid) {
+    // Init the pose and speed suppliers and consumers for pathplanner...
+    m_poseSupplier = () -> drivetrain.getPose();
+    m_poseResetConsumer = (Pose2d new_zero) -> drivetrain.setPose(new_zero);
 
     // Configure AutoBuilder last
     AutoBuilder.configureHolonomic(
-        this.getPose, // Robot pose supplier
-        this.resetPose, // Method to reset odometry (will be called if your auto has a starting
+        this.m_poseSupplier, // Robot pose supplier
+        this.m_poseResetConsumer, // Method to reset odometry (will be called if your auto has a starting
         // pose)
         this.getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         this.driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE
         // ChassisSpeeds
         new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in
             // your Constants class
-            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-            new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-            4.5, // Max module speed, in m/s
-            0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+            swervesPid, // Translation PID constants
+            rotationPid, // Rotation PID constants
+            Constants.Swerve.maxSpeed, // Max module speed, in m/s
+            Constants.robotBaseRadiusApprox, // Drive base radius in meters. Distance from robot center to furthest module.
             new ReplanningConfig() // Default path replanning config. See the API for the options
             // here
             ),
@@ -56,5 +80,10 @@ public class automod extends SubsystemBase {
         },
         this // Reference to this subsystem to set requirements
         );
+  }
+
+  public void follow(Mode automode){
+    PathPlannerPath path = PathPlannerPath.fromPathFile(automode.toString());
+    AutoBuilder.followPath(path);
   }
 }

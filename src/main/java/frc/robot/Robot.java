@@ -64,6 +64,11 @@ public class Robot extends TimedRobot {
   //   }
   // }
 
+  @Override
+  public void autonomousInit() {
+    m_robotContainer.autoInit();
+  }
+
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {}

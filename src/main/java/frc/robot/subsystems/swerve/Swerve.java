@@ -165,6 +165,7 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putData(m_field2d);
   }
 
+  // TODO: la position initiale va changer dépendamment du mode auto...
   public Command resetOdometryBlueSide() {
     return this.runOnce(
         () ->

@@ -17,6 +17,9 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
 
   public static final double stickDeadband = 0.1;
+  public static final double robotBaseWidth = 0.7747; // meters. approx of 30.5 inches
+  public static final double robotBaseDepth = 0.7239; // meters. approx of 28.5 inches
+  public static final double robotBaseRadiusApprox = Math.hypot(robotBaseWidth, robotBaseDepth) / 2.0;
 
   public static final class Swerve {
     public static final int pigeonID = 1;
