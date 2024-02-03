@@ -176,6 +176,8 @@ public final class Constants {
     public static final int kservoFingerId = 6;
     public static final int kfingerlimitswitchId = 6;
 
+    public static final int kservoBlockerId = 5;
+
     public static final double kfingerClosed = 180.0; // angle of finger servo when closed/opened
     public static final double kfingerOpened = 90.0;
 
