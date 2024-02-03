@@ -98,7 +98,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setShooterSpeed() {
-    m_speed = m_curve.getMotorSpeed(highSpeed);
+    m_speed = m_curve.getMotorSpeed(m_shooterTargetSpeed);
     m_leftMaster.set(m_speed);
     m_rightMaster.set(m_speed);
   }

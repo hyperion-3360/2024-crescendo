@@ -19,7 +19,7 @@ public final class Constants {
   public static final double stickDeadband = 0.1;
 
   public static final class Swerve {
-    public static final int pigeonID = 1;
+    public static final int pigeonID = 0;
 
     public static final COTSTalonFXSwerveConstants chosenModule =
         COTSTalonFXSwerveConstants.WCP.SwerveXFlipped.Falcon500(
@@ -164,6 +164,13 @@ public final class Constants {
     public static final double kHighTarget = 0.25;
     public static final double kLowTarget = 0.10;
     public static final double kIntakeTarget = 0.0;
+  }
+
+  public static class ClimberConstants {
+    public static final double kclimberDeadBand = 0.005;
+    public static final double kGripTarget = 0.35;
+    public static final double kTopTarget = 0.3;
+    public static final double kBottomTarget = 0.0;
   }
 
   public static class OperatorConstants {

@@ -3,9 +3,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Trap;
+import frc.robot.subsystems.Climber.e_climberCheck;
 import frc.robot.subsystems.Elevator.e_elevatorLevel;
 import frc.robot.subsystems.Shooter.shootSpeed;
 
@@ -49,9 +51,16 @@ public class Sequences {
       );
     }
 
-    public static Command manualTrapCommand(Trap m_trap) {
-      return Commands.sequence(
+    // public static Command manualTrapCommand(Trap m_trap) {
+    //   return Commands.sequence(
 
-      );
-    }
+    //   );
+    // }
+
+    // public static Command climberSequence(Climber m_climber) {
+    //   return Command.sequence(
+    //     m_climber.climberGoToSelectedLevel(e_climberCheck.BOTTOM),
+    //     new WaitUntilCommand()
+    //   );
+    // }
 }
