@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.Shuffleboard3360;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Trap;
@@ -26,24 +27,26 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final Swerve m_swerveDrive = new Swerve();
-  private final Trap m_trap = new Trap();
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
 
-  private final Shuffleboard3360 shuffleboard = Shuffleboard3360.getInstance();
+  public static final Sequences m_sequence = new Sequences();
+  public static final Shooter m_shooter = new Shooter();
   public static final Elevator m_elevator = new Elevator();
+  public static final Trap m_trap = new Trap();
+
+  private final Shuffleboard3360 shuffleboard = Shuffleboard3360.getInstance();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+       private final CommandXboxController m_coDriverController =
+      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+
+
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
-
-  // private final Elevator m_elevator = new Elevator();
-  private final Shooter m_shooter = new Shooter();
-
-  // private final Shooter m_shooter = new Shooter();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -69,20 +72,13 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    m_driverController.a().onTrue(Sequences.automaticTrapSequence(m_trap));
 
-    // m_driverController.y()
-    // .onTrue(
-    // Sequences.switchToHigh(m_elevator)
-    // );
+    m_driverController.b().onTrue(Sequences.shootLow(m_elevator, m_shooter));
 
+     m_driverController.y().onTrue(Sequences.shootHigh(m_elevator, m_shooter));
 
-    // m_driverController.y().onTrue(Sequences.switchToHigh(m_elevator));
-
-    // m_driverController.b().onTrue(Sequences.switchToIntakeMode(m_elevator));
-
-    // m_driverController.a().onTrue(Sequences.switchToLow(m_elevator));
-
-    // m_driverController.b()
-    // .onTrue(m_shooter.shooting(e_shoot.LOW));
+      m_driverController.x().onTrue(Sequences.switchToIntakeMode(m_elevator, m_shooter));
+    
   }
 }
