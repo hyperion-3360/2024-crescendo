@@ -2,19 +2,11 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkBase.IdleMode;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.Constants;
-
-
-
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
   public enum shootSpeed {
@@ -36,10 +28,10 @@ public class Shooter extends SubsystemBase {
 
   private double m_speed = 0;
 
-  private CANSparkMax m_leftMaster = new CANSparkMax(Constants.kLeftMasterId, MotorType.kBrushless);
-  private CANSparkMax m_rightMaster = new CANSparkMax(Constants.kRightMasterId, MotorType.kBrushless);
-  private CANSparkMax m_leftFollower = new CANSparkMax(Constants.kLeftFollowerId, MotorType.kBrushless);
-  private CANSparkMax m_rightFollower = new CANSparkMax(Constants.kRightFollowerId, MotorType.kBrushless);
+  private CANSparkMax m_leftMaster = new CANSparkMax(Constants.SubsystemConstants.kLeftMasterId, MotorType.kBrushless);
+  private CANSparkMax m_rightMaster = new CANSparkMax(Constants.SubsystemConstants.kRightMasterId, MotorType.kBrushless);
+  private CANSparkMax m_leftFollower = new CANSparkMax(Constants.SubsystemConstants.kLeftFollowerId, MotorType.kBrushless);
+  private CANSparkMax m_rightFollower = new CANSparkMax(Constants.SubsystemConstants.kRightFollowerId, MotorType.kBrushless);
 
 
   public Shooter() {

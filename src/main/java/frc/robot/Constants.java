@@ -199,7 +199,7 @@ public final class Constants {
     public static final double kangleElbowscoreNote = 145.5; 
     public static final double kangleWristscoreNote = 155.0; 
     public static final double kangleFingerscoreNote = 155.0; 
-    static final int kservoBlockerId = 5;
+    public static final int kservoBlockerId = 5;
   }
 
   public static class WCPSwerveModule {
