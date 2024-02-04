@@ -22,7 +22,7 @@ public class Elevator extends SubsystemBase {
   };
 
   // instanciate a limit switch
-  DigitalInput bottomlimitSwitch = new DigitalInput(1);
+  DigitalInput bottomlimitSwitch = new DigitalInput(5);
 
   // instancing the motor controllers m_elevatorLeft is the master motor
   private CANSparkMax m_elevatorRight =

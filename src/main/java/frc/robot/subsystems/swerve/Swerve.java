@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.lib.util.ModifiedSignalLogger;
 import frc.robot.Constants;
 
 public class Swerve extends SubsystemBase {
@@ -145,14 +144,14 @@ public class Swerve extends SubsystemBase {
   @Override
   public void periodic() {
     //        swerveOdometry.update(getGyroYaw(), getModulePositions());
-    for (SwerveModule mod : mSwerveMods) {
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " CANcoder", mod.getMagEncoderPos().getDegrees());
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-    }
+    //    for (SwerveModule mod : mSwerveMods) {
+    //      SmartDashboard.putNumber(
+    //          "Mod " + mod.moduleNumber + " CANcoder", mod.getMagEncoderPos().getDegrees());
+    //      SmartDashboard.putNumber(
+    //          "Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
+    //      SmartDashboard.putNumber(
+    //          "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+    //    }
 
     m_gyro.getRotation2d();
 
@@ -187,7 +186,8 @@ public class Swerve extends SubsystemBase {
 
   private SysIdRoutine m_driveSysIdRoutine =
       new SysIdRoutine(
-          new SysIdRoutine.Config(null, null, null, ModifiedSignalLogger.logState()),
+          //          new SysIdRoutine.Config(null, null, null, ModifiedSignalLogger.logState()),
+          new SysIdRoutine.Config(null, null, null, null),
           new SysIdRoutine.Mechanism(
               (Measure<Voltage> volts) -> drive(volts.in(Volts)), null, this));
 
