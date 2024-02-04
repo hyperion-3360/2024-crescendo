@@ -1,7 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import static edu.wpi.first.units.Units.*;
-
 import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,15 +10,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.lib.util.ModifiedSignalLogger;
 import frc.robot.Constants;
 
 public class Swerve extends SubsystemBase {
@@ -74,12 +67,6 @@ public class Swerve extends SubsystemBase {
 
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
-    }
-  }
-
-  public void drive(double voltage) {
-    for (SwerveModule mod : mSwerveMods) {
-      mod.setDriveVoltage(voltage);
     }
   }
 
@@ -184,18 +171,4 @@ public class Swerve extends SubsystemBase {
   }
 
   public void robotInit() {}
-
-  private SysIdRoutine m_driveSysIdRoutine =
-      new SysIdRoutine(
-          new SysIdRoutine.Config(null, null, null, ModifiedSignalLogger.logState()),
-          new SysIdRoutine.Mechanism(
-              (Measure<Voltage> volts) -> drive(volts.in(Volts)), null, this));
-
-  public Command runDriveQuasiTest(Direction direction) {
-    return m_driveSysIdRoutine.quasistatic(direction);
-  }
-
-  public Command runDriveDynamTest(SysIdRoutine.Direction direction) {
-    return m_driveSysIdRoutine.dynamic(direction);
-  }
 }
