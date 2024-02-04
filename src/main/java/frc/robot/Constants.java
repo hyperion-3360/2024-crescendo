@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -14,7 +13,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
-
 
 public final class Constants {
 
@@ -156,10 +154,10 @@ public final class Constants {
     public static final int kShooterLeftFollowerId = 0;
     public static final int kShooterRightFollowerId = 0;
 
-  public static final int kRightMasterId = 16;
-  public static final int kLeftMasterId = 14;
-  public static final int kLeftFollowerId = 13;
-  public static final int kRightFollowerId = 15;
+    public static final int kRightMasterId = 16;
+    public static final int kLeftMasterId = 14;
+    public static final int kLeftFollowerId = 13;
+    public static final int kRightFollowerId = 15;
   }
 
   public static class ElevatorConstants {
@@ -177,28 +175,28 @@ public final class Constants {
 
   public static class TrapConstants {
 
-    public static final int kservoShoulderId = 9; //servo ports + limit switch
+    public static final int kservoShoulderId = 9; // servo ports + limit switch
     public static final int kservoElbowId = 8;
     public static final int kservoWristId = 7;
     public static final int kservoFingerId = 6;
     public static final int kfingerlimitswitchId = 6;
 
-    public static final double kfingerClosed = 180.0; //angle of finger servo when closed/opened
-    public static final double kfingerOpened = 90.0; 
+    public static final double kfingerClosed = 180.0; // angle of finger servo when closed/opened
+    public static final double kfingerOpened = 90.0;
 
-    public static final double kangleShouldersetZero = 7.0; //angles servos in SETZERO   //lower number = lower
-    public static final double kangleElbowsetZero = 145.5;                               //higher number = lower
-    public static final double kangleWristsetZero = 155.0;                               //higher number = lower
-    
+    public static final double kangleShouldersetZero =
+        7.0; // angles servos in SETZERO   //lower number = lower
+    public static final double kangleElbowsetZero = 145.5; // higher number = lower
+    public static final double kangleWristsetZero = 155.0; // higher number = lower
 
-    public static final double kangleShouldergrabPosition = 70.0; //angles servos in GRABPOSITION
+    public static final double kangleShouldergrabPosition = 70.0; // angles servos in GRABPOSITION
     public static final double kangleElbowgrabPosition = 105.0;
     public static final double kangleWristgrabPosition = 75.0;
 
-    public static final double kangleShoulderscoreNote = 7.0; //angles servos in SCORENOTE
-    public static final double kangleElbowscoreNote = 145.5; 
-    public static final double kangleWristscoreNote = 155.0; 
-    public static final double kangleFingerscoreNote = 155.0; 
+    public static final double kangleShoulderscoreNote = 7.0; // angles servos in SCORENOTE
+    public static final double kangleElbowscoreNote = 145.5;
+    public static final double kangleWristscoreNote = 155.0;
+    public static final double kangleFingerscoreNote = 155.0;
     public static final int kservoBlockerId = 5;
   }
 
@@ -241,7 +239,3 @@ public final class Constants {
     public static final double kangleFingerscoreNote = 155.0;
   }
 }
-
-
-
-

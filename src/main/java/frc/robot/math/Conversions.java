@@ -106,5 +106,3 @@ public class Conversions {
     return meters / (circumference / (gearRatio * 2048.0));
   }
 }
-
-

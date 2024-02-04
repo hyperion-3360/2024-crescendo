@@ -1,58 +1,39 @@
 {
     "fileName": "REVLib.json",
     "name": "REVLib",
-<<<<<<< HEAD
-<<<<<<< HEAD
     "version": "2024.2.0",
     "frcYear": "2024",
-=======
+
     "version": "2024.1.3",
->>>>>>> 0f32c26 (y)
-=======
+
     "version": "2024.2.0",
     "frcYear": "2024",
->>>>>>> 053d3e4 (most likely working shooter, need to modify speed values)
     "uuid": "3f48eb8c-50fe-43a6-9cb7-44c86353c4cb",
     "mavenUrls": [
         "https://maven.revrobotics.com/"
     ],
-<<<<<<< HEAD
-<<<<<<< HEAD
+
     "jsonUrl": "https://software-metadata.revrobotics.com/REVLib-2024.json",
-=======
     "jsonUrl": "https://software-metadata.revrobotics.com/REVLib-2023.json",
->>>>>>> 0f32c26 (y)
-=======
+
     "jsonUrl": "https://software-metadata.revrobotics.com/REVLib-2024.json",
->>>>>>> 053d3e4 (most likely working shooter, need to modify speed values)
     "javaDependencies": [
         {
             "groupId": "com.revrobotics.frc",
             "artifactId": "REVLib-java",
-<<<<<<< HEAD
-<<<<<<< HEAD
+
+            "version": "2024.2.0",
+            "version": "2023.1.3",
             "version": "2024.2.0"
-=======
-            "version": "2023.1.3"
->>>>>>> 0f32c26 (y)
-=======
-            "version": "2024.2.0"
->>>>>>> 053d3e4 (most likely working shooter, need to modify speed values)
         }
     ],
     "jniDependencies": [
         {
             "groupId": "com.revrobotics.frc",
             "artifactId": "REVLib-driver",
-<<<<<<< HEAD
-<<<<<<< HEAD
             "version": "2024.2.0",
-=======
             "version": "2023.1.3",
->>>>>>> 0f32c26 (y)
-=======
             "version": "2024.2.0",
->>>>>>> 053d3e4 (most likely working shooter, need to modify speed values)
             "skipInvalidPlatforms": true,
             "isJar": false,
             "validPlatforms": [
@@ -70,15 +51,9 @@
         {
             "groupId": "com.revrobotics.frc",
             "artifactId": "REVLib-cpp",
-<<<<<<< HEAD
-<<<<<<< HEAD
             "version": "2024.2.0",
-=======
             "version": "2023.1.3",
->>>>>>> 0f32c26 (y)
-=======
             "version": "2024.2.0",
->>>>>>> 053d3e4 (most likely working shooter, need to modify speed values)
             "libName": "REVLib",
             "headerClassifier": "headers",
             "sharedLibrary": false,
@@ -96,15 +71,9 @@
         {
             "groupId": "com.revrobotics.frc",
             "artifactId": "REVLib-driver",
-<<<<<<< HEAD
-<<<<<<< HEAD
             "version": "2024.2.0",
-=======
             "version": "2023.1.3",
->>>>>>> 0f32c26 (y)
-=======
             "version": "2024.2.0",
->>>>>>> 053d3e4 (most likely working shooter, need to modify speed values)
             "libName": "REVLibDriver",
             "headerClassifier": "headers",
             "sharedLibrary": false,

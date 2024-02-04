@@ -5,15 +5,14 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
-
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Shooter.shootSpeed;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.Shuffleboard3360;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.shootSpeed;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
@@ -34,7 +33,6 @@ public class RobotContainer {
   private final Shuffleboard3360 shuffleboard = Shuffleboard3360.getInstance();
   public static final Elevator m_elevator = new Elevator();
   private Shooter m_shooter = new Shooter();
-  
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -78,10 +76,8 @@ public class RobotContainer {
     m_driverController.a().onTrue(m_shooter.shoot(shootSpeed.HIGH));
 
     m_driverController.a().onTrue(m_shooter.shoot(shootSpeed.INTAKE));
- 
   }
 
-    /* wpilib controller example */
-    //    m_driverController.b().onTrue(new ResetZeroAbsolute(m_swerveDrive));
-  }
-
+  /* wpilib controller example */
+  //    m_driverController.b().onTrue(new ResetZeroAbsolute(m_swerveDrive));
+}
