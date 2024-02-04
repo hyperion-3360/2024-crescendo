@@ -1,5 +1,7 @@
 package frc.robot.subsystems.swerve;
 
+import static edu.wpi.first.units.Units.*;
+
 import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -10,32 +12,29 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.lib.util.ModifiedSignalLogger;
 import frc.robot.Constants;
 
 public class Swerve extends SubsystemBase {
   public SwerveModule[] mSwerveMods;
-
   public SwerveModulePosition[] positions;
-
   private final WPI_PigeonIMU m_gyro;
-
   private final Field2d m_field2d;
-
   public SwerveDriveOdometry m_odometry;
 
   public Swerve() {
-
     m_gyro = new WPI_PigeonIMU(0);
-
     m_field2d = new Field2d();
-
     m_gyro.reset();
     m_gyro.enterCalibrationMode(CalibrationMode.Temperature);
-
     mSwerveMods =
         new SwerveModule[] {
           new SwerveModule(0, Constants.Swerve.Mod0.constants),
@@ -43,13 +42,11 @@ public class Swerve extends SubsystemBase {
           new SwerveModule(2, Constants.Swerve.Mod2.constants),
           new SwerveModule(3, Constants.Swerve.Mod3.constants)
         };
-
     positions = new SwerveModulePosition[4];
     for (SwerveModule mod : mSwerveMods) {
       positions[mod.moduleNumber] = mod.getPosition();
     }
     ;
-
     m_odometry =
         new SwerveDriveOdometry(
             Constants.Swerve.swerveKinematics,
@@ -64,16 +61,20 @@ public class Swerve extends SubsystemBase {
         Constants.Swerve.swerveKinematics.toSwerveModuleStates(
             new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
-
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
+    }
+  }
+
+  public void drive(double voltage) {
+    for (SwerveModule mod : mSwerveMods) {
+      mod.setDriveVoltage(voltage);
     }
   }
 
   /* Used by SwerveControllerCommand in Auto */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.maxSpeed);
-
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(desiredStates[mod.moduleNumber], false);
     }
@@ -140,15 +141,11 @@ public class Swerve extends SubsystemBase {
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
     }
-
     m_gyro.getRotation2d();
-
     // updates the odometry positon
     var m_odometryPose = m_odometry.update(m_gyro.getRotation2d(), getModulePositions());
-
     // Renews the field periodically
     m_field2d.setRobotPose(m_odometryPose);
-
     SmartDashboard.putData(m_field2d);
   }
 
@@ -171,4 +168,18 @@ public class Swerve extends SubsystemBase {
   }
 
   public void robotInit() {}
+
+  private SysIdRoutine m_driveSysIdRoutine =
+      new SysIdRoutine(
+          new SysIdRoutine.Config(null, null, null, ModifiedSignalLogger.logState()),
+          new SysIdRoutine.Mechanism(
+              (Measure<Voltage> volts) -> drive(volts.in(Volts)), null, this));
+
+  public Command runDriveQuasiTest(Direction direction) {
+    return m_driveSysIdRoutine.quasistatic(direction);
+  }
+
+  public Command runDriveDynamTest(SysIdRoutine.Direction direction) {
+    return m_driveSysIdRoutine.dynamic(direction);
+  }
 }
