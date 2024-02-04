@@ -2,7 +2,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.subsystems.Blocker;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Shooter;
@@ -13,37 +16,75 @@ import frc.robot.subsystems.Shooter.shootSpeed;
 
 public class Sequences {
 
-  public static Command switchToIntakeMode(
-    Elevator m_elevator, Shooter m_shooter) {
+  // public static Command switchToIntakeMode(
+  //   Elevator m_elevator, Shooter m_shooter, Blocker m_blocker) {
+  //   return Commands.sequence(
+  //     m_blocker.setZero(),
+  //     m_elevator.extendTheElevator(e_elevatorLevel.INTAKE),
+  //     new WaitUntilCommand(() -> m_elevator.onTarget()),
+  //     m_shooter.shoot(shootSpeed.INTAKE)
+  //   );
+  // }
+
+  // public static Command shootHigh(
+  //   Elevator m_elevator, Shooter m_shooter, Blocker m_blocker) {
+  //   return Commands
+  //   .sequence(
+  //     m_blocker.setZero(),
+  //     m_elevator.extendTheElevator(e_elevatorLevel.HIGH),
+  //      new WaitUntilCommand(() -> m_elevator.onTarget()),
+  //     m_shooter.shoot(shootSpeed.HIGH)
+  //   );
+  // }
+
+  // public static Command shootLow(
+  //   Elevator m_elevator, Shooter m_shooter, Blocker m_blocker) {
+  //   return Commands.sequence(
+  //     m_blocker.setZero(),
+  //     m_elevator.extendTheElevator(e_elevatorLevel.LOW),
+  //      new WaitUntilCommand(() -> m_elevator.onTarget()),
+  //     m_shooter.shoot(shootSpeed.LOW)
+  //   );
+  // }
+
+
+   public static Command shootLow(
+    Shooter m_shooter, Blocker m_blocker) {
     return Commands.sequence(
-      m_elevator.extendTheElevator(e_elevatorLevel.INTAKE),
-      new WaitUntilCommand(() -> m_elevator.onTarget()),
+      m_blocker.setZero(),
+      m_shooter.shoot(shootSpeed.LOW).
+      alongWith(new WaitCommand(1).andThen( m_blocker.letGoOfNote().
+      andThen(new WaitCommand(1)))),
+      m_shooter.stop(),
+      m_blocker.setZero()
+    );
+  }
+
+   public static Command shootHigh(
+    Shooter m_shooter, Blocker m_blocker) {
+    return Commands.sequence(
+      m_blocker.setZero(),
+   m_shooter.shoot(shootSpeed.HIGH).
+      alongWith(new WaitCommand(1).andThen( m_blocker.letGoOfNote().
+      andThen(new WaitCommand(1)))),
+      m_shooter.stop(),
+      m_blocker.setZero()
+    );
+  }
+
+   public static Command switchToIntakeMode(
+    Shooter m_shooter, Blocker m_blocker) {
+    return Commands.sequence(
+      m_blocker.setZero(),
       m_shooter.shoot(shootSpeed.INTAKE)
     );
   }
 
-  public static Command shootHigh(
-    Elevator m_elevator, Shooter m_shooter) {
-    return Commands
-    .sequence(
-      m_elevator.extendTheElevator(e_elevatorLevel.HIGH),
-       new WaitUntilCommand(() -> m_elevator.onTarget()),
-      m_shooter.shoot(shootSpeed.HIGH)
-    );
-  }
-
-  public static Command shootLow(
-    Elevator m_elevator, Shooter m_shooter) {
-    return Commands.sequence(
-      m_elevator.extendTheElevator(e_elevatorLevel.LOW),
-       new WaitUntilCommand(() -> m_elevator.onTarget()),
-      m_shooter.shoot(shootSpeed.LOW)
-    );
-  }
-
-   public static Command automaticTrapSequence(Trap m_trap) {
+   public static Command automaticTrapSequence(Trap m_trap, Shooter m_shooter) {
       return Commands.sequence(
         m_trap.grabPosition(),
+        new WaitCommand(5),
+        m_shooter.shoot(shootSpeed.TRAP),
         new WaitUntilCommand(() -> m_trap.m_limitSwitch.get()),
         m_trap.scoreNote(),
         new WaitUntilCommand(() -> !m_trap.m_limitSwitch.get()),

@@ -107,7 +107,7 @@ public final class Constants {
       public static final int driveMotorID = 5;
       public static final int angleMotorID = 6;
       public static final int magEncoderID = 2;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(126.5);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(129.5); //126.5
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, magEncoderID, angleOffset);
     }
@@ -117,7 +117,7 @@ public final class Constants {
       public static final int driveMotorID = 7;
       public static final int angleMotorID = 8;
       public static final int magEncoderID = 1;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(65.5);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(65.5); //65.5
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, magEncoderID, angleOffset);
     }
@@ -127,7 +127,7 @@ public final class Constants {
       public static final int driveMotorID = 1;
       public static final int angleMotorID = 2;
       public static final int magEncoderID = 3;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(346.8);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(346.8); //346.8
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, magEncoderID, angleOffset);
     }
@@ -137,7 +137,7 @@ public final class Constants {
       public static final int driveMotorID = 3;
       public static final int angleMotorID = 4;
       public static final int magEncoderID = 0;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(282.3);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(282.3); //282.3
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, magEncoderID, angleOffset);
     }
@@ -151,10 +151,10 @@ public final class Constants {
     public static final int kclimberRightId = 11; //  climber
     public static final int kclimberLeftId = 12;
 
-    public static final int kShooterLeftMasterId = 13;
-    public static final int kShooterRightMasterId = 14;
-    public static final int kShooterLeftFollowerId = 15;
-    public static final int kShooterRightFollowerId = 16;
+    public static final int kRightMasterId = 16;
+    public static final int kLeftMasterId = 14;
+    public static final int kLeftFollowerId = 13;
+    public static final int kRightFollowerId = 15;  
     
     public static final int kBeamBreakChannel = 0;
   }
@@ -186,6 +186,8 @@ public final class Constants {
     public static final int kservoWristId = 7;
     public static final int kservoFingerId = 6;
     public static final int kfingerlimitswitchId = 6;
+
+    public static final int kservoBlockerId = 5;
 
     public static final double kfingerClosed = 180.0; // angle of finger servo when closed/opened
     public static final double kfingerOpened = 90.0;

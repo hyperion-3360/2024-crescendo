@@ -11,6 +11,7 @@ import frc.Shuffleboard3360;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
+import frc.robot.subsystems.Blocker;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
@@ -33,6 +34,7 @@ public class RobotContainer {
   public static final Shooter m_shooter = new Shooter();
   public static final Elevator m_elevator = new Elevator();
   public static final Trap m_trap = new Trap();
+  public static final Blocker m_blocker = new Blocker();
 
   private final Shuffleboard3360 shuffleboard = Shuffleboard3360.getInstance();
 
@@ -72,13 +74,13 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.a().onTrue(Sequences.automaticTrapSequence(m_trap));
+    m_driverController.a().onTrue(Sequences.automaticTrapSequence(m_trap, m_shooter));
 
-    m_driverController.b().onTrue(Sequences.shootLow(m_elevator, m_shooter));
+    m_driverController.b().onTrue(Sequences.shootHigh( m_shooter, m_blocker));
 
-     m_driverController.y().onTrue(Sequences.shootHigh(m_elevator, m_shooter));
+     m_driverController.y().onTrue(Sequences.shootLow( m_shooter, m_blocker));
 
-      m_driverController.x().onTrue(Sequences.switchToIntakeMode(m_elevator, m_shooter));
+      m_driverController.x().whileTrue(Sequences.switchToIntakeMode( m_shooter, m_blocker)).onFalse(m_shooter.stop());
     
   }
 }

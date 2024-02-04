@@ -41,7 +41,6 @@ return this.runOnce(() -> { m_servoShoulder.setAngle(
     m_servoFinger.setAngle(Constants.TrapConstants.kangleFingerscoreNote);
       }));
     }
-
   @Override
   public void periodic() {
 
