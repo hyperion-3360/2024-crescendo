@@ -90,6 +90,7 @@ public class Elevator extends SubsystemBase {
       Double adjustedSpeed = m_curve.adjustPeriodic();
       if (adjustedSpeed != null) {
         m_elevatorLeftMaster.set(adjustedSpeed);
+        m_elevatorRight.set(adjustedSpeed);
       }
     }
 
@@ -127,6 +128,7 @@ public class Elevator extends SubsystemBase {
     m_curve.stop();
 
     m_elevatorLeftMaster.stopMotor();
+    m_elevatorRight.stopMotor();
   }
 
   // check if the limit switch is triggered
