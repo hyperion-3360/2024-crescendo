@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.lib.util.ModifiedSignalLogger;
 import frc.robot.Constants;
 
 public class Swerve extends SubsystemBase {
@@ -133,6 +132,7 @@ public class Swerve extends SubsystemBase {
   @Override
   public void periodic() {
     //        swerveOdometry.update(getGyroYaw(), getModulePositions());
+<<<<<<< HEAD
     for (SwerveModule mod : mSwerveMods) {
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " CANcoder", mod.getMagEncoderPos().getDegrees());
@@ -141,6 +141,17 @@ public class Swerve extends SubsystemBase {
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
     }
+=======
+    //    for (SwerveModule mod : mSwerveMods) {
+    //      SmartDashboard.putNumber(
+    //          "Mod " + mod.moduleNumber + " CANcoder", mod.getMagEncoderPos().getDegrees());
+    //      SmartDashboard.putNumber(
+    //          "Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
+    //      SmartDashboard.putNumber(
+    //          "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+    //    }
+
+>>>>>>> ab46a18 (updated angle gear ratio, change PID for angle motor, reset zeros, hardcoded a new port for elevator bottom limit switch, remove polling of falcon encoders to reduce CAN bus usage)
     m_gyro.getRotation2d();
     // updates the odometry positon
     var m_odometryPose = m_odometry.update(m_gyro.getRotation2d(), getModulePositions());
@@ -171,7 +182,8 @@ public class Swerve extends SubsystemBase {
 
   private SysIdRoutine m_driveSysIdRoutine =
       new SysIdRoutine(
-          new SysIdRoutine.Config(null, null, null, ModifiedSignalLogger.logState()),
+          //          new SysIdRoutine.Config(null, null, null, ModifiedSignalLogger.logState()),
+          new SysIdRoutine.Config(null, null, null, null),
           new SysIdRoutine.Mechanism(
               (Measure<Voltage> volts) -> drive(volts.in(Volts)), null, this));
 
