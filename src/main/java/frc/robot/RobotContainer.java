@@ -51,6 +51,21 @@ public class RobotContainer {
 
   private final double kJoystickDeadband = 0.1;
 
+  /***
+   * conditionJoystick
+   * Condition a joystick axis value given a slewrate limiter and deadband
+   * @param axis axis to condition
+   * @param limiter slewrate limiter (to smooth the rate of changed
+   * @see https://docs.wpilib.org/en/stable/docs/software/advanced-controls/filters/slew-rate-limiter.html)
+   * @param deadband deadband to suppress noise around the 0 of a joystick axis
+   * @see https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/MathUtil.html#applyDeadband(double,double)
+   * @return the conditioned value
+   */
+  private double conditionJoystick(int axis, SlewRateLimiter limiter, double deadband) {
+    return -limiter.calculate(
+        MathUtil.applyDeadband(m_driverController.getRawAxis(axis), deadband));
+  }
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -59,18 +74,9 @@ public class RobotContainer {
     m_swerveDrive.setDefaultCommand(
         new TeleopSwerve(
             m_swerveDrive,
-            () ->
-                -translationLimiter.calculate(
-                    MathUtil.applyDeadband(
-                        m_driverController.getRawAxis(translationAxis), kJoystickDeadband)),
-            () ->
-                -strafeLimiter.calculate(
-                    MathUtil.applyDeadband(
-                        m_driverController.getRawAxis(strafeAxis), kJoystickDeadband)),
-            () ->
-                -rotationLimiter.calculate(
-                    MathUtil.applyDeadband(
-                        m_driverController.getRawAxis(rotationAxis), kJoystickDeadband)),
+            () -> conditionJoystick(translationAxis, translationLimiter, kJoystickDeadband),
+            () -> conditionJoystick(strafeAxis, strafeLimiter, kJoystickDeadband),
+            () -> conditionJoystick(rotationAxis, rotationLimiter, kJoystickDeadband),
             () -> false));
     configureBindings();
   }
