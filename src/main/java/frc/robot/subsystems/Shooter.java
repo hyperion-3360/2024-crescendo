@@ -25,7 +25,7 @@ public class Shooter extends SubsystemBase {
   private static double intakeSpeed = 0.4;
   private static double trapSpeed = 0; // requires testing
   private static double stopSpeed = 0;
-  private static double rampRate = 6; // to be tuned according to battery and time consumption
+  private static double rampRate = 4; // to be tuned according to battery and time consumption
 
   // declaring speed member
   private double m_speed = 0;
