@@ -86,7 +86,7 @@ public class RobotContainer {
 
     //   m_coDriverController.x().whileTrue(Sequences.switchToIntakeMode( m_shooter, m_blocker)).onFalse(m_shooter.stop());
 
-      m_driverController.b().onTrue(m_climber.climberGoToSelectedLevel(e_climberCheck.BOTTOM));
+      m_coDriverController.b().onTrue(m_climber.climberGoToSelectedLevel(e_climberCheck.BOTTOM));
 
        m_driverController.y().onTrue(m_climber.climberGoToSelectedLevel(e_climberCheck.TOP));
   }
