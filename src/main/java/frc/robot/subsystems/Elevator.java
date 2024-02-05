@@ -4,13 +4,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -55,9 +50,9 @@ public class Elevator extends SubsystemBase {
 
     m_elevatorLeftMaster.setInverted(true);
 
-   m_elevatorRight.follow(m_elevatorLeftMaster, true);
+    m_elevatorRight.follow(m_elevatorLeftMaster, true);
 
-   m_elevatorRight.setInverted(false);
+    m_elevatorRight.setInverted(false);
 
     m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 3);
     m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 3);
@@ -66,7 +61,7 @@ public class Elevator extends SubsystemBase {
     m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 6);
 
     m_encoder.setPosition(0.0);
-    //m_encoder.setPositionConversionFactor(0.5);
+    // m_encoder.setPositionConversionFactor(0.5);
   }
 
   @Override
@@ -133,10 +128,10 @@ public class Elevator extends SubsystemBase {
   }
 
   private double encoderConversions() {
-    double m_encoderPosition =
-        m_encoder.getPosition() / 360; 
+    double m_encoderPosition = m_encoder.getPosition() / 360;
     return m_encoderPosition;
   }
+
   private boolean negativeTargetChecker() {
     if (encoderConversions() > m_elevatorTarget) {
       return true;
@@ -173,15 +168,12 @@ public class Elevator extends SubsystemBase {
             }),
         run(() -> this.goToTarget())
             .until(this::onTarget)
-            .andThen(run(() -> {m_elevatorLeftMaster.set(0.03);
-              }
-            )
-          )
-        );
+            .andThen(
+                run(
+                    () -> {
+                      m_elevatorLeftMaster.set(0.03);
+                    })));
   }
 
-
-  public void robotInit() {
-
-  }
+  public void robotInit() {}
 }
