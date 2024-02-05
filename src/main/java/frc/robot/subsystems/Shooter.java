@@ -3,10 +3,13 @@ package frc.robot.subsystems;
 // import edu.wpi.first.wpilibj.DigitalInput;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
+import frc.robot.math.CurveFunction;
 
 public class Shooter extends SubsystemBase {
   public enum shootSpeed {
@@ -25,36 +28,43 @@ public class Shooter extends SubsystemBase {
 
   private double m_speed = 0;
 
-  private CANSparkMax m_leftMaster = new CANSparkMax(Constants.SubsystemConstants.kLeftMasterId, MotorType.kBrushless);
-  private CANSparkMax m_rightMaster = new CANSparkMax(Constants.SubsystemConstants.kRightMasterId, MotorType.kBrushless);
-  private CANSparkMax m_leftFollower = new CANSparkMax(Constants.SubsystemConstants.kLeftFollowerId, MotorType.kBrushless);
-  private CANSparkMax m_rightFollower = new CANSparkMax(Constants.SubsystemConstants.kRightFollowerId, MotorType.kBrushless);
+  private double m_shooterTargetSpeed;
+
+  private CANSparkMax m_leftMaster = new CANSparkMax(
+    Constants.SubsystemConstants.kLeftMasterId, MotorType.kBrushless);
+  private CANSparkMax m_rightMaster = new CANSparkMax(
+    Constants.SubsystemConstants.kRightMasterId, MotorType.kBrushless);
+  private CANSparkMax m_leftFollower = new CANSparkMax(
+    Constants.SubsystemConstants.kLeftFollowerId, MotorType.kBrushless);
+  private CANSparkMax m_rightFollower = new CANSparkMax(
+    Constants.SubsystemConstants.kLeftFollowerId, MotorType.kBrushless);
+
+    private CurveFunction m_curve = new CurveFunction();
 
   public Shooter() {
-    m_leftMaster.restoreFactoryDefaults();
+
     m_rightMaster.restoreFactoryDefaults();
-    m_leftFollower.restoreFactoryDefaults();
-    m_rightFollower.restoreFactoryDefaults();
-
-    m_leftMaster.setInverted(true);
-    m_leftFollower.setInverted(true);
-
-    m_leftFollower.follow(m_leftMaster);
-    m_rightFollower.follow(m_rightMaster);
-
+    m_rightMaster.setInverted(false);
     m_rightMaster.burnFlash();
-    m_leftFollower.burnFlash();
-    m_rightFollower.burnFlash();
+
+    m_leftMaster.restoreFactoryDefaults();
+    m_leftMaster.setInverted(true);
     m_leftMaster.burnFlash();
-    
+
+    m_leftFollower.follow(m_leftMaster, true);
+    m_rightFollower.follow(m_rightMaster, false);
   }
 
   @Override
   public void periodic() {
-        m_leftMaster.set(m_speed);
-        m_rightMaster.set(m_speed);
-        
-        // System.out.println("encoder " + m_rightMaster.getEncoder().getPosition() + " applied output " + m_leftMaster.getAppliedOutput());
+    if (m_speed == 0.0) {
+      m_curve.stop();
+    } else {
+      Double adjustedSpeed = m_curve.adjustPeriodic();
+      if (adjustedSpeed != null) {
+        m_rightMaster.set(adjustedSpeed);
+      }
+    }
   }
 
   private void setShootingLevel(shootSpeed shoot) {
@@ -62,32 +72,44 @@ public class Shooter extends SubsystemBase {
     switch (shoot) {
       case LOW:
         m_speed = lowSpeed;
+        m_shooterTargetSpeed = lowSpeed;
         break;
 
       case HIGH:
         m_speed = highSpeed;
+        m_shooterTargetSpeed = highSpeed; 
         break;
 
       case STOP:
         m_speed = stopSpeed;
+        m_shooterTargetSpeed = stopSpeed;
         break;
 
       case TRAP:
         m_speed = trapSpeed;
+        m_shooterTargetSpeed = trapSpeed;
         break;
 
       case INTAKE:
         m_speed = intakeSpeed;
+        m_shooterTargetSpeed = intakeSpeed;
         break;
     }
   }
 
-  public Command shoot(shootSpeed shootSpeed) {
-    return this.runOnce(() -> setShootingLevel(shootSpeed));
-        // .andThen(new WaitCommand(3).andThen(this.stop()));
+  public void setShooterSpeed() {
+    m_speed = m_curve.getMotorSpeed(highSpeed);
+    m_leftMaster.set(m_speed);
+    m_rightMaster.set(m_speed);
   }
 
   public Command stop() {
-    return this.runOnce(() -> setShootingLevel(shootSpeed.STOP));
+    return this.runOnce(
+      () -> setShootingLevel(shootSpeed.STOP)
+    );
+  }
+
+  public Command shoot(shootSpeed shootSpeed) {
+    return this.runOnce(() -> setShootingLevel(shootSpeed));
   }
 }

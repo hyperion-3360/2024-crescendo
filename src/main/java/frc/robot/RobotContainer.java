@@ -80,7 +80,7 @@ public class RobotContainer {
 
      m_driverController.y().onTrue(Sequences.shootLow( m_shooter, m_blocker));
 
-      m_driverController.x().whileTrue(Sequences.switchToIntakeMode( m_shooter, m_blocker)).onFalse(m_shooter.stop());
+      m_coDriverController.x().whileTrue(Sequences.switchToIntakeMode( m_shooter, m_blocker)).onFalse(m_shooter.stop());
     
   }
 }
