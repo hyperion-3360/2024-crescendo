@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,7 +17,6 @@ public class Climber extends SubsystemBase {
     public enum e_climberCheck{
         TOP,
         BOTTOM,
-        GRIP_MODE,
         STOP
     }
 
@@ -31,6 +31,8 @@ public class Climber extends SubsystemBase {
 
     private CurveFunction m_curve = new CurveFunction();
 
+    private double m_climberSpeed;
+
     // declare 2 members, check fb for type and port, add port in constants
     public  Climber() {
         m_climberLeft.restoreFactoryDefaults();
@@ -40,9 +42,9 @@ public class Climber extends SubsystemBase {
 
         m_climberLeft.follow(m_climberRightMaster, true);
 
-        m_encoder.setPosition(0.0);
+        m_encoder.setPosition(m_encoder.getPosition());
 
-        m_gyro.reset();
+        // m_gyro.reset();
     }
     
     public void robotInit()
@@ -61,11 +63,17 @@ public class Climber extends SubsystemBase {
               m_climberRightMaster.set(adjustedSpeed);
       
             }
+
+
+    if (DriverStation.isDisabled()) {
+      m_climberTarget = m_encoder.getPosition();
+    }
+    m_climberRightMaster.set(0.0);
           }
 
-          m_gyro.getRoll();
+        //   m_gyro.getRoll();
 
-          repositionement();
+        //   repositionement();
 
           System.out.println("ENCODER POSITION " + encoderPositon());
     }
@@ -79,14 +87,12 @@ public class Climber extends SubsystemBase {
         switch (m_climberCheck) {
                 case TOP:
                 m_climberTarget = Constants.ClimberConstants.kTopTarget;
+                setClimberSpeed(m_climberSpeed * -1);
                 break;
         
                 case BOTTOM:
                 m_climberTarget = Constants.ClimberConstants.kBottomTarget;
-                break;
-                
-                case GRIP_MODE:
-                m_climberTarget = Constants.ClimberConstants.kGripTarget;
+                setClimberSpeed(m_climberSpeed);
                 break;
 
                 case STOP:
@@ -94,18 +100,18 @@ public class Climber extends SubsystemBase {
         }
     }
 
-    private void repositionement() {
+    // private void repositionement() {
 
-        if (Math.abs(m_gyro.getRoll()) > 15){
-                 m_climberRightMaster.set(+ 0.1);
-        }
+    //     if (Math.abs(m_gyro.getRoll()) > 15){
+    //              m_climberRightMaster.set(+ 0.1);
+    //     }
 
-        if (Math.abs(m_gyro.getRoll()) < -15){
-                 m_climberLeft.set(+ 0.1);
-         }
-             goToTarget();
+    //     if (Math.abs(m_gyro.getRoll()) < -15){
+    //              m_climberLeft.set(+ 0.1);
+    //      }
+    //          goToTarget();
                
-        }
+    //     }
 
     private void stop() {
         m_climberRightMaster.stopMotor();
@@ -115,28 +121,10 @@ public class Climber extends SubsystemBase {
         return m_encoder.getPosition() / 360;
     }
 
-    private boolean negativeClimberChecker() {
-        if (m_climberTarget > m_encoder.getPosition()) {
-            return true;
-        }
-        return false;
-    }
-
     private boolean onTarget() {
-        if (negativeClimberChecker() == true){
-        return Math.abs(m_climberTarget - encoderPositon()) > 
+        return Math.abs(m_climberTarget + encoderPositon()) <
         Constants.ClimberConstants.kclimberDeadBand;
     }
-        return Math.abs(m_climberTarget + encoderPositon()) >
-         Constants.ClimberConstants.kclimberDeadBand;
-   }
-
-   private void goToTarget() {
-    if (negativeClimberChecker() == true) {
-        setClimberSpeed(-0.20);
-    }
-    setClimberSpeed(0.20);
-   }
 
     public Command climberGoToSelectedLevel(e_climberCheck m_climberCheck) {
         return new SequentialCommandGroup(
@@ -145,7 +133,7 @@ public class Climber extends SubsystemBase {
                     setClimberLevel(m_climberCheck);
                 }
             ),
-            run(() -> goToTarget()).until(this::onTarget).
+            run(() -> setClimberSpeed(0.2)).until(this::onTarget).
             andThen(() -> setClimberLevel(e_climberCheck.STOP))
             );
     }

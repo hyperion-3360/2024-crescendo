@@ -85,9 +85,9 @@ public class Sequences {
         m_trap.grabPosition(),
         new WaitCommand(5),
         m_shooter.shoot(shootSpeed.TRAP),
-        new WaitUntilCommand(() -> m_trap.m_limitSwitch.get()),
-        m_trap.scoreNote(),
         new WaitUntilCommand(() -> !m_trap.m_limitSwitch.get()),
+        m_trap.scoreNote(),
+        new WaitUntilCommand(() -> m_trap.m_limitSwitch.get()),
         m_trap.setZero()
       );
     }

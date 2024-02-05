@@ -6,8 +6,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,9 +36,6 @@ public class Elevator extends SubsystemBase {
       new CANSparkMax(Constants.SubsystemConstants.kelevatorLeftId, MotorType.kBrushless);
 
   private RelativeEncoder m_encoder = m_elevatorLeftMaster.getEncoder();
-    private RelativeEncoder m_encoderLeft = m_elevatorLeftMaster.getEncoder();
-   private RelativeEncoder m_encoderRight = m_elevatorRight.getEncoder();
-
   private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
 
   private CurveFunction m_curve = new CurveFunction();
@@ -55,23 +55,19 @@ public class Elevator extends SubsystemBase {
 
     m_elevatorLeftMaster.setInverted(true);
 
-   // m_elevatorRight.follow(m_elevatorLeftMaster, true);
+   m_elevatorRight.follow(m_elevatorLeftMaster, true);
 
    m_elevatorRight.setInverted(false);
 
-    // m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 3);
-    // m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 3);
+    m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 3);
+    m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 3);
 
-    // m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 6);
-    // m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 6);
+    m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 6);
+    m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 6);
 
     m_encoder.setPosition(0.0);
-    m_encoderLeft.setPosition(0.0);
-    m_encoderRight.setPosition(0.0);
-
+    //m_encoder.setPositionConversionFactor(0.5);
   }
-
-  public void robotInit() {}
 
   @Override
   public void periodic() {
@@ -81,7 +77,6 @@ public class Elevator extends SubsystemBase {
       m_elevatorTarget = m_encoder.getPosition();
     }
     m_elevatorLeftMaster.set(0.0);
-    m_elevatorRight.set(0.0);
 
     // checks if the motor is running or at max speed for the exponential function
     if (this.onTarget()) {
@@ -90,15 +85,12 @@ public class Elevator extends SubsystemBase {
       Double adjustedSpeed = m_curve.adjustPeriodic();
       if (adjustedSpeed != null) {
         m_elevatorLeftMaster.set(adjustedSpeed);
-        m_elevatorRight.set(adjustedSpeed);
       }
     }
 
     if (isAtBottom()) {
       m_encoder.setPosition(0.0);
     }
-
-    motorCatchUp();
   }
 
   // switch case statement for configuring elevator height
@@ -141,47 +133,12 @@ public class Elevator extends SubsystemBase {
   }
 
   private double encoderConversions() {
-
     double m_encoderPosition =
-        m_encoder.getPosition() / 360; // * 1/m_encoder.getCountsPerRevolution() *
-    // m_pulleyDiameter + m_beltRampUp * 3.14159265358979323846;
-
+        m_encoder.getPosition() / 360; 
     return m_encoderPosition;
   }
-
-  private void motorCatchUp() {
-
-    double m_encoderBuffer = (m_encoderLeft.getPosition() /360 - m_encoderRight.getPosition() /360) * -1;
-
-    if (m_encoderBuffer >= 0.007) {
-
-      if (m_encoderLeft.getPosition() < m_encoderRight.getPosition()) {
-        m_elevatorLeftMaster.set(m_elevatorSpeed + 0.05);
-
-        while (m_encoderLeft.getPosition() < m_encoderRight.getPosition()) {
-
-          if (m_encoderLeft.getPosition() == m_encoderRight.getPosition()) {
-            m_elevatorLeftMaster.set(m_elevatorSpeed);
-            break;
-          }
-        }
-      }else{
-        m_elevatorRight.set(m_elevatorSpeed + 0.05);
-
-          
-        while (m_encoderRight.getPosition() < m_encoderLeft.getPosition()) {
-
-          if (m_encoderRight.getPosition() == m_encoderLeft.getPosition()) {
-            m_elevatorRight.set(m_elevatorSpeed);
-            break;
-          }
-      }
-    }
-  }
-}
-
   private boolean negativeTargetChecker() {
-    if (encoderConversions() < m_elevatorTarget) {
+    if (encoderConversions() > m_elevatorTarget) {
       return true;
     }
     return false;
@@ -201,7 +158,7 @@ public class Elevator extends SubsystemBase {
   // checks if the target is lower than the motors, if it is, lowers the motors
   private void goToTarget() {
     if (encoderConversions() < m_elevatorTarget) {
-      setElevatorSpeed(0.50);
+      setElevatorSpeed(0.60);
 
     } else {
       setElevatorSpeed(-0.20);
@@ -217,10 +174,14 @@ public class Elevator extends SubsystemBase {
         run(() -> this.goToTarget())
             .until(this::onTarget)
             .andThen(run(() -> {m_elevatorLeftMaster.set(0.03);
-               m_elevatorRight.set(0.03);
               }
             )
           )
         );
+  }
+
+
+  public void robotInit() {
+
   }
 }

@@ -160,7 +160,7 @@ public final class Constants {
   }
 
   public static class ElevatorConstants {
-    public static final double kDeadzone = 0.0035;
+    public static final double kDeadzone = 0.0045;
     public static final double kHighTarget = 0.25;
     public static final double kLowTarget = 0.10;
     public static final double kIntakeTarget = 0.0;
@@ -168,8 +168,7 @@ public final class Constants {
 
   public static class ClimberConstants {
     public static final double kclimberDeadBand = 0.005;
-    public static final double kGripTarget = 0.35;
-    public static final double kTopTarget = 0.3;
+    public static final double kTopTarget = 0.48;
     public static final double kBottomTarget = 0.0;
   }
 
