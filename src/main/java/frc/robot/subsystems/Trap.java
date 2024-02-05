@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -13,7 +14,9 @@ public class Trap extends SubsystemBase {
   private Servo m_servoFinger = new Servo(Constants.TrapConstants.kservoFingerId);
   DigitalInput m_limitSwitch = new DigitalInput(Constants.TrapConstants.kfingerlimitswitchId);
 
-  public Trap() {}
+  public Trap() {
+    setZero();
+  }
 
   public void setZero() {
 
@@ -28,7 +31,7 @@ public class Trap extends SubsystemBase {
     m_servoShoulder.setAngle(
         Constants.TrapConstants.kangleShouldergrabPosition); // arm position when grabing note
     m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowgrabPosition);
-    m_servoWrist.setAngle(Constants.TrapConstants.kangleWristgrabPosition);
+    m_servoWrist.setAngle(Constants.TrapConstants.kangleElbowgrabPosition);
   }
 
   public void scoreNote() {
@@ -42,10 +45,16 @@ public class Trap extends SubsystemBase {
 
   @Override
   public void periodic() {
-
-    this.setZero();
+    //  System.out.println(m_servoShoulder.get());
 
     if (!m_limitSwitch.get()) m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed);
     else m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened);
+  }
+
+  public Command grabNote() {
+    return this.runOnce(
+            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldergrabPosition))
+        .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowgrabPosition))
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleElbowgrabPosition));
   }
 }
