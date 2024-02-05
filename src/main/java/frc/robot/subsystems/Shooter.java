@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
+
+  // different speed possibilities
   public enum shootSpeed {
     HIGH,
     LOW,
@@ -17,15 +19,17 @@ public class Shooter extends SubsystemBase {
     STOP
   }
 
-  private static double highSpeed = 0.5; // 55% seem good
-  private static double lowSpeed = 0.04;
-  private static double intakeSpeed = 0.3;
-  private static double trapSpeed = 0;
+  private static double highSpeed = 0.5; // requires testing
+  private static double lowSpeed = 0.04; // requires testing
+  private static double intakeSpeed = 0.4;
+  private static double trapSpeed = 0; // requires testing
   private static double stopSpeed = 0;
-  private static double rampRate = 5;
+  private static double rampRate = 5; // to be tuned according to battery and time consumption
 
+  // declaring speed member
   private double m_speed = 0;
 
+  // declaring motors for the shooter
   private CANSparkMax m_leftMaster =
       new CANSparkMax(Constants.SubsystemConstants.kLeftMasterId, MotorType.kBrushless);
   private CANSparkMax m_rightMaster =
@@ -37,6 +41,7 @@ public class Shooter extends SubsystemBase {
 
   public Shooter() {
 
+    // configs
     m_leftMaster.restoreFactoryDefaults();
     m_rightMaster.restoreFactoryDefaults();
     m_leftFollower.restoreFactoryDefaults();
@@ -53,6 +58,8 @@ public class Shooter extends SubsystemBase {
     m_leftFollower.follow(m_leftMaster);
     m_rightFollower.follow(m_rightMaster);
 
+    // the openLoopRampRate is a feature from spark max that caps the maximum acceleration from 0 to
+    // +/- 1 in seconds
     m_rightMaster.setOpenLoopRampRate(rampRate);
     m_leftMaster.setOpenLoopRampRate(rampRate);
     m_rightFollower.setOpenLoopRampRate(rampRate);
@@ -66,14 +73,12 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // calcSpeed();
+    // setting speed to motors
     m_leftMaster.set(m_speed);
     m_rightMaster.set(m_speed);
-
-    // System.out.println("speed " + m_leftMaster.getAppliedOutput());
   }
 
-  private void setShootingLevel(shootSpeed shoot) {
+  private void setShootingSpeed(shootSpeed shoot) {
 
     switch (shoot) {
       case LOW:
@@ -98,12 +103,21 @@ public class Shooter extends SubsystemBase {
     }
   }
 
+  /*
+   * shooting to desired level except intake and stop
+   */
   public Command shoot(shootSpeed shootSpeed) {
-    return this.runOnce(() -> setShootingLevel(shootSpeed))
+    return this.runOnce(() -> setShootingSpeed(shootSpeed))
         .andThen(new WaitCommand(5).andThen(this.stop()));
   }
 
+  // stop the motors
   public Command stop() {
-    return this.runOnce(() -> setShootingLevel(shootSpeed.STOP));
+    return this.runOnce(() -> setShootingSpeed(shootSpeed.STOP));
+  }
+
+  // TODO: intake command that will have the infrared sensor to stop the spin
+  public Command intake() {
+    return null;
   }
 }
