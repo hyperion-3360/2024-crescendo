@@ -13,13 +13,12 @@ import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Blocker;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.Climber.e_climberCheck;
-import frc.robot.subsystems.Elevator.e_elevatorLevel;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.subsystems.Shooter;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -46,13 +45,13 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-       private final CommandXboxController m_coDriverController =
+  private final CommandXboxController m_coDriverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
-
 
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -84,10 +83,11 @@ public class RobotContainer {
 
     //  m_driverController.y().onTrue(Sequences.shootLow( m_shooter, m_blocker));
 
-    //   m_coDriverController.x().whileTrue(Sequences.switchToIntakeMode( m_shooter, m_blocker)).onFalse(m_shooter.stop());
+    //   m_coDriverController.x().whileTrue(Sequences.switchToIntakeMode( m_shooter,
+    // m_blocker)).onFalse(m_shooter.stop());
 
-      m_coDriverController.b().onTrue(m_climber.climberGoToSelectedLevel(e_climberCheck.BOTTOM));
+    m_coDriverController.b().onTrue(m_climber.climberGoToSelectedLevel(e_climberCheck.BOTTOM));
 
-       m_driverController.y().onTrue(m_climber.climberGoToSelectedLevel(e_climberCheck.TOP));
+    m_driverController.y().onTrue(m_climber.climberGoToSelectedLevel(e_climberCheck.TOP));
   }
 }

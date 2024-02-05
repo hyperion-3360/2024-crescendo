@@ -13,34 +13,46 @@ public class Trap extends SubsystemBase {
   private Servo m_servoElbow = new Servo(Constants.TrapConstants.kservoElbowId);
   private Servo m_servoWrist = new Servo(Constants.TrapConstants.kservoWristId);
   private Servo m_servoFinger = new Servo(Constants.TrapConstants.kservoFingerId);
-  public DigitalInput m_limitSwitch = new DigitalInput(Constants.TrapConstants.kfingerlimitswitchId);
+  public DigitalInput m_limitSwitch =
+      new DigitalInput(Constants.TrapConstants.kfingerlimitswitchId);
 
   public Trap() {}
 
   public Command setZero() {
-return this.runOnce(() -> { m_servoShoulder.setAngle(
-        Constants.TrapConstants.kangleShouldersetZero); // arm position during the game
-    m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowsetZero);
-    m_servoWrist.setAngle(Constants.TrapConstants.kangleWristsetZero);
-  });
-}
+    return this.runOnce(
+        () -> {
+          m_servoShoulder.setAngle(
+              Constants.TrapConstants.kangleShouldersetZero); // arm position during the game
+          m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowsetZero);
+          m_servoWrist.setAngle(Constants.TrapConstants.kangleWristsetZero);
+        });
+  }
 
   public Command grabPosition() {
-    return new SequentialCommandGroup(this.runOnce(() -> {  m_servoShoulder.setAngle(
-    Constants.TrapConstants.kangleShouldergrabPosition); // arm position when grabing note
-    m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowgrabPosition);
-    m_servoWrist.setAngle(Constants.TrapConstants.kangleWristgrabPosition); 
-      }));
-    }
+    return new SequentialCommandGroup(
+        this.runOnce(
+            () -> {
+              m_servoShoulder.setAngle(
+                  Constants.TrapConstants
+                      .kangleShouldergrabPosition); // arm position when grabing note
+              m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowgrabPosition);
+              m_servoWrist.setAngle(Constants.TrapConstants.kangleWristgrabPosition);
+            }));
+  }
 
   public Command scoreNote() {
-    return new SequentialCommandGroup(this.runOnce(() -> { m_servoShoulder.setAngle(
-    Constants.TrapConstants.kangleShoulderscoreNote); // arm position when grabing note
-    m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowscoreNote);
-    m_servoWrist.setAngle(Constants.TrapConstants.kangleWristscoreNote);
-    m_servoFinger.setAngle(Constants.TrapConstants.kangleFingerscoreNote);
-      }));
-    }
+    return new SequentialCommandGroup(
+        this.runOnce(
+            () -> {
+              m_servoShoulder.setAngle(
+                  Constants.TrapConstants
+                      .kangleShoulderscoreNote); // arm position when grabing note
+              m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowscoreNote);
+              m_servoWrist.setAngle(Constants.TrapConstants.kangleWristscoreNote);
+              m_servoFinger.setAngle(Constants.TrapConstants.kangleFingerscoreNote);
+            }));
+  }
+
   @Override
   public void periodic() {
 
