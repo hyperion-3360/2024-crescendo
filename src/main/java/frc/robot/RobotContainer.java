@@ -92,5 +92,7 @@ public class RobotContainer {
     // );
 
     // m_driverController.a().onTrue(m_shooter.intake());
+    m_driverController.a().onTrue(m_trap.setZero());
+    m_driverController.b().onTrue(m_trap.grabPosition());
   }
 }
