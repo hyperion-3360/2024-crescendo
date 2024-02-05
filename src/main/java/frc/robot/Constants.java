@@ -149,15 +149,14 @@ public final class Constants {
     public static final int kclimberLeftId = 12;
     public static final int kelevatorRightId = 9; // elevator
     public static final int kelevatorLeftId = 10;
-    public static final int kShooterLeftMasterId = 0;
-    public static final int kShooterRightMasterId = 0;
-    public static final int kShooterLeftFollowerId = 0;
-    public static final int kShooterRightFollowerId = 0;
+  }
 
+  public static class ShooterConstants {
     public static final int kRightMasterId = 16;
     public static final int kLeftMasterId = 14;
     public static final int kLeftFollowerId = 13;
     public static final int kRightFollowerId = 15;
+    public static final int kInfraredSensorId = 4;
   }
 
   public static class ElevatorConstants {

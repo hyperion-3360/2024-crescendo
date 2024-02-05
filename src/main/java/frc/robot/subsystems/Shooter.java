@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -24,20 +25,23 @@ public class Shooter extends SubsystemBase {
   private static double intakeSpeed = 0.4;
   private static double trapSpeed = 0; // requires testing
   private static double stopSpeed = 0;
-  private static double rampRate = 5; // to be tuned according to battery and time consumption
+  private static double rampRate = 6; // to be tuned according to battery and time consumption
 
   // declaring speed member
   private double m_speed = 0;
 
   // declaring motors for the shooter
   private CANSparkMax m_leftMaster =
-      new CANSparkMax(Constants.SubsystemConstants.kLeftMasterId, MotorType.kBrushless);
+      new CANSparkMax(Constants.ShooterConstants.kLeftMasterId, MotorType.kBrushless);
   private CANSparkMax m_rightMaster =
-      new CANSparkMax(Constants.SubsystemConstants.kRightMasterId, MotorType.kBrushless);
+      new CANSparkMax(Constants.ShooterConstants.kRightMasterId, MotorType.kBrushless);
   private CANSparkMax m_leftFollower =
-      new CANSparkMax(Constants.SubsystemConstants.kLeftFollowerId, MotorType.kBrushless);
+      new CANSparkMax(Constants.ShooterConstants.kLeftFollowerId, MotorType.kBrushless);
   private CANSparkMax m_rightFollower =
-      new CANSparkMax(Constants.SubsystemConstants.kRightFollowerId, MotorType.kBrushless);
+      new CANSparkMax(Constants.ShooterConstants.kRightFollowerId, MotorType.kBrushless);
+  // infrared sensor for intake
+  private DigitalInput m_infraredSensor =
+      new DigitalInput(Constants.ShooterConstants.kInfraredSensorId);
 
   public Shooter() {
 
@@ -118,6 +122,10 @@ public class Shooter extends SubsystemBase {
 
   // TODO: intake command that will have the infrared sensor to stop the spin
   public Command intake() {
-    return null;
+    return this.run(() -> setShootingSpeed(shootSpeed.INTAKE)).until(this::hasNote).andThen(stop());
+  }
+
+  public boolean hasNote() {
+    return !m_infraredSensor.get();
   }
 }
