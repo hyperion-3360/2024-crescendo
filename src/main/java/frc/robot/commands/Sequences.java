@@ -15,44 +15,13 @@ import frc.robot.subsystems.Elevator.e_elevatorLevel;
 import frc.robot.subsystems.Shooter.shootSpeed;
 
 public class Sequences {
-
-  // public static Command switchToIntakeMode(
-  //   Elevator m_elevator, Shooter m_shooter, Blocker m_blocker) {
-  //   return Commands.sequence(
-  //     m_blocker.setZero(),
-  //     m_elevator.extendTheElevator(e_elevatorLevel.INTAKE),
-  //     new WaitUntilCommand(() -> m_elevator.onTarget()),
-  //     m_shooter.shoot(shootSpeed.INTAKE)
-  //   );
-  // }
-
-  // public static Command shootHigh(
-  //   Elevator m_elevator, Shooter m_shooter, Blocker m_blocker) {
-  //   return Commands
-  //   .sequence(
-  //     m_blocker.setZero(),
-  //     m_elevator.extendTheElevator(e_elevatorLevel.HIGH),
-  //      new WaitUntilCommand(() -> m_elevator.onTarget()),
-  //     m_shooter.shoot(shootSpeed.HIGH)
-  //   );
-  // }
-
-  // public static Command shootLow(
-  //   Elevator m_elevator, Shooter m_shooter, Blocker m_blocker) {
-  //   return Commands.sequence(
-  //     m_blocker.setZero(),
-  //     m_elevator.extendTheElevator(e_elevatorLevel.LOW),
-  //      new WaitUntilCommand(() -> m_elevator.onTarget()),
-  //     m_shooter.shoot(shootSpeed.LOW)
-  //   );
-  // }
-
-
+  
    public static Command shootLow(
-    Shooter m_shooter, Blocker m_blocker) {
+    Shooter m_shooter, Blocker m_blocker, Elevator m_elevator) {
     return Commands.sequence(
       m_blocker.setZero(),
-      m_shooter.shoot(shootSpeed.LOW).
+      m_elevator.extendTheElevator(e_elevatorLevel.LOW).andThen
+      (m_shooter.shoot(shootSpeed.LOW)).
       alongWith(new WaitCommand(1).andThen( m_blocker.letGoOfNote().
       andThen(new WaitCommand(1)))),
       m_shooter.stop(),
@@ -61,10 +30,11 @@ public class Sequences {
   }
 
    public static Command shootHigh(
-    Shooter m_shooter, Blocker m_blocker) {
+    Shooter m_shooter, Blocker m_blocker, Elevator m_elevator) {
     return Commands.sequence(
       m_blocker.setZero(),
-   m_shooter.shoot(shootSpeed.HIGH).
+      m_elevator.extendTheElevator(e_elevatorLevel.LOW).andThen(
+      m_shooter.shoot(shootSpeed.HIGH)).
       alongWith(new WaitCommand(1).andThen( m_blocker.letGoOfNote().
       andThen(new WaitCommand(1)))),
       m_shooter.stop(),
@@ -73,10 +43,11 @@ public class Sequences {
   }
 
    public static Command switchToIntakeMode(
-    Shooter m_shooter, Blocker m_blocker) {
+    Shooter m_shooter, Blocker m_blocker, Elevator m_elevator) {
     return Commands.sequence(
       m_blocker.setZero(),
-      m_shooter.shoot(shootSpeed.INTAKE)
+      m_elevator.extendTheElevator(e_elevatorLevel.LOW).andThen
+      (m_shooter.shoot(shootSpeed.INTAKE))
     );
   }
 
