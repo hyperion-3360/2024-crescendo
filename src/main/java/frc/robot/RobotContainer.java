@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -11,6 +13,7 @@ import frc.Shuffleboard3360;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
@@ -22,6 +25,7 @@ import frc.robot.subsystems.swerve.Swerve;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
   // The robot's subsystems and commands are defined here...
 
   private final Swerve m_swerveDrive = new Swerve();
@@ -30,6 +34,7 @@ public class RobotContainer {
 
   private final Shuffleboard3360 shuffleboard = Shuffleboard3360.getInstance();
   public static final Elevator m_elevator = new Elevator();
+  private Shooter m_shooter = new Shooter();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -39,6 +44,13 @@ public class RobotContainer {
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
+  // Slew Rate Limiters to limit acceleration of joystick inputs
+  private final SlewRateLimiter translationLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter strafeLimiter = new SlewRateLimiter(0.5);
+  private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(0.5);
+
+  private final double kJoystickDeadband = 0.1;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -47,9 +59,18 @@ public class RobotContainer {
     m_swerveDrive.setDefaultCommand(
         new TeleopSwerve(
             m_swerveDrive,
-            () -> -m_driverController.getRawAxis(translationAxis),
-            () -> -m_driverController.getRawAxis(strafeAxis),
-            () -> -m_driverController.getRawAxis(rotationAxis),
+            () ->
+                -translationLimiter.calculate(
+                    MathUtil.applyDeadband(
+                        m_driverController.getRawAxis(translationAxis), kJoystickDeadband)),
+            () ->
+                -strafeLimiter.calculate(
+                    MathUtil.applyDeadband(
+                        m_driverController.getRawAxis(strafeAxis), kJoystickDeadband)),
+            () ->
+                -rotationLimiter.calculate(
+                    MathUtil.applyDeadband(
+                        m_driverController.getRawAxis(rotationAxis), kJoystickDeadband)),
             () -> false));
     configureBindings();
   }
@@ -70,7 +91,6 @@ public class RobotContainer {
     // Sequences.switchToHigh(m_elevator)
     // );
 
-    /* wpilib controller example */
-    //    m_driverController.b().onTrue(new ResetZeroAbsolute(m_swerveDrive));
+    // m_driverController.a().onTrue(m_shooter.intake());
   }
 }
