@@ -183,7 +183,7 @@ public final class Constants {
     public static final double kfingerClosed = 180.0; // angle of finger servo when closed/opened
     public static final double kfingerOpened = 90.0;
 
-    public static final double kangleShouldersetZero =5.0; // SETZERO   //lower number = lower
+    public static final double kangleShouldersetZero = 5.0; // SETZERO   //lower number = lower
     public static final double kangleElbowsetZero = 145.5; // higher number = lower
     public static final double kangleWristsetZero = 140.0; // higher number = lower
 

@@ -14,9 +14,7 @@ public class Trap extends SubsystemBase {
   private Servo m_servoFinger = new Servo(Constants.TrapConstants.kservoFingerId);
   DigitalInput m_limitSwitch = new DigitalInput(Constants.TrapConstants.kfingerlimitswitchId);
 
-  public Trap() {
-   
-  }
+  public Trap() {}
 
   @Override
   public void periodic() {
@@ -29,23 +27,29 @@ public class Trap extends SubsystemBase {
 
   public Command setZero() {
     return this.runOnce(
-            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldersetZero)) // arm position during the game
+            () ->
+                m_servoShoulder.setAngle(
+                    Constants.TrapConstants.kangleShouldersetZero)) // arm position during the game
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowsetZero))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleElbowsetZero));
   }
 
   public Command scoreNote() {
     return this.runOnce(
-            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderscoreNote)) // arm position to score note
+            () ->
+                m_servoShoulder.setAngle(
+                    Constants.TrapConstants.kangleShoulderscoreNote)) // arm position to score note
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowscoreNote))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleElbowscoreNote));
   }
 
   public Command grabPosition() {
     return this.runOnce(
-            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldergrabPosition)) // arm position when grabing note
+            () ->
+                m_servoShoulder.setAngle(
+                    Constants.TrapConstants
+                        .kangleShouldergrabPosition)) // arm position when grabing note
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowgrabPosition))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleElbowgrabPosition));
   }
 }
-

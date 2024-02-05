@@ -29,7 +29,7 @@
   "[java]": {
     "editor.tabSize": 2,
     "spotlessGradle.format.enable": true,
-    "editor.defaultFormatter": "richardwillis.vscode-spotless-gradle",
+    "editor.defaultFormatter": "redhat.java",
     "spotlessGradle.diagnostics.enable": true,
     "editor.codeActionsOnSave": {
         "source.fixAll.spotlessGradle": "explicit"
