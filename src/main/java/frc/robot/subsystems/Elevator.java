@@ -60,8 +60,8 @@ public class Elevator extends SubsystemBase {
     m_encoderLeft.setPositionConversionFactor(0.1);
 
     while (true) {
-      new WaitCommand(1);
-      System.out.println("ENCODER VALUE " + encoderConversion());
+      new WaitCommand(1)
+          .andThen(runOnce(() -> System.out.println("ENCODER VALUE " + encoderConversion())));
     }
   }
 
