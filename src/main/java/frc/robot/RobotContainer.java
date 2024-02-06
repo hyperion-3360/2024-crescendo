@@ -14,11 +14,12 @@ import frc.robot.Constants.OperatorConstants;
 // import frc.robot.subsystems.Blocker;
 // import frc.robot.subsystems.Climber;
 // import frc.robot.subsystems.Climber.e_climberCheck;
-import frc.robot.subsystems.Elevator.e_elevatorLevel;
 import frc.robot.subsystems.Elevator;
 // import frc.robot.subsystems.Shooter;
 // import frc.robot.subsystems.Trap;
+import frc.robot.subsystems.Elevator.e_elevatorLevel;
 import frc.robot.subsystems.swerve.CTREConfigs;
+
 // import frc.robot.subsystems.swerve.Swerve;
 
 /**
@@ -55,7 +56,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    
+
     // m_swerveDrive.resetModulesToAbsolute();
 
     // m_swerveDrive.setDefaultCommand(
@@ -93,8 +94,8 @@ public class RobotContainer {
 
     m_coDriverController.a().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.LOW));
 
-       m_coDriverController.b().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.INTAKE));
+    m_coDriverController.b().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.INTAKE));
 
-       m_coDriverController.y().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.LOW));
+    m_coDriverController.y().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.LOW));
   }
 }

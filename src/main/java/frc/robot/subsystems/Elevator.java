@@ -3,16 +3,15 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.EncoderType;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.math.Conversions;
 import frc.robot.math.CurveFunction;
 
 public class Elevator extends SubsystemBase {
@@ -32,7 +31,7 @@ public class Elevator extends SubsystemBase {
   private CANSparkMax m_elevatorLeftMaster =
       new CANSparkMax(Constants.SubsystemConstants.kelevatorLeftId, MotorType.kBrushless);
 
-   private RelativeEncoder m_encoderLeft = m_elevatorLeftMaster.getEncoder();
+  private RelativeEncoder m_encoderLeft = m_elevatorLeftMaster.getEncoder();
 
   private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
 
@@ -42,6 +41,8 @@ public class Elevator extends SubsystemBase {
   // private double m_pulleyDiameter = 0.05445;
 
   // private double m_beltRampUp = 0.0;
+
+  // gear ratio = 35;
 
   // creating an elevator
   public Elevator() {
@@ -88,7 +89,6 @@ public class Elevator extends SubsystemBase {
     if (isAtBottom()) {
       m_encoderLeft.setPosition(0.0);
     }
-    System.out.println("ENCODER VALUE " + m_encoderLeft.getPosition());
   }
 
   // switch case statement for configuring elevator height
@@ -121,6 +121,20 @@ public class Elevator extends SubsystemBase {
     // m_elevatorRight.stopMotor();
   }
 
+  /*
+   * 35 = gear ratio.
+   * 0.5445 = pulley diameter.
+   * CPR / 4 is PPR because CPR is PPR * 4 https://www.cuidevices.com/blog/what-is-encoder-ppr-cpr-and-lpr#:~:text=Counts%20Per%20Revolution%20(CPR),-CPR%20most%20commonly&text=This%20results%20in%204%20times,to%20mean%20Cycles%20per%20Revolution.
+   * encoder position is the position of the encoder
+   */
+  private double encoderConversion() {
+    double m_encoderPosition;
+    m_encoderPosition =
+        Conversions.NEOToMeters(
+            35, 0.5445, m_encoderLeft.getCountsPerRevolution() / 4, m_encoderLeft.getPosition());
+    return m_encoderPosition;
+  }
+
   // check if the limit switch is triggered
   public boolean isAtBottom() {
     if (bottomlimitSwitch.get()) {
@@ -130,13 +144,13 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean onTarget() {
-      return Math.abs(this.m_elevatorTarget - m_encoderLeft.getPosition())
-          < Constants.ElevatorConstants.kDeadzone;
+    return Math.abs(this.m_elevatorTarget - encoderConversion())
+        < Constants.ElevatorConstants.kDeadzone;
   }
 
   // checks if the target is lower than the motors, if it is, lowers the motors
   private void goToTarget() {
-    if (m_encoderLeft.getPosition() < m_elevatorTarget) {
+    if (encoderConversion() < m_elevatorTarget) {
       setElevatorSpeed(0.30);
 
     } else {
@@ -150,7 +164,7 @@ public class Elevator extends SubsystemBase {
             () -> {
               this.setElevator(m_elevatorLevel);
             }),
-         run(() -> this.goToTarget())
+        run(() -> this.goToTarget())
             .until(this::onTarget)
             .andThen(
                 run(

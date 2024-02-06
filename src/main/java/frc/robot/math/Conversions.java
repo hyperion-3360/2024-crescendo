@@ -105,4 +105,18 @@ public class Conversions {
   public static double MetersToFalcon(double meters, double circumference, double gearRatio) {
     return meters / (circumference / (gearRatio * 2048.0));
   }
+
+  /**
+   * @param gearRatio the gear ration between the NEO 550 and the wheel
+   * @param wheelDiameter the diameter of the wheel
+   * @param pulsePerRotation the number of pulse per encoder rotation
+   * @param encoderPosition the recorded position of the encoder
+   * @return the wheel position in meters
+   */
+  public static double NEOToMeters(
+      double gearRatio, double wheelDiameter, double pulsePerRotation, double encoderPosition) {
+    double meterPerPulse = gearRatio * (Math.PI * wheelDiameter) / pulsePerRotation;
+    double wheelPositionInMeters = encoderPosition * meterPerPulse;
+    return wheelPositionInMeters;
+  }
 }
