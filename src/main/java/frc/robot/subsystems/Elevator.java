@@ -30,19 +30,12 @@ public class Elevator extends SubsystemBase {
   //     new CANSparkMax(Constants.SubsystemConstants.kelevatorRightId, MotorType.kBrushless);
   private CANSparkMax m_elevatorLeftMaster =
       new CANSparkMax(Constants.SubsystemConstants.kelevatorLeftId, MotorType.kBrushless);
-
+  // calls the integrated Hall sensor relative encoder for the NEO 550
   private RelativeEncoder m_encoderLeft = m_elevatorLeftMaster.getEncoder();
 
   private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
-
+  // useful exponential curve function to extend motor lifespan
   private CurveFunction m_curve = new CurveFunction();
-
-  // just in case
-  // private double m_pulleyDiameter = 0.05445;
-
-  // private double m_beltRampUp = 0.0;
-
-  // gear ratio = 35;
 
   // creating an elevator
   public Elevator() {
@@ -118,20 +111,16 @@ public class Elevator extends SubsystemBase {
     m_curve.stop();
 
     m_elevatorLeftMaster.stopMotor();
-    // m_elevatorRight.stopMotor();
   }
 
   /*
    * 35 = gear ratio.
    * 0.5445 = pulley diameter.
-   * CPR / 4 is PPR because CPR is PPR * 4 https://www.cuidevices.com/blog/what-is-encoder-ppr-cpr-and-lpr#:~:text=Counts%20Per%20Revolution%20(CPR),-CPR%20most%20commonly&text=This%20results%20in%204%20times,to%20mean%20Cycles%20per%20Revolution.
    * encoder position is the position of the encoder
    */
   private double encoderConversion() {
     double m_encoderPosition;
-    m_encoderPosition =
-        Conversions.NEOToMeters(
-            35, 0.5445, m_encoderLeft.getCountsPerRevolution() / 4, m_encoderLeft.getPosition());
+    m_encoderPosition = Conversions.NEOToMeters(35, 0.5445, m_encoderLeft.getPosition());
     return m_encoderPosition;
   }
 
@@ -143,12 +132,13 @@ public class Elevator extends SubsystemBase {
     return false;
   }
 
+  // checks if the elevator has reached the target
   public boolean onTarget() {
     return Math.abs(this.m_elevatorTarget - encoderConversion())
         < Constants.ElevatorConstants.kDeadzone;
   }
 
-  // checks if the target is lower than the motors, if it is, lowers the motors
+  // checks if the target is lower than the elevator, if it is, lowers the elevator
   private void goToTarget() {
     if (encoderConversion() < m_elevatorTarget) {
       setElevatorSpeed(0.30);
@@ -158,6 +148,7 @@ public class Elevator extends SubsystemBase {
     }
   }
 
+  // a command to extend the elevator
   public Command extendTheElevator(e_elevatorLevel m_elevatorLevel) {
     return new SequentialCommandGroup(
         this.runOnce(
