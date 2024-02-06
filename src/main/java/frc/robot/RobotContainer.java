@@ -96,6 +96,6 @@ public class RobotContainer {
 
     m_coDriverController.b().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.INTAKE));
 
-    m_coDriverController.y().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.LOW));
+    m_coDriverController.y().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.HIGH));
   }
 }

@@ -146,7 +146,7 @@ public final class Constants {
   public static class SubsystemConstants {
     // constants for climber, shooter, elevator, trap name example: kExamplePort, all ints if port
     public static final int kelevatorRightId = 9; // elevator
-    public static final int kelevatorLeftId = 15;
+    public static final int kelevatorLeftId = 10;
 
     public static final int kclimberRightId = 11; //  climber
     public static final int kclimberLeftId = 12;
@@ -154,15 +154,15 @@ public final class Constants {
     public static final int kRightMasterId = 16;
     public static final int kLeftMasterId = 14;
     public static final int kLeftFollowerId = 13;
-    public static final int kRightFollowerId = 0; // 15
+    public static final int kRightFollowerId = 15; // 15
 
     public static final int kBeamBreakChannel = 0;
   }
 
   public static class ElevatorConstants {
     public static final double kDeadzone = 0.005;
-    public static final double kHighTarget = 0.25;
-    public static final double kLowTarget = 0.10;
+    public static final double kHighTarget = 0.3;
+    public static final double kLowTarget = 0.2;
     public static final double kIntakeTarget = 0.0;
   }
 
