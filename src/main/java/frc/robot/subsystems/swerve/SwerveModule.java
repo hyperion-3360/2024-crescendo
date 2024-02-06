@@ -40,7 +40,8 @@
 //     /* Angle Encoder Config */
 //     angleEncoder = new DutyCycleEncoder(moduleConstants.magEncoderID);
 //     angleEncoder.setDutyCycleRange(
-//         RobotContainer.ctreConfigs.dutyCycleRangeMin, RobotContainer.ctreConfigs.dutyCycleRangeMax);
+//         RobotContainer.ctreConfigs.dutyCycleRangeMin,
+// RobotContainer.ctreConfigs.dutyCycleRangeMax);
 
 //     /* Angle Motor Config */
 //     mAngleMotor = new TalonFX(moduleConstants.angleMotorID);

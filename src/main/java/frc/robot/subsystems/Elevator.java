@@ -3,16 +3,16 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.EncoderType;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.math.Conversions;
 import frc.robot.math.CurveFunction;
 
 public class Elevator extends SubsystemBase {
@@ -31,17 +31,12 @@ public class Elevator extends SubsystemBase {
   //     new CANSparkMax(Constants.SubsystemConstants.kelevatorRightId, MotorType.kBrushless);
   private CANSparkMax m_elevatorLeftMaster =
       new CANSparkMax(Constants.SubsystemConstants.kelevatorLeftId, MotorType.kBrushless);
-
-   private RelativeEncoder m_encoderLeft = m_elevatorLeftMaster.getEncoder();
+  // calls the integrated Hall sensor relative encoder for the NEO 550
+  private RelativeEncoder m_encoderLeft = m_elevatorLeftMaster.getEncoder();
 
   private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
-
+  // useful exponential curve function to extend motor lifespan
   private CurveFunction m_curve = new CurveFunction();
-
-  // just in case
-  // private double m_pulleyDiameter = 0.05445;
-
-  // private double m_beltRampUp = 0.0;
 
   // creating an elevator
   public Elevator() {
@@ -62,9 +57,12 @@ public class Elevator extends SubsystemBase {
     m_encoderLeft.setPosition(0.0);
     // m_encoderRight.setPosition(0.0);
 
-    m_elevatorLeftMaster.set(0.6);
-
     m_encoderLeft.setPositionConversionFactor(0.1);
+
+    while (true) {
+      new WaitCommand(1);
+      System.out.println("ENCODER VALUE " + encoderConversion());
+    }
   }
 
   @Override
@@ -88,7 +86,6 @@ public class Elevator extends SubsystemBase {
     if (isAtBottom()) {
       m_encoderLeft.setPosition(0.0);
     }
-    System.out.println("ENCODER VALUE " + m_encoderLeft.getPosition());
   }
 
   // switch case statement for configuring elevator height
@@ -118,7 +115,17 @@ public class Elevator extends SubsystemBase {
     m_curve.stop();
 
     m_elevatorLeftMaster.stopMotor();
-    // m_elevatorRight.stopMotor();
+  }
+
+  /*
+   * 35 = gear ratio.
+   * 0.5445 = pulley diameter.
+   * encoder position is the position of the encoder
+   */
+  private double encoderConversion() {
+    double m_encoderPosition;
+    m_encoderPosition = Conversions.NEOToMeters(35, 0.5445, m_encoderLeft.getPosition());
+    return m_encoderPosition;
   }
 
   // check if the limit switch is triggered
@@ -129,28 +136,30 @@ public class Elevator extends SubsystemBase {
     return false;
   }
 
+  // checks if the elevator has reached the target
   public boolean onTarget() {
-      return Math.abs(this.m_elevatorTarget - m_encoderLeft.getPosition())
-          < Constants.ElevatorConstants.kDeadzone;
+    return Math.abs(this.m_elevatorTarget - encoderConversion())
+        < Constants.ElevatorConstants.kDeadzone;
   }
 
-  // checks if the target is lower than the motors, if it is, lowers the motors
+  // checks if the target is lower than the elevator, if it is, lowers the elevator
   private void goToTarget() {
-    if (m_encoderLeft.getPosition() < m_elevatorTarget) {
-      setElevatorSpeed(0.30);
+    if (encoderConversion() < m_elevatorTarget) {
+      setElevatorSpeed(0.10);
 
     } else {
-      setElevatorSpeed(-0.20);
+      setElevatorSpeed(-0.10);
     }
   }
 
+  // a command to extend the elevator
   public Command extendTheElevator(e_elevatorLevel m_elevatorLevel) {
     return new SequentialCommandGroup(
         this.runOnce(
             () -> {
               this.setElevator(m_elevatorLevel);
             }),
-         run(() -> this.goToTarget())
+        run(() -> this.goToTarget())
             .until(this::onTarget)
             .andThen(
                 run(
