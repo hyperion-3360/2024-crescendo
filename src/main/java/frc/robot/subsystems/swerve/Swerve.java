@@ -65,6 +65,11 @@ public class Swerve extends SubsystemBase {
     }
   }
 
+  private void configurePathPlanner() {
+
+    //    AutoBuilder.configureHolonomic(this::getPose);
+  }
+
   public void drive(double voltage) {
     for (SwerveModule mod : mSwerveMods) {
       mod.setDriveVoltage(voltage);
@@ -166,8 +171,6 @@ public class Swerve extends SubsystemBase {
                 getModulePositions(),
                 new Pose2d(14.4, 5, Rotation2d.fromDegrees(180))));
   }
-
-  public void robotInit() {}
 
   private SysIdRoutine m_driveSysIdRoutine =
       new SysIdRoutine(
