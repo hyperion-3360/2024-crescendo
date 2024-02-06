@@ -3,9 +3,11 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.EncoderType;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,17 +27,16 @@ public class Elevator extends SubsystemBase {
   DigitalInput bottomlimitSwitch = new DigitalInput(5);
 
   // instancing the motor controllers m_elevatorLeft is the master motor
-  private CANSparkMax m_elevatorRight =
-      new CANSparkMax(Constants.SubsystemConstants.kelevatorRightId, MotorType.kBrushless);
+  // private CANSparkMax m_elevatorRight =
+  //     new CANSparkMax(Constants.SubsystemConstants.kelevatorRightId, MotorType.kBrushless);
   private CANSparkMax m_elevatorLeftMaster =
       new CANSparkMax(Constants.SubsystemConstants.kelevatorLeftId, MotorType.kBrushless);
 
-  private RelativeEncoder m_encoder = m_elevatorLeftMaster.getEncoder();
+   private RelativeEncoder m_encoderLeft = m_elevatorLeftMaster.getEncoder();
+
   private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
 
   private CurveFunction m_curve = new CurveFunction();
-
-  private double m_elevatorSpeed;
 
   // just in case
   // private double m_pulleyDiameter = 0.05445;
@@ -46,30 +47,27 @@ public class Elevator extends SubsystemBase {
   public Elevator() {
     // configures the CANSparkMax controllers
     m_elevatorLeftMaster.restoreFactoryDefaults();
-    m_elevatorRight.restoreFactoryDefaults();
+    // m_elevatorRight.restoreFactoryDefaults();
 
     m_elevatorLeftMaster.setInverted(true);
 
-    m_elevatorRight.follow(m_elevatorLeftMaster, true);
-
-    m_elevatorRight.setInverted(false);
+    // m_elevatorRight.follow(m_elevatorLeftMaster, true);
 
     m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 3);
-    m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 3);
+    // m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 3);
 
     m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 6);
-    m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 6);
+    // m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 6);
 
-    m_encoder.setPosition(0.0);
-    // m_encoder.setPositionConversionFactor(0.5);
+    m_encoderLeft.setPosition(0.0);
+    // m_encoderRight.setPosition(0.0);
   }
 
   @Override
   public void periodic() {
-    encoderConversions();
 
     if (DriverStation.isDisabled()) {
-      m_elevatorTarget = m_encoder.getPosition();
+      m_elevatorTarget = m_encoderLeft.getPosition();
     }
     m_elevatorLeftMaster.set(0.0);
 
@@ -84,8 +82,9 @@ public class Elevator extends SubsystemBase {
     }
 
     if (isAtBottom()) {
-      m_encoder.setPosition(0.0);
+      m_encoderLeft.setPosition(0.0);
     }
+    System.out.println("ENCODER POSITION " + m_encoderLeft.getPosition());
   }
 
   // switch case statement for configuring elevator height
@@ -115,44 +114,25 @@ public class Elevator extends SubsystemBase {
     m_curve.stop();
 
     m_elevatorLeftMaster.stopMotor();
-    m_elevatorRight.stopMotor();
+    // m_elevatorRight.stopMotor();
   }
 
   // check if the limit switch is triggered
   public boolean isAtBottom() {
     if (bottomlimitSwitch.get()) {
-
-      return true;
-    }
-    return false;
-  }
-
-  private double encoderConversions() {
-    double m_encoderPosition = m_encoder.getPosition() / 360;
-    return m_encoderPosition;
-  }
-
-  private boolean negativeTargetChecker() {
-    if (encoderConversions() > m_elevatorTarget) {
       return true;
     }
     return false;
   }
 
   public boolean onTarget() {
-
-    if (negativeTargetChecker() == false) {
-
-      return Math.abs(this.m_elevatorTarget + encoderConversions())
+      return Math.abs(this.m_elevatorTarget - m_encoderLeft.getPosition())
           < Constants.ElevatorConstants.kDeadzone;
-    }
-    return Math.abs(this.m_elevatorTarget - encoderConversions())
-        < Constants.ElevatorConstants.kDeadzone;
   }
 
   // checks if the target is lower than the motors, if it is, lowers the motors
   private void goToTarget() {
-    if (encoderConversions() < m_elevatorTarget) {
+    if (m_encoderLeft.getPosition() < m_elevatorTarget) {
       setElevatorSpeed(0.60);
 
     } else {

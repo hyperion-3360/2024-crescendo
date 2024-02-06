@@ -70,7 +70,7 @@ public class Climber extends SubsystemBase {
 
     //   repositionement();
 
-    System.out.println("ENCODER POSITION " + encoderPositon());
+    // System.out.println("ENCODER POSITION " + encoderPositon());
   }
 
   public void setClimberSpeed(double m_climberSpeed) {
@@ -117,7 +117,7 @@ public class Climber extends SubsystemBase {
   }
 
   private boolean onTarget() {
-    return Math.abs(m_climberTarget + encoderPositon())
+    return Math.abs(m_climberTarget - encoderPositon())
         < Constants.ClimberConstants.kclimberDeadBand;
   }
 

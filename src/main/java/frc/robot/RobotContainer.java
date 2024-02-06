@@ -14,6 +14,7 @@ import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Blocker;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Climber.e_climberCheck;
+import frc.robot.subsystems.Elevator.e_elevatorLevel;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Trap;
@@ -86,8 +87,14 @@ public class RobotContainer {
     //   m_coDriverController.x().whileTrue(Sequences.switchToIntakeMode( m_shooter,
     // m_blocker)).onFalse(m_shooter.stop());
 
-    m_coDriverController.b().onTrue(m_climber.climberGoToSelectedLevel(e_climberCheck.BOTTOM));
+    // m_coDriverController.b().onTrue(m_climber.climberGoToSelectedLevel(e_climberCheck.BOTTOM));
 
-    m_driverController.y().onTrue(m_climber.climberGoToSelectedLevel(e_climberCheck.TOP));
+    // m_driverController.y().onTrue(m_climber.climberGoToSelectedLevel(e_climberCheck.TOP));
+
+    m_coDriverController.a().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.LOW));
+
+       m_coDriverController.b().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.INTAKE));
+
+       m_coDriverController.y().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.LOW));
   }
 }
