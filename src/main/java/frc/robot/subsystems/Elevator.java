@@ -61,6 +61,10 @@ public class Elevator extends SubsystemBase {
 
     m_encoderLeft.setPosition(0.0);
     // m_encoderRight.setPosition(0.0);
+
+    m_elevatorLeftMaster.set(0.6);
+
+    m_encoderLeft.setPositionConversionFactor(0.1);
   }
 
   @Override
@@ -84,7 +88,7 @@ public class Elevator extends SubsystemBase {
     if (isAtBottom()) {
       m_encoderLeft.setPosition(0.0);
     }
-    System.out.println("ENCODER POSITION " + m_encoderLeft.getPosition());
+    System.out.println("ENCODER VALUE " + m_encoderLeft.getPosition());
   }
 
   // switch case statement for configuring elevator height
@@ -133,7 +137,7 @@ public class Elevator extends SubsystemBase {
   // checks if the target is lower than the motors, if it is, lowers the motors
   private void goToTarget() {
     if (m_encoderLeft.getPosition() < m_elevatorTarget) {
-      setElevatorSpeed(0.60);
+      setElevatorSpeed(0.30);
 
     } else {
       setElevatorSpeed(-0.20);
@@ -146,7 +150,7 @@ public class Elevator extends SubsystemBase {
             () -> {
               this.setElevator(m_elevatorLevel);
             }),
-        run(() -> this.goToTarget())
+         run(() -> this.goToTarget())
             .until(this::onTarget)
             .andThen(
                 run(

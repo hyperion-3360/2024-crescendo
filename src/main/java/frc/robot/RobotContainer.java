@@ -9,17 +9,17 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.Shuffleboard3360;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Sequences;
-import frc.robot.commands.TeleopSwerve;
-import frc.robot.subsystems.Blocker;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Climber.e_climberCheck;
+// import frc.robot.commands.Sequences;
+// import frc.robot.commands.TeleopSwerve;
+// import frc.robot.subsystems.Blocker;
+// import frc.robot.subsystems.Climber;
+// import frc.robot.subsystems.Climber.e_climberCheck;
 import frc.robot.subsystems.Elevator.e_elevatorLevel;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Trap;
+// import frc.robot.subsystems.Shooter;
+// import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
-import frc.robot.subsystems.swerve.Swerve;
+// import frc.robot.subsystems.swerve.Swerve;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -30,15 +30,15 @@ import frc.robot.subsystems.swerve.Swerve;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private final Swerve m_swerveDrive = new Swerve();
+  // private final Swerve m_swerveDrive = new Swerve();
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
 
-  public static final Sequences m_sequence = new Sequences();
-  public static final Shooter m_shooter = new Shooter();
+  // public static final Sequences m_sequence = new Sequences();
+  // public static final Shooter m_shooter = new Shooter();
   public static final Elevator m_elevator = new Elevator();
-  public static final Trap m_trap = new Trap();
-  public static final Blocker m_blocker = new Blocker();
-  public static final Climber m_climber = new Climber();
+  // public static final Trap m_trap = new Trap();
+  // public static final Blocker m_blocker = new Blocker();
+  // public static final Climber m_climber = new Climber();
 
   private final Shuffleboard3360 shuffleboard = Shuffleboard3360.getInstance();
 
@@ -55,16 +55,16 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    
+    // m_swerveDrive.resetModulesToAbsolute();
 
-    m_swerveDrive.resetModulesToAbsolute();
-
-    m_swerveDrive.setDefaultCommand(
-        new TeleopSwerve(
-            m_swerveDrive,
-            () -> -m_driverController.getRawAxis(translationAxis),
-            () -> -m_driverController.getRawAxis(strafeAxis),
-            () -> -m_driverController.getRawAxis(rotationAxis),
-            () -> false));
+    // m_swerveDrive.setDefaultCommand(
+    //     new TeleopSwerve(
+    //         m_swerveDrive,
+    //         () -> -m_driverController.getRawAxis(translationAxis),
+    //         () -> -m_driverController.getRawAxis(strafeAxis),
+    //         () -> -m_driverController.getRawAxis(rotationAxis),
+    //         () -> false));
     configureBindings();
   }
 
