@@ -29,12 +29,20 @@ public class Elevator extends SubsystemBase {
       new CANSparkMax(Constants.SubsystemConstants.kelevatorRightId, MotorType.kBrushless);
   private CANSparkMax m_elevatorLeftMaster =
       new CANSparkMax(Constants.SubsystemConstants.kelevatorLeftId, MotorType.kBrushless);
-  // calls the integrated Hall sensor relative encoder for the NEO 550
-  private RelativeEncoder m_encoderLeft = m_elevatorLeftMaster.getEncoder();
+
+  private RelativeEncoder m_encoder = m_elevatorLeftMaster.getEncoder();
 
   private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
 
   private double m_elevatorRampRate = 0.2;
+
+  // private final ProfiledPIDController m_pid =
+  // new ProfiledPIDController(kp, 0.0 ,0.0, new Constraints(m_velocity, m_acceleration));
+
+  // just in case
+  // private double m_pulleyDiameter = 0.05445;
+
+  // private double m_beltRampUp = 0.0;
 
   // creating an elevator
   public Elevator() {
@@ -46,13 +54,13 @@ public class Elevator extends SubsystemBase {
 
     m_elevatorRight.follow(m_elevatorLeftMaster, true);
 
-    m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 3);
-    m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 3);
+    m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
+    m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
 
-    m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 6);
-    m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 6);
+    m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
+    m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
 
-    m_encoderLeft.setPosition(0.0);
+    m_encoder.setPosition(0.0);
 
     m_elevatorLeftMaster.setIdleMode(IdleMode.kBrake);
     m_elevatorRight.setIdleMode(IdleMode.kBrake);
@@ -61,16 +69,16 @@ public class Elevator extends SubsystemBase {
     m_elevatorRight.setOpenLoopRampRate(m_elevatorRampRate);
   }
 
+  public void robotInit() {}
+
   @Override
   public void periodic() {
-    if (DriverStation.isDisabled()) {
-      m_elevatorLeftMaster.stopMotor();
-      m_elevatorTarget = m_encoderLeft.getPosition();
-    }
+    encoderConversions();
 
-    if (!m_bottomlimitSwitch.get()) {
-      m_encoderLeft.setPosition(0.0);
+    if (DriverStation.isDisabled()) {
+      m_elevatorTarget = m_encoder.getPosition();
     }
+    m_elevatorLeftMaster.set(0.0);
   }
 
   // switch case statement for configuring elevator height
@@ -89,10 +97,8 @@ public class Elevator extends SubsystemBase {
   }
 
   // setting the elevator speed according to the exponential function
-  public double setElevatorSpeed() {
-    double m_elevatorSpeed = m_elevatorLeftMaster.get();
+  public void setElevatorSpeed(double m_elevatorSpeed) {
     m_elevatorLeftMaster.set(m_elevatorSpeed);
-    return m_elevatorSpeed;
   }
 
   // stops the motors
@@ -100,37 +106,49 @@ public class Elevator extends SubsystemBase {
     m_elevatorLeftMaster.stopMotor();
   }
 
-  // checks if the elevator has reached the target
+  private double encoderConversions() {
+
+    double m_encoderPosition = m_encoder.getPosition() / 360;
+    return m_encoderPosition;
+  }
+
+  private boolean negativeTargetChecker() {
+    if (encoderConversions() < m_elevatorTarget) {
+      return true;
+    }
+    return false;
+  }
+
   public boolean onTarget() {
-    return Math.abs(this.m_elevatorTarget - m_encoderLeft.getPosition())
+
+    if (negativeTargetChecker() == false) {
+
+      return Math.abs(this.m_elevatorTarget + encoderConversions())
+          < Constants.ElevatorConstants.kDeadzone;
+    }
+    return Math.abs(this.m_elevatorTarget - encoderConversions())
         < Constants.ElevatorConstants.kDeadzone;
   }
 
-  private void negativeTargetChecker() {
-    if (m_encoderLeft.getPosition() < m_elevatorTarget + Constants.ElevatorConstants.kDeadzone) {
-      setElevatorSpeed();
+  // checks if the target is lower than the motors, if it is, lowers the motors
+  private void goToTarget() {
+    if (encoderConversions() < m_elevatorTarget) {
+      setElevatorSpeed(0.50);
+
+    } else {
+      setElevatorSpeed(-0.20);
     }
-    m_elevatorLeftMaster.set(0.2);
   }
 
-  // checks if the target is lower than the elevator, if it is, lowers the elevator
-
-  // a command to extend the elevator
   public Command extendTheElevator(e_elevatorLevel m_elevatorLevel) {
     return new SequentialCommandGroup(
         this.runOnce(
             () -> {
+              // this.m_pid.reset(m_encoder.getPosition());
               this.setElevator(m_elevatorLevel);
-              negativeTargetChecker();
             }),
-        run(() -> this.m_elevatorLeftMaster.set(-0.3))
+        run(() -> this.goToTarget())
             .until(this::onTarget)
-            .andThen(
-                run(
-                    () -> {
-                      m_elevatorLeftMaster.set(0.0);
-                    })));
+            .andThen(run(() -> m_elevatorLeftMaster.set(0.03))));
   }
-
-  public void robotInit() {}
 }
