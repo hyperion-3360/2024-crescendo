@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -14,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -52,6 +54,7 @@ public class Swerve extends SubsystemBase {
             m_gyro.getRotation2d(),
             positions,
             new Pose2d(0, 0, new Rotation2d()));
+    configurePathPlanner();
   }
 
   public void drive(
@@ -59,15 +62,49 @@ public class Swerve extends SubsystemBase {
     SwerveModuleState[] swerveModuleStates =
         Constants.Swerve.swerveKinematics.toSwerveModuleStates(
             new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
-    for (SwerveModule mod : mSwerveMods) {
-      mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
+    setStates(swerveModuleStates, isOpenLoop);
+  }
+
+  public void setStates(SwerveModuleState[] targetStates, boolean isOpenLoop) {
+    SwerveDriveKinematics.desaturateWheelSpeeds(targetStates, Constants.Swerve.maxSpeed);
+
+    for (int i = 0; i < mSwerveMods.length; i++) {
+      mSwerveMods[i].setDesiredState(targetStates[i], isOpenLoop);
     }
   }
 
   private void configurePathPlanner() {
 
-    //    AutoBuilder.configureHolonomic(this::getPose);
+    AutoBuilder.configureHolonomic(
+        this::getPose,
+        this::setPose,
+        this::getSpeeds,
+        this::driveRobotRelative,
+        Constants.AutoConstants.kHolonomicPathFollowerConfig,
+        () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+        },
+        this);
+  }
+
+  public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
+    ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
+
+    SwerveModuleState[] targetStates =
+        Constants.Swerve.swerveKinematics.toSwerveModuleStates(targetSpeeds);
+    setStates(targetStates, true);
+  }
+
+  public ChassisSpeeds getSpeeds() {
+    return Constants.Swerve.swerveKinematics.toChassisSpeeds(getModuleStates());
   }
 
   public void drive(double voltage) {

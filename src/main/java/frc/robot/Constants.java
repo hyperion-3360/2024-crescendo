@@ -7,6 +7,9 @@ package frc.robot;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -196,5 +199,17 @@ public final class Constants {
     public static final double kangleShoulderscoreNote = 65.0; // SCORENOTE
     public static final double kangleElbowscoreNote = 100.5;
     public static final double kangleWristscoreNote = 102.0;
+  }
+
+  public static class AutoConstants {
+    public static final HolonomicPathFollowerConfig kHolonomicPathFollowerConfig =
+        new HolonomicPathFollowerConfig(
+            new PIDConstants(10, 0, 0),
+            new PIDConstants(10, 0, 0),
+            Swerve.maxSpeed,
+            Math.sqrt(
+                (Swerve.trackWidth / 2.0 * Swerve.trackWidth / 2.0)
+                    + (Swerve.wheelBase / 2.0 * Swerve.wheelBase / 2.0)),
+            new ReplanningConfig());
   }
 }
