@@ -181,21 +181,20 @@ public final class Constants {
     public static final int kfingerlimitswitchId = 6;
     public static final int kservoBlockerId = 5;
 
-    public static final double kfingerClosed = 180.0; // angle of finger servo when closed/opened
+    public static final double kfingerClosed = 150.0; // angle of finger servo when closed/opened
     public static final double kfingerOpened = 90.0;
-
+    // good
     public static final double kangleShouldersetZero = 0.0; // SETZERO   //higher number = higher
     public static final double kangleElbowsetZero = 145.5; // higher number = lower
     public static final double kangleWristsetZero = 155.0; // higher number = higher
-    public static final double kangleShouldersetZeroHalf = 43.4;
-
+    public static final double kangleShouldersetZeroDelayed = 25.0;
+    // good
     public static final double kangleShouldergrabPosition = 65.0; // GRABPOSITION
-    public static final double kangleElbowgrabPosition = 85.0;
-    public static final double kangleWristgrabPosition = 120.0;
-
-    public static final double kangleShoulderscoreNote = 7.0; // SCORENOTE
-    public static final double kangleElbowscoreNote = 145.5;
-    public static final double kangleWristscoreNote = 155.0;
-    public static final double kangleFingerscoreNote = 155.0;
+    public static final double kangleElbowgrabPosition = 95.0;
+    public static final double kangleWristgrabPosition = 102.0;
+    // not finished
+    public static final double kangleShoulderscoreNote = 65.0; // SCORENOTE
+    public static final double kangleElbowscoreNote = 100.5;
+    public static final double kangleWristscoreNote = 102.0;
   }
 }

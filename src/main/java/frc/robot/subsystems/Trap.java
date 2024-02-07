@@ -43,14 +43,17 @@ public class Trap extends SubsystemBase {
                 servoTimer = Timer.getFPGATimestamp();
                 m_servoShoulder.setAngle(
                     Constants.TrapConstants
-                        .kangleShouldersetZeroHalf); // arm position during the game
+                        .kangleShouldersetZeroDelayed); // delays the shoulder angle (goes to half
+                // angle then total angle)
                 servoZeroState = ServoZeroSeqStates.SHOULDER;
 
               } else if (servoZeroState == ServoZeroSeqStates.SHOULDER) {
-                if (Timer.getFPGATimestamp() - servoTimer > 0.3) {
+                if (Timer.getFPGATimestamp() - servoTimer
+                    > 0.3) { // 0.3 seconds or 300 milliseconds (it's not calulated but works)
 
                   servoZeroState = ServoZeroSeqStates.ZERO;
-                  m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowsetZero);
+                  m_servoElbow.setAngle(
+                      Constants.TrapConstants.kangleElbowsetZero); // all the complete angles
                   m_servoWrist.setAngle(Constants.TrapConstants.kangleWristsetZero);
                   m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldersetZero);
                 }
@@ -80,9 +83,9 @@ public class Trap extends SubsystemBase {
             () ->
                 m_servoShoulder.setAngle(
                     Constants.TrapConstants
-                        .kangleShouldergrabPosition)) // arm position when grabing note (from
-        // shooter)
+                        .kangleShouldergrabPosition)) // arm position grabing note (from shooter)
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowgrabPosition))
-        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristgrabPosition));
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristgrabPosition))
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kfingerOpened));
   }
 }
