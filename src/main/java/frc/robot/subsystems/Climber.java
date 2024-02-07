@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.math.CurveFunction;
+import frc.robot.math.Conversions;
 
 public class Climber extends SubsystemBase {
 
@@ -30,9 +30,7 @@ public class Climber extends SubsystemBase {
 
   private double m_climberTarget = 0.0;
 
-  private CurveFunction m_curve = new CurveFunction();
-
-  private double m_climberSpeed;
+  private double m_climberRampRate = 0.2;
 
   // declare 2 members, check fb for type and port, add port in constants
   public Climber() {
@@ -46,23 +44,18 @@ public class Climber extends SubsystemBase {
     m_encoder.setPosition(m_encoder.getPosition());
 
     // m_gyro.reset();
+
+    m_climberRightMaster.setOpenLoopRampRate(m_climberRampRate);
+    m_climberLeft.setOpenLoopRampRate(m_climberRampRate);
   }
 
   public void robotInit() {}
 
   @Override
   public void periodic() {
-    if (this.onTarget()) {
-      this.stop();
-    } else {
-      Double adjustedSpeed = m_curve.adjustPeriodic();
-      if (adjustedSpeed != null) {
-        m_climberRightMaster.set(adjustedSpeed);
-      }
 
-      if (DriverStation.isDisabled()) {
-        m_climberTarget = m_encoder.getPosition();
-      }
+    if (DriverStation.isDisabled()) {
+      m_climberTarget = m_encoder.getPosition();
       m_climberRightMaster.set(0.0);
     }
 
@@ -73,25 +66,20 @@ public class Climber extends SubsystemBase {
     // System.out.println("ENCODER POSITION " + encoderPositon());
   }
 
-  public void setClimberSpeed(double m_climberSpeed) {
-    m_climberSpeed = m_curve.getMotorSpeed(m_climberSpeed);
-    m_climberRightMaster.set(m_climberSpeed);
-  }
-
   private void setClimberLevel(e_climberCheck m_climberCheck) {
     switch (m_climberCheck) {
       case TOP:
         m_climberTarget = Constants.ClimberConstants.kTopTarget;
-        setClimberSpeed(m_climberSpeed * -1);
+        m_climberRightMaster.set(0.2);
         break;
 
       case BOTTOM:
         m_climberTarget = Constants.ClimberConstants.kBottomTarget;
-        setClimberSpeed(m_climberSpeed);
+        m_climberRightMaster.set(-0.2);
         break;
 
       case STOP:
-        setClimberSpeed(0.0);
+        m_climberRightMaster.stopMotor();
     }
   }
 
@@ -108,12 +96,10 @@ public class Climber extends SubsystemBase {
 
   //     }
 
-  private void stop() {
-    m_climberRightMaster.stopMotor();
-  }
-
   private double encoderPositon() {
-    return m_encoder.getPosition() / 360;
+    double m_encoderPosition;
+    m_encoderPosition = Conversions.NEOToMeters(35, 0.041275, m_encoder.getPosition());
+    return m_encoderPosition;
   }
 
   private boolean onTarget() {
@@ -123,11 +109,7 @@ public class Climber extends SubsystemBase {
 
   public Command climberGoToSelectedLevel(e_climberCheck m_climberCheck) {
     return new SequentialCommandGroup(
-        this.runOnce(
-            () -> {
-              setClimberLevel(m_climberCheck);
-            }),
-        run(() -> setClimberSpeed(0.2))
+        this.run(() -> setClimberLevel(m_climberCheck))
             .until(this::onTarget)
             .andThen(() -> setClimberLevel(e_climberCheck.STOP)));
   }
