@@ -12,8 +12,7 @@ import frc.robot.Constants;
 import frc.robot.math.Conversions;
 
 public class Climber extends SubsystemBase {
-// 0.107526666 = pulley diameter
-//9 = gear ratio
+
   public enum e_climberCheck {
     TOP,
     BOTTOM,
@@ -37,8 +36,6 @@ public class Climber extends SubsystemBase {
   public Climber() {
     m_climberLeft.restoreFactoryDefaults();
     m_climberRightMaster.restoreFactoryDefaults();
-
-    m_climberRightMaster.setInverted(true);
 
     m_climberLeft.follow(m_climberRightMaster, true);
 
@@ -71,12 +68,12 @@ public class Climber extends SubsystemBase {
     switch (m_climberCheck) {
       case TOP:
         m_climberTarget = Constants.ClimberConstants.kTopTarget;
-        m_climberRightMaster.set(0.2);
+        m_climberRightMaster.set(-0.2);
         break;
 
       case BOTTOM:
         m_climberTarget = Constants.ClimberConstants.kBottomTarget;
-        m_climberRightMaster.set(-0.2);
+        m_climberRightMaster.set(0.2);
         break;
 
       case STOP:
@@ -99,7 +96,7 @@ public class Climber extends SubsystemBase {
 
   private double encoderPositon() {
     double m_encoderPosition;
-    m_encoderPosition = Conversions.NEOToMeters(35, 0.041275, m_encoder.getPosition());
+    m_encoderPosition = Conversions.NEOToMeters(9, 0.107526667, m_encoder.getPosition());
     return m_encoderPosition;
   }
 
