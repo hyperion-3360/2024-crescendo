@@ -161,8 +161,8 @@ public final class Constants {
 
   public static class ElevatorConstants {
     public static final double kDeadzone = 0.005;
-    public static final double kHighTarget = 0.3;
-    public static final double kLowTarget = 0.2;
+    public static final double kHighTarget = 30;
+    public static final double kLowTarget = 15;
     public static final double kIntakeTarget = 0.0;
   }
 

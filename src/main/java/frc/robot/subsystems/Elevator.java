@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.math.Conversions;
 
 public class Elevator extends SubsystemBase {
 
@@ -72,8 +71,6 @@ public class Elevator extends SubsystemBase {
     if (!m_bottomlimitSwitch.get()) {
       m_encoderLeft.setPosition(0.0);
     }
-
-    encoderConversion();
   }
 
   // switch case statement for configuring elevator height
@@ -103,28 +100,17 @@ public class Elevator extends SubsystemBase {
     m_elevatorLeftMaster.stopMotor();
   }
 
-  /*
-   * 35 = gear ratio.
-   * 0.041275 = pulley diameter. belt size = 0.00182
-   * encoder position is the position of the encoder
-   */
-  private double encoderConversion() {
-    double m_encoderPosition;
-    m_encoderPosition = Conversions.NEOToMeters(35, 0.041275, m_encoderLeft.getPosition());
-    return m_encoderPosition;
-  }
-
   // checks if the elevator has reached the target
   public boolean onTarget() {
-    return Math.abs(this.m_elevatorTarget - encoderConversion())
+    return Math.abs(this.m_elevatorTarget - m_encoderLeft.getPosition())
         < Constants.ElevatorConstants.kDeadzone;
   }
 
-  private double negativeTargetChecker() {
-    if (encoderConversion() < m_elevatorTarget) {
-      return setElevatorSpeed();
+  private void negativeTargetChecker() {
+    if (m_encoderLeft.getPosition() < m_elevatorTarget + Constants.ElevatorConstants.kDeadzone) {
+      setElevatorSpeed();
     }
-    return (setElevatorSpeed() - 0.3) * -1;
+    m_elevatorLeftMaster.set(0.2);
   }
 
   // checks if the target is lower than the elevator, if it is, lowers the elevator
@@ -137,7 +123,7 @@ public class Elevator extends SubsystemBase {
               this.setElevator(m_elevatorLevel);
               negativeTargetChecker();
             }),
-        run(() -> this.m_elevatorLeftMaster.set(0.5))
+        run(() -> this.m_elevatorLeftMaster.set(-0.3))
             .until(this::onTarget)
             .andThen(
                 run(
