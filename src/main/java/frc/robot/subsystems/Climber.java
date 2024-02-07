@@ -12,7 +12,8 @@ import frc.robot.Constants;
 import frc.robot.math.Conversions;
 
 public class Climber extends SubsystemBase {
-
+// 0.107526666 = pulley diameter
+//9 = gear ratio
   public enum e_climberCheck {
     TOP,
     BOTTOM,
