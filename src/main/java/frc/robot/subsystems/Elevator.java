@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -54,11 +53,11 @@ public class Elevator extends SubsystemBase {
 
     m_elevatorRight.follow(m_elevatorLeftMaster, true);
 
-    m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
-    m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
+    // m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
+    // m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
 
-    m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
-    m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
+    // m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
+    // m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
 
     m_encoder.setPosition(0.0);
   }
@@ -71,8 +70,8 @@ public class Elevator extends SubsystemBase {
 
     if (DriverStation.isDisabled()) {
       m_elevatorTarget = m_encoder.getPosition();
+      m_elevatorLeftMaster.set(0.0);
     }
-    m_elevatorLeftMaster.set(0.0);
 
     // checks if the motor is running or at max speed for the exponential function
     if (this.onTarget()) {
@@ -87,7 +86,6 @@ public class Elevator extends SubsystemBase {
     if (isAtBottom()) {
       m_encoder.setPosition(0.0);
     }
-    m_encoder.getPosition();
   }
 
   // switch case statement for configuring elevator height
@@ -120,7 +118,7 @@ public class Elevator extends SubsystemBase {
 
   // check if the limit switch is triggered
   public boolean isAtBottom() {
-    if (bottomlimitSwitch.get()) {
+    if (!bottomlimitSwitch.get()) {
 
       return true;
     }
