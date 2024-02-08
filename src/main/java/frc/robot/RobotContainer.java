@@ -4,9 +4,11 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.Shuffleboard3360;
@@ -79,6 +81,14 @@ public class RobotContainer {
             () -> conditionJoystick(strafeAxis, strafeLimiter, kJoystickDeadband),
             () -> conditionJoystick(rotationAxis, rotationLimiter, kJoystickDeadband),
             () -> false));
+
+    String shoot = "shoot hight";
+    NamedCommands.registerCommand(shoot, highGoal());
+    String shootlow = "shoot low";
+    NamedCommands.registerCommand(shootlow, lowGoal());
+    String take = "take";
+    NamedCommands.registerCommand(take, takeNote());
+
     configureBindings();
   }
 
@@ -103,5 +113,32 @@ public class RobotContainer {
     // m_driverController.b().onTrue(m_trap.grabPosition());
     // m_driverController.x().onTrue(m_trap.scoreNote());
     m_driverController.a().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.HIGH));
+  }
+
+  public Command highGoal() {
+    return m_elevator
+        .extendTheElevator(Elevator.e_elevatorLevel.HIGH)
+        .andThen(
+            () -> {
+              m_shooter.shoot(Shooter.shootSpeed.HIGH);
+            });
+  }
+
+  public Command lowGoal() {
+    return m_elevator
+        .extendTheElevator(Elevator.e_elevatorLevel.LOW)
+        .andThen(
+            () -> {
+              m_shooter.shoot(Shooter.shootSpeed.LOW);
+            });
+  }
+
+  public Command takeNote() {
+    return m_elevator
+        .extendTheElevator(Elevator.e_elevatorLevel.INTAKE)
+        .andThen(
+            () -> {
+              m_shooter.intake();
+            });
   }
 }

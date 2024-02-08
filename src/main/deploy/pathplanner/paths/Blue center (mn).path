@@ -1,0 +1,164 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.6953903539171806,
+        "y": 3.9379452294197423
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.7154711242469904,
+        "y": 3.904215071405449
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.92140407426029,
+        "y": 7.17892111861857
+      },
+      "prevControl": {
+        "x": 3.002345879391278,
+        "y": 6.259691883812308
+      },
+      "nextControl": {
+        "x": 1.7186925956095804,
+        "y": 7.35130627064251
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.8955425304589686,
+        "y": 5.596995278343703
+      },
+      "prevControl": {
+        "x": 2.8717557109004117,
+        "y": 5.6306976613082025
+      },
+      "nextControl": {
+        "x": 2.9374822932338174,
+        "y": 5.537572876664546
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.92140407426029,
+        "y": 7.17892111861857
+      },
+      "prevControl": {
+        "x": 1.8302902994528745,
+        "y": 6.976247001161702
+      },
+      "nextControl": {
+        "x": 1.9657040546052242,
+        "y": 7.277462304501205
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.464318461990289,
+        "y": 4.638058080912928
+      },
+      "prevControl": {
+        "x": 4.461995385611182,
+        "y": 4.627846355725492
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -88.22032846054991,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Shoot amp 1",
+      "waypointRelativePos": 1.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "wait",
+              "data": {
+                "waitTime": 3.0
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "shoot low"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Take Note",
+      "waypointRelativePos": 1.85,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "take"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Shoot amp 2",
+      "waypointRelativePos": 2.9,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "shoot low"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -90.04876782661033,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}
