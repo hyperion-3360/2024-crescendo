@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.889555152607901,
-      "y": 5.643500604500117
+      "x": 15.871918870040163,
+      "y": 3.7884568411746407
     },
-    "rotation": 0
+    "rotation": -178.97213331119673
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "8,09 Center"
+            "pathName": "Red Center (mn)"
           }
         }
       ]

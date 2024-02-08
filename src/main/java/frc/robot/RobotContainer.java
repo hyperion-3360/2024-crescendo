@@ -63,8 +63,10 @@ public class RobotContainer {
             () -> -m_driverController.getRawAxis(rotationAxis),
             () -> false));
 
-    String shoot = "shoot";
+    String shoot= "shoot hight";
     NamedCommands.registerCommand(shoot, highGoal());
+    String shootlow= "shoot low";
+    NamedCommands.registerCommand(shootlow, lowGoal());
     String take = "take";
     NamedCommands.registerCommand(take, takeNote());
 
@@ -114,7 +116,16 @@ public class RobotContainer {
         () -> {
           m_shooter.highGoal(0.5);
         });
+      }
+
+
+       public Command lowGoal() {
+    return Commands.runOnce(
+        () -> {
+        m_shooter.lowGoal(0.5);//change distance
+        });
   }
+    
 
   public Command takeNote() {
     return Commands.runOnce(
@@ -123,3 +134,4 @@ public class RobotContainer {
         });
   }
 }
+

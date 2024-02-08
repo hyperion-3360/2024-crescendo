@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.9920033465094245,
-      "y": 7.089337091562077
+      "x": 2,
+      "y": 2
     },
     "rotation": 0
   },
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "7,87 Left"
+            "pathName": "Blue right (mn)"
           }
         }
       ]
