@@ -13,6 +13,7 @@ import frc.Shuffleboard3360;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Elevator.e_elevatorLevel;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
@@ -51,6 +52,21 @@ public class RobotContainer {
 
   private final double kJoystickDeadband = 0.1;
 
+  /***
+   * conditionJoystick
+   * Condition a joystick axis value given a slewrate limiter and deadband
+   * @param axis axis to condition
+   * @param limiter slewrate limiter (to smooth the rate of changed
+   * @see https://docs.wpilib.org/en/stable/docs/software/advanced-controls/filters/slew-rate-limiter.html)
+   * @param deadband deadband to suppress noise around the 0 of a joystick axis
+   * @see https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/MathUtil.html#applyDeadband(double,double)
+   * @return the conditioned value
+   */
+  private double conditionJoystick(int axis, SlewRateLimiter limiter, double deadband) {
+    return -limiter.calculate(
+        MathUtil.applyDeadband(m_driverController.getRawAxis(axis), deadband));
+  }
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -59,18 +75,9 @@ public class RobotContainer {
     m_swerveDrive.setDefaultCommand(
         new TeleopSwerve(
             m_swerveDrive,
-            () ->
-                -translationLimiter.calculate(
-                    MathUtil.applyDeadband(
-                        m_driverController.getRawAxis(translationAxis), kJoystickDeadband)),
-            () ->
-                -strafeLimiter.calculate(
-                    MathUtil.applyDeadband(
-                        m_driverController.getRawAxis(strafeAxis), kJoystickDeadband)),
-            () ->
-                -rotationLimiter.calculate(
-                    MathUtil.applyDeadband(
-                        m_driverController.getRawAxis(rotationAxis), kJoystickDeadband)),
+            () -> conditionJoystick(translationAxis, translationLimiter, kJoystickDeadband),
+            () -> conditionJoystick(strafeAxis, strafeLimiter, kJoystickDeadband),
+            () -> conditionJoystick(rotationAxis, rotationLimiter, kJoystickDeadband),
             () -> false));
     configureBindings();
   }
@@ -92,5 +99,9 @@ public class RobotContainer {
     // );
 
     // m_driverController.a().onTrue(m_shooter.intake());
+    // m_driverController.a().onTrue(m_trap.setZero());
+    // m_driverController.b().onTrue(m_trap.grabPosition());
+    // m_driverController.x().onTrue(m_trap.scoreNote());
+    m_driverController.a().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.HIGH));
   }
 }
