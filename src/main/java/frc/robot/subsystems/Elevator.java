@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+ackage frc.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -79,6 +79,10 @@ public class Elevator extends SubsystemBase {
       m_elevatorTarget = m_encoder.getPosition();
     }
     m_elevatorLeftMaster.set(0.0);
+
+    if (!m_bottomlimitSwitch.get()) {
+      m_encoder.setPosition(0.0);
+    }
   }
 
   // switch case statement for configuring elevator height
