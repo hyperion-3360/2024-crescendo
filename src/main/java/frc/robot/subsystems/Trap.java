@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.util.TimedServo;
 import frc.robot.Constants;
 
 public class Trap extends SubsystemBase {
@@ -15,8 +14,9 @@ public class Trap extends SubsystemBase {
   private Servo m_servoWrist = new Servo(Constants.TrapConstants.kservoWristId);
   private Servo m_servoFinger = new Servo(Constants.TrapConstants.kservoFingerId);
   DigitalInput m_limitSwitch = new DigitalInput(Constants.TrapConstants.kfingerlimitswitchId);
+
   // private var m_timedServo = new TimedServo(TimedServo.TimedServo.);
-  
+
   public Trap() {}
 
   @Override

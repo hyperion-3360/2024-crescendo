@@ -9,24 +9,21 @@ public class TimedServo extends Servo {
   private double m_angularSpeed = 0.0;
   private double m_completedTime = 0.0;
 
-
-  public TimedServo(int channel, double angularSpeed){
+  public TimedServo(int channel, double angularSpeed) {
 
     super(channel);
     this.m_angularSpeed = angularSpeed;
-
   }
-  
+
   @Override
-  public void setAngle(double degrees){
+  public void setAngle(double degrees) {
 
     m_completedTime = degrees * m_angularSpeed + RobotController.getFPGATime();
-    new RunCommand(()-> super.setAngle(degrees)).until(()->this.isDone());
-
+    new RunCommand(() -> super.setAngle(degrees)).until(() -> this.isDone());
   }
 
-public boolean isDone(){
+  public boolean isDone() {
 
-  return RobotController.getFPGATime() > m_completedTime;
-}
+    return RobotController.getFPGATime() > m_completedTime;
+  }
 }
