@@ -69,6 +69,8 @@ public class RobotContainer {
         MathUtil.applyDeadband(m_driverController.getRawAxis(axis), deadband));
   }
 
+  private ModeAuto m_autoHandler = new ModeAuto();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -115,6 +117,11 @@ public class RobotContainer {
     m_driverController.a().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.HIGH));
   }
 
+  public void autoInit(){
+    // TODO Selectionner le mode auto du shuffleboard
+    m_autoHandler.follow(ModeAuto.Mode.RED_AUTO1);
+  }
+
   public Command highGoal() {
     return m_elevator
         .extendTheElevator(Elevator.e_elevatorLevel.HIGH)
@@ -141,4 +148,9 @@ public class RobotContainer {
               m_shooter.intake();
             });
   }
+
+public Command getAutonomousCommand() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'getAutonomousCommand'");
+}
 }
