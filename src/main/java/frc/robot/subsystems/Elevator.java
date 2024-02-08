@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.subsystems.swerve.Swerve;
 
 public class Elevator extends SubsystemBase {
 
@@ -35,6 +37,10 @@ public class Elevator extends SubsystemBase {
   private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
 
   private double m_elevatorRampRate = 0.2;
+
+  private Swerve m_swerve = new Swerve();
+
+  private AprilTag m_aprilTag = new AprilTag(0, null);
 
   // private final ProfiledPIDController m_pid =
   // new ProfiledPIDController(kp, 0.0 ,0.0, new Constraints(m_velocity, m_acceleration));
@@ -138,6 +144,17 @@ public class Elevator extends SubsystemBase {
     } else {
       setElevatorSpeed(-0.20);
     }
+  }
+
+  private void foundDiagonal() {
+    var m_foundDiagonal = 0.0;
+    double xposition = m_swerve.m_odometry.getPoseMeters().getX();
+    double yPosition = m_swerve.m_odometry.getPoseMeters().getY();
+    xposition = Math.pow(xposition, 2);
+    yPosition = Math.pow(yPosition, 2);
+    var cPosition = xposition + yPosition;
+
+    m_foundDiagonal = Math.sqrt(cPosition);
   }
 
   public Command extendTheElevator(e_elevatorLevel m_elevatorLevel) {
