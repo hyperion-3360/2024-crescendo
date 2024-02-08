@@ -16,7 +16,7 @@ public class Blocker extends SubsystemBase {
 
   // set l'angle a zero
   public Command setZero() {
-    return this.runOnce(() -> m_servoBlocker.setAngle(70));
+    return this.runOnce(() -> m_servoBlocker.setAngle(0));
   }
 
   // si il a une note il attend 3 secondes avant de lever
