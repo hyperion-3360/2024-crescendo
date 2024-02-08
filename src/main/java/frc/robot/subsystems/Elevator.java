@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -54,11 +53,11 @@ public class Elevator extends SubsystemBase {
 
     m_elevatorRight.follow(m_elevatorLeftMaster, true);
 
-    m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
-    m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
+    // m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
+    // m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
 
-    m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
-    m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
+    // m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
+    // m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
 
     m_encoder.setPosition(0.0);
   }
