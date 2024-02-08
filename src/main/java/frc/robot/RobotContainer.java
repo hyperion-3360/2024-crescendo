@@ -13,6 +13,7 @@ import frc.Shuffleboard3360;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Elevator.e_elevatorLevel;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
@@ -98,8 +99,9 @@ public class RobotContainer {
     // );
 
     // m_driverController.a().onTrue(m_shooter.intake());
-    m_driverController.a().onTrue(m_trap.setZero());
-    m_driverController.b().onTrue(m_trap.grabPosition());
-    m_driverController.x().onTrue(m_trap.scoreNote());
+    // m_driverController.a().onTrue(m_trap.setZero());
+    // m_driverController.b().onTrue(m_trap.grabPosition());
+    // m_driverController.x().onTrue(m_trap.scoreNote());
+    m_driverController.a().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.HIGH));
   }
 }
