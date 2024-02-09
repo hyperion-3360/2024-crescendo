@@ -117,7 +117,7 @@ public class RobotContainer {
     m_driverController.a().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.HIGH));
   }
 
-  public void autoInit(){
+  public void autoInit() {
     // TODO Selectionner le mode auto du shuffleboard
     m_autoHandler.follow(ModeAuto.Mode.RED_AUTO1);
   }
@@ -149,8 +149,8 @@ public class RobotContainer {
             });
   }
 
-public Command getAutonomousCommand() {
+  public Command getAutonomousCommand() {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'getAutonomousCommand'");
-}
+  }
 }

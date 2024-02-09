@@ -4,7 +4,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-
 /** Add your docs here. */
 public class ModeAuto extends SubsystemBase {
   // TODO Changer pour avoir les bons noms de fichiers
@@ -17,16 +16,17 @@ public class ModeAuto extends SubsystemBase {
     BLUE_AUTO3("Blue left (mn)");
 
     private String m_path;
-    private Mode(String path){
+
+    private Mode(String path) {
       m_path = path;
     }
 
-    public String toString(){
+    public String toString() {
       return m_path;
     }
   }
 
-  public void follow(Mode automode){
+  public void follow(Mode automode) {
     PathPlannerPath path = PathPlannerPath.fromPathFile(automode.toString());
     AutoBuilder.followPath(path);
   }
