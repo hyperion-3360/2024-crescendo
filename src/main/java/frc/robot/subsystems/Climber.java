@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -26,8 +27,8 @@ public class Climber extends SubsystemBase {
 
   private RelativeEncoder m_encoder = m_climberRightMaster.getEncoder();
 
-  private double m_climberRampRate = 1; // was .2
-  private double m_speed = 0.2;
+  private double m_climberRampRate = 2; // was .2
+  private double m_speed = 1.0;
   private double m_climberTarget = ClimberConstants.kstartPos;
   private boolean isTop = false;
   private double m_climberStallSpeed;
@@ -49,6 +50,9 @@ public class Climber extends SubsystemBase {
     m_climberRightMaster.burnFlash();
     m_climberLeft.burnFlash();
 
+    m_climberRightMaster.setIdleMode(IdleMode.kBrake);
+    m_climberLeft.setIdleMode(IdleMode.kBrake);
+
     // setInitialPos();
   }
 
@@ -64,7 +68,6 @@ public class Climber extends SubsystemBase {
 
     //   repositionement();
 
-    System.out.println("enc pos " + m_encoder.getPosition() + " on target? " + onTarget());
   }
 
   private void setClimberLevel(climberPos m_climberCheck) {
@@ -72,7 +75,7 @@ public class Climber extends SubsystemBase {
       case TOP:
         isTop = true;
         m_climberTarget = Constants.ClimberConstants.kTopTarget;
-        m_climberRightMaster.set(-m_speed);
+        m_climberRightMaster.set(-0.1);
         m_climberStallSpeed = 0;
         break;
 
@@ -87,7 +90,7 @@ public class Climber extends SubsystemBase {
       case INITAL:
         isTop = false;
         m_climberTarget = ClimberConstants.kstartPos;
-        m_climberRightMaster.set(0.1);
+        m_climberRightMaster.set(m_speed);
         m_climberStallSpeed = 0.03;
         break;
     }
