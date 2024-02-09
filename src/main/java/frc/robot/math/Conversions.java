@@ -105,4 +105,20 @@ public class Conversions {
   public static double MetersToFalcon(double meters, double circumference, double gearRatio) {
     return meters / (circumference / (gearRatio * 2048.0));
   }
+
+  // found this formula for swerve conversions and adapted it for NEO
+  // https://www.chiefdelphi.com/t/converting-drive-motor-encoder-output-to-meters-swerve/428066
+  /**
+   * @param gearRatio the gear ration between the NEO 550 and the wheel
+   * @param wheelDiameter the diameter of the wheel
+   * @param encoderPosition the recorded position of the encoder
+   * @return the wheel position in meters
+   */
+  public static double NEOToMeters(double gearRatio, double wheelDiameter, double encoderPosition) {
+    double NEOpulsePerRotation = 42; // https://www.revrobotics.com/content/docs/REV-21-1650-DS.pdf
+
+    double meterPerPulse = gearRatio * (Math.PI * wheelDiameter) / NEOpulsePerRotation;
+    double wheelPositionInMeters = encoderPosition * meterPerPulse;
+    return wheelPositionInMeters;
+  }
 }

@@ -1,19 +1,23 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.util.TimedServo;
 import frc.robot.Constants;
 
 public class Trap extends SubsystemBase {
 
-  private Servo m_servoShoulder = new Servo(Constants.TrapConstants.kservoShoulderId);
-  private Servo m_servoElbow = new Servo(Constants.TrapConstants.kservoElbowId);
-  private Servo m_servoWrist = new Servo(Constants.TrapConstants.kservoWristId);
-  private Servo m_servoFinger = new Servo(Constants.TrapConstants.kservoFingerId);
+  private TimedServo m_servoShoulder =
+      new TimedServo(Constants.TrapConstants.kservoShoulderId, 0.0);
+  private TimedServo m_servoElbow = new TimedServo(Constants.TrapConstants.kservoElbowId, 0.0);
+  private TimedServo m_servoWrist =
+      new TimedServo(Constants.TrapConstants.kservoWristId, 1000000.0);
+  private TimedServo m_servoFinger = new TimedServo(Constants.TrapConstants.kservoFingerId, 0.0);
   DigitalInput m_limitSwitch = new DigitalInput(Constants.TrapConstants.kfingerlimitswitchId);
+
+  private boolean m_trap_ready = false;
 
   // private var m_timedServo = new TimedServo(TimedServo.TimedServo.);
 
@@ -22,8 +26,11 @@ public class Trap extends SubsystemBase {
   @Override
   public void periodic() {
 
-    // if (!m_limitSwitch.get() && isDone);
-    // else m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened);
+    // if (!m_limitSwitch.get() &&
+    if (m_trap_ready) {
+      m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened);
+      System.out.println("terminer");
+    }
   }
 
   enum ServoZeroSeqStates {
@@ -70,12 +77,17 @@ public class Trap extends SubsystemBase {
   }
 
   public Command scoreNote() {
-    return this.runOnce(
-            () ->
-                m_servoShoulder.setAngle(
-                    Constants.TrapConstants.kangleShoulderscoreNote)) // arm position to score note
+    return this.run(
+            () -> {
+              m_trap_ready = false;
+              m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderscoreNote);
+            }) // arm position to score note
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowscoreNote))
-        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristscoreNote));
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristscoreNote))
+        .andThen(
+            () -> {
+              m_trap_ready = true;
+            });
   }
 
   public Command grabPosition() {
@@ -87,5 +99,25 @@ public class Trap extends SubsystemBase {
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowgrabPosition))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristgrabPosition))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kfingerOpened));
+  }
+
+  private boolean isActivated = false;
+
+  public Command test() {
+    return this.run(
+            () -> {
+              if (!isActivated) {
+                isActivated = true;
+                m_trap_ready = false;
+                m_servoWrist.setAngle(Constants.TrapConstants.kangleWristgrabPosition);
+              }
+              System.out.println("EN CORUS");
+            })
+        .until(() -> m_servoWrist.isDone())
+        .andThen(
+            () -> {
+              m_trap_ready = true;
+              isActivated = false;
+            });
   }
 }
