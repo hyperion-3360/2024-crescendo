@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.Blocker;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Climber.climberPos;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.e_elevatorLevel;
 import frc.robot.subsystems.Shooter;
@@ -63,10 +65,11 @@ public class Sequences {
   //   );
   // }
 
-  // public static Command climberSequence(Climber m_climber) {
-  //   return Command.sequence(
-  //     m_climber.climberGoToSelectedLevel(e_climberCheck.BOTTOM),
-  //     new WaitUntilCommand()
-  //   );
-  // }
+  public static Command climberSequence(Climber m_climber) {
+    return Commands.sequence(
+        m_climber
+            .climberGoToSelectedLevel(climberPos.TOP)
+            .alongWith(new WaitCommand(2))
+            .andThen(m_climber.climberGoToSelectedLevel(climberPos.INITAL)));
+  }
 }

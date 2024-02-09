@@ -7,6 +7,9 @@ package frc.robot;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+// import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+// import com.pathplanner.lib.util.PIDConstants;
+// import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -19,7 +22,7 @@ public final class Constants {
   public static final double stickDeadband = 0.1;
 
   public static final class Swerve {
-    public static final int pigeonID = 0;
+    public static final int pigeonID = 1;
 
     public static final COTSTalonFXSwerveConstants chosenModule =
         COTSTalonFXSwerveConstants.WCP.SwerveXFlipped.Falcon500(
@@ -107,7 +110,7 @@ public final class Constants {
       public static final int driveMotorID = 5;
       public static final int angleMotorID = 6;
       public static final int magEncoderID = 2;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(129.5); // 126.5
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(154.7);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, magEncoderID, angleOffset);
     }
@@ -117,7 +120,7 @@ public final class Constants {
       public static final int driveMotorID = 7;
       public static final int angleMotorID = 8;
       public static final int magEncoderID = 1;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(65.5); // 65.5
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(96.2);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, magEncoderID, angleOffset);
     }
@@ -127,7 +130,7 @@ public final class Constants {
       public static final int driveMotorID = 1;
       public static final int angleMotorID = 2;
       public static final int magEncoderID = 3;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(346.8); // 346.8
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(14.0);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, magEncoderID, angleOffset);
     }
@@ -137,7 +140,7 @@ public final class Constants {
       public static final int driveMotorID = 3;
       public static final int angleMotorID = 4;
       public static final int magEncoderID = 0;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(282.3); // 282.3
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(314.7);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, magEncoderID, angleOffset);
     }
@@ -145,31 +148,29 @@ public final class Constants {
 
   public static class SubsystemConstants {
     // constants for climber, shooter, elevator, trap name example: kExamplePort, all ints if port
-    public static final int kelevatorRightId = 9; // elevator
-    public static final int kelevatorLeftId = 10;
-
     public static final int kclimberRightId = 11; //  climber
     public static final int kclimberLeftId = 12;
-
-    public static final int kRightMasterId = 16;
-    public static final int kLeftMasterId = 14;
-    public static final int kLeftFollowerId = 13;
-    public static final int kRightFollowerId = 15; // 15
-
-    public static final int kBeamBreakChannel = 0;
-  }
-
-  public static class ElevatorConstants {
-    public static final double kDeadzone = 0.005;
-    public static final double kHighTarget = 30;
-    public static final double kLowTarget = 15;
-    public static final double kIntakeTarget = 0.0;
+    public static final int kelevatorRightId = 9; // elevator
+    public static final int kelevatorLeftId = 10;
   }
 
   public static class ClimberConstants {
-    public static final double kclimberDeadBand = 0.005;
-    public static final double kTopTarget = 0.48;
-    public static final double kBottomTarget = 0.0;
+    public static final double kTopTarget = 3;
+  }
+
+  public static class ShooterConstants {
+    public static final int kRightMasterId = 16;
+    public static final int kLeftMasterId = 14;
+    public static final int kLeftFollowerId = 13;
+    public static final int kRightFollowerId = 15;
+    public static final int kInfraredSensorId = 4;
+  }
+
+  public static class ElevatorConstants {
+    public static final double kDeadzone = 0.0035;
+    public static final double kHighTarget = 69;
+    public static final double kLowTarget = 39;
+    public static final double kIntakeTarget = 0.0;
   }
 
   public static class OperatorConstants {
@@ -180,29 +181,39 @@ public final class Constants {
 
   public static class TrapConstants {
 
-    public static final int kservoShoulderId = 9; // servo ports + limit switch
+    public static final int kservoShoulderId = 9; // servo ports + limit switch + blocker
     public static final int kservoElbowId = 8;
     public static final int kservoWristId = 7;
     public static final int kservoFingerId = 6;
     public static final int kfingerlimitswitchId = 6;
-
     public static final int kservoBlockerId = 5;
 
-    public static final double kfingerClosed = 180.0; // angle of finger servo when closed/opened
+    public static final double kfingerClosed = 150.0; // angle of finger servo when closed/opened
     public static final double kfingerOpened = 90.0;
-
-    public static final double kangleShouldersetZero =
-        7.0; // angles servos in SETZERO   //lower number = lower
+    // good
+    public static final double kangleShouldersetZero = 0.0; // SETZERO   //higher number = higher
     public static final double kangleElbowsetZero = 145.5; // higher number = lower
-    public static final double kangleWristsetZero = 155.0; // higher number = lower
+    public static final double kangleWristsetZero = 155.0; // higher number = higher
+    public static final double kangleShouldersetZeroDelayed = 25.0;
+    // good
+    public static final double kangleShouldergrabPosition = 65.0; // GRABPOSITION
+    public static final double kangleElbowgrabPosition = 95.0;
+    public static final double kangleWristgrabPosition = 102.0;
+    // not finished
+    public static final double kangleShoulderscoreNote = 65.0; // SCORENOTE
+    public static final double kangleElbowscoreNote = 100.5;
+    public static final double kangleWristscoreNote = 102.0;
+  }
 
-    public static final double kangleShouldergrabPosition = 70.0; // angles servos in GRABPOSITION
-    public static final double kangleElbowgrabPosition = 105.0;
-    public static final double kangleWristgrabPosition = 75.0;
-
-    public static final double kangleShoulderscoreNote = 7.0; // angles servos in SCORENOTE
-    public static final double kangleElbowscoreNote = 145.5;
-    public static final double kangleWristscoreNote = 155.0;
-    public static final double kangleFingerscoreNote = 155.0;
+  public static class AutoConstants {
+    public static final HolonomicPathFollowerConfig kHolonomicPathFollowerConfig =
+        new HolonomicPathFollowerConfig(
+            new PIDConstants(10, 0, 0),
+            new PIDConstants(10, 0, 0),
+            Swerve.maxSpeed,
+            Math.sqrt(
+                (Swerve.trackWidth / 2.0 * Swerve.trackWidth / 2.0)
+                    + (Swerve.wheelBase / 2.0 * Swerve.wheelBase / 2.0)),
+            new ReplanningConfig());
   }
 }

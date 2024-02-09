@@ -13,7 +13,6 @@ import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Blocker;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
@@ -35,7 +34,7 @@ public class RobotContainer {
 
   public static final Sequences m_sequence = new Sequences();
   public static final Shooter m_shooter = new Shooter();
-  public static final Elevator m_elevator = new Elevator();
+  // public static final Elevator m_elevator = new Elevator();
   public static final Trap m_trap = new Trap();
   public static final Blocker m_blocker = new Blocker();
   public static final Climber m_climber = new Climber();
@@ -87,7 +86,7 @@ public class RobotContainer {
     //   m_coDriverController.x().whileTrue(Sequences.switchToIntakeMode( m_shooter,
     // m_blocker)).onFalse(m_shooter.stop());
 
-    // m_driverController.a().onTrue(m_climber.setInitialPos());
+    m_driverController.a().onTrue(Sequences.climberSequence(m_climber));
 
     // m_coDriverController.a().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.LOW));
 
