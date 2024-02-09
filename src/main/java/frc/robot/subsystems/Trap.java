@@ -19,6 +19,8 @@ public class Trap extends SubsystemBase {
 
   private boolean m_trap_ready = false;
 
+  // private var m_timedServo = new TimedServo(TimedServo.TimedServo.);
+
   public Trap() {}
 
   @Override

@@ -6,7 +6,6 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
@@ -22,7 +21,7 @@ public class Shooter extends SubsystemBase {
 
   private static double highSpeed = 0.5; // requires testing
   private static double lowSpeed = 0.04; // requires testing
-  private static double intakeSpeed = 0.4;
+  private static double intakeSpeed = 0.3;
   private static double trapSpeed = 0; // requires testing
   private static double stopSpeed = 0;
   private static double rampRate = 4; // to be tuned according to battery and time consumption
@@ -111,8 +110,7 @@ public class Shooter extends SubsystemBase {
    * shooting to desired level except intake and stop
    */
   public Command shoot(shootSpeed shootSpeed) {
-    return this.runOnce(() -> setShootingSpeed(shootSpeed))
-        .andThen(new WaitCommand(5).andThen(this.stop()));
+    return this.runOnce(() -> setShootingSpeed(shootSpeed));
   }
 
   // stop the motors

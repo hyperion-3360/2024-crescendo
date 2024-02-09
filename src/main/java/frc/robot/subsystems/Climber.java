@@ -18,8 +18,6 @@ public class Climber extends SubsystemBase {
     m_climberLeft.follow(m_climberRight);
   }
 
-  public void robotInit() {}
-
   @Override
   public void periodic() {}
 }
