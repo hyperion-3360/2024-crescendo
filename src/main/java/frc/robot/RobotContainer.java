@@ -4,15 +4,18 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.Shuffleboard3360;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Elevator.e_elevatorLevel;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
@@ -66,6 +69,8 @@ public class RobotContainer {
         MathUtil.applyDeadband(m_driverController.getRawAxis(axis), deadband));
   }
 
+  private ModeAuto m_autoHandler = new ModeAuto();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -78,6 +83,14 @@ public class RobotContainer {
             () -> conditionJoystick(strafeAxis, strafeLimiter, kJoystickDeadband),
             () -> conditionJoystick(rotationAxis, rotationLimiter, kJoystickDeadband),
             () -> false));
+
+    String shoot = "shoot hight";
+    NamedCommands.registerCommand(shoot, highGoal());
+    String shootlow = "shoot low";
+    NamedCommands.registerCommand(shootlow, lowGoal());
+    String take = "take";
+    NamedCommands.registerCommand(take, takeNote());
+
     configureBindings();
   }
 
@@ -98,9 +111,46 @@ public class RobotContainer {
     // );
 
     // m_driverController.a().onTrue(m_shooter.intake());
-    m_driverController.a().onTrue(m_trap.setZero());
-    m_driverController.b().onTrue(m_trap.grabPosition());
-    m_driverController.x().onTrue(m_trap.scoreNote());
-    m_driverController.y().onTrue(m_trap.test());
+    // m_driverController.a().onTrue(m_trap.setZero());
+    // m_driverController.b().onTrue(m_trap.grabPosition());
+    // m_driverController.x().onTrue(m_trap.scoreNote());
+    m_driverController.a().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.HIGH));
+  }
+
+  public void autoInit() {
+    // TODO Selectionner le mode auto du shuffleboard
+    m_autoHandler.follow(ModeAuto.Mode.RED_AUTO1);
+  }
+
+  public Command highGoal() {
+    return m_elevator
+        .extendTheElevator(Elevator.e_elevatorLevel.HIGH)
+        .andThen(
+            () -> {
+              m_shooter.shoot(Shooter.shootSpeed.HIGH);
+            });
+  }
+
+  public Command lowGoal() {
+    return m_elevator
+        .extendTheElevator(Elevator.e_elevatorLevel.LOW)
+        .andThen(
+            () -> {
+              m_shooter.shoot(Shooter.shootSpeed.LOW);
+            });
+  }
+
+  public Command takeNote() {
+    return m_elevator
+        .extendTheElevator(Elevator.e_elevatorLevel.INTAKE)
+        .andThen(
+            () -> {
+              m_shooter.intake();
+            });
+  }
+
+  public Command getAutonomousCommand() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'getAutonomousCommand'");
   }
 }

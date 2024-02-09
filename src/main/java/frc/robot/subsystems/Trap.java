@@ -35,7 +35,7 @@ public class Trap extends SubsystemBase {
     START,
     SHOULDER,
     ZERO
-  };
+  }
 
   private ServoZeroSeqStates servoZeroState = ServoZeroSeqStates.START;
   private Double servoTimer = null;
