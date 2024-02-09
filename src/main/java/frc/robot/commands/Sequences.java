@@ -16,34 +16,33 @@ public class Sequences {
   public static Command shootLow(Shooter m_shooter, Blocker m_blocker, Elevator m_elevator) {
     return Commands.sequence(
         m_blocker.hookIntake(),
-        m_elevator
-            .extendTheElevator(e_elevatorLevel.LOW)
-            .andThen(m_shooter.shoot(shootSpeed.LOW))
-            .alongWith(
-                new WaitCommand(1).andThen(m_blocker.hookRelease().andThen(new WaitCommand(1)))),
+        m_shooter
+            .shoot(shootSpeed.LOW)
+            .andThen(
+                new WaitCommand(1).andThen(m_blocker.hookRelease().alongWith(new WaitCommand(2)))),
         m_shooter.stop(),
-        m_blocker.hookIntake());
+        m_blocker.hookIntake(),
+        m_elevator.extendTheElevator(e_elevatorLevel.INTAKE));
   }
 
   public static Command shootHigh(Shooter m_shooter, Blocker m_blocker, Elevator m_elevator) {
     return Commands.sequence(
         m_blocker.hookIntake(),
-        m_elevator
-            .extendTheElevator(e_elevatorLevel.LOW)
-            .andThen(m_shooter.shoot(shootSpeed.HIGH))
-            .alongWith(
-                new WaitCommand(1).andThen(m_blocker.hookRelease().andThen(new WaitCommand(1)))),
+        m_shooter
+            .shoot(shootSpeed.HIGH)
+            .andThen(
+                new WaitCommand(1).andThen(m_blocker.hookRelease().alongWith(new WaitCommand(2)))),
         m_shooter.stop(),
-        m_blocker.hookIntake());
+        m_blocker.hookIntake(),
+        m_elevator.extendTheElevator(e_elevatorLevel.INTAKE));
   }
 
-  public static Command switchToIntakeMode(
-      Shooter m_shooter, Blocker m_blocker, Elevator m_elevator) {
+  public static Command takeNote(Shooter m_shooter, Elevator m_elevator, Blocker m_blocker) {
     return Commands.sequence(
         m_blocker.hookIntake(),
-        m_elevator
-            .extendTheElevator(e_elevatorLevel.LOW)
-            .andThen(m_shooter.shoot(shootSpeed.INTAKE)));
+        m_shooter.shoot(shootSpeed.INTAKE),
+        m_shooter.stop(),
+        m_blocker.hookIntake());
   }
 
   // trap isn't finished
