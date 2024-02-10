@@ -17,8 +17,8 @@ import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Elevator.e_elevatorLevel;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.levelSpeed;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
@@ -119,14 +119,15 @@ public class RobotContainer {
     // m_driverController.a().onTrue(m_trap.setZero());
     // m_driverController.b().onTrue(m_trap.grabPosition());
     // m_driverController.x().onTrue(m_trap.scoreNote());
-    m_coDriverController.a().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.HIGH));
-    m_coDriverController.y().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.LOW));
-    m_coDriverController.x().onTrue(Sequences.shootHigh(m_shooter, m_elevator));
-    m_coDriverController.b().onTrue(Sequences.shootLow(m_shooter, m_elevator));
+    m_coDriverController.a().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter));
+    m_coDriverController.y().onTrue(Sequences.elevatorLow(m_elevator, m_shooter));
+    m_coDriverController.x().onTrue(m_shooter.shootTo());
+
     m_driverController.a().onTrue(m_shooter.intake());
+
     // m_coDriverController
     //     .leftBumper()
-    //     .onTrue(Sequences.shootHigh(m_shooter, m_elevator).unless(() -> !m_elevator.isHigh()));
+    //     .onTrue(Sequences.shootLow(m_shooter, m_elevator).unless(() -> !m_elevator.isLow()));
     // m_coDriverController.y().onTrue(Sequences.shootHigh(m_shooter, m_servoBlocker, m_elevator));
     // m_driverController.b().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.INTAKE));
     // m_driverController.a().onTrue(m_shooter.intake());
@@ -142,25 +143,19 @@ public class RobotContainer {
 
   public Command highGoal() {
     return m_elevator
-        .extendTheElevator(Elevator.e_elevatorLevel.HIGH)
-        .andThen(
-            () -> {
-              m_shooter.shoot(Shooter.shootSpeed.HIGH);
-            });
+        .extendTheElevator(Elevator.elevatorHeight.HIGH)
+        .andThen(m_shooter.setTargetLevel(levelSpeed.HIGH).andThen(m_shooter.shootTo()));
   }
 
   public Command lowGoal() {
     return m_elevator
-        .extendTheElevator(Elevator.e_elevatorLevel.LOW)
-        .andThen(
-            () -> {
-              m_shooter.shoot(Shooter.shootSpeed.LOW);
-            });
+        .extendTheElevator(Elevator.elevatorHeight.LOW)
+        .andThen(m_shooter.setTargetLevel(levelSpeed.LOW).andThen(m_shooter.shootTo()));
   }
 
   public Command takeNote() {
     return m_elevator
-        .extendTheElevator(Elevator.e_elevatorLevel.INTAKE)
+        .extendTheElevator(Elevator.elevatorHeight.INTAKE)
         .andThen(
             () -> {
               m_shooter.intake();

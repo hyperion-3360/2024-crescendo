@@ -6,13 +6,15 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
 
   // different speed possibilities
-  public enum shootSpeed {
+  public enum levelSpeed {
     HIGH,
     LOW,
     INTAKE,
@@ -29,6 +31,7 @@ public class Shooter extends SubsystemBase {
 
   // declaring speed member
   private double m_speed = 0;
+  private levelSpeed m_targetLevel = levelSpeed.STOP;
 
   // blocker constants
   private final double kIntakeHookAngleOpen = 0.0;
@@ -82,6 +85,7 @@ public class Shooter extends SubsystemBase {
     m_rightFollower.burnFlash();
     m_leftMaster.burnFlash();
 
+    // setting the blocker to closed on boot
     m_blocker.setAngle(kIntakeHookAngleClose);
   }
 
@@ -92,7 +96,8 @@ public class Shooter extends SubsystemBase {
     m_rightMaster.set(m_speed);
   }
 
-  private void setShootingSpeed(shootSpeed shoot) {
+  // switch case for different speeds according to the level
+  private void setSpeedFor(levelSpeed shoot) {
 
     switch (shoot) {
       case LOW:
@@ -117,32 +122,56 @@ public class Shooter extends SubsystemBase {
     }
   }
 
-  /*
-   * shooting to desired level except intake and stop
-   */
-  public Command shoot(shootSpeed shootSpeed) {
-    return this.runOnce(() -> setShootingSpeed(shootSpeed));
+  public Command holdSpeed(levelSpeed level) {
+    return this.run(() -> this.setSpeedFor(level));
   }
 
-  // stop the motors
   public Command stop() {
-    return this.runOnce(() -> setShootingSpeed(shootSpeed.STOP));
+    return this.runOnce(() -> this.setSpeedFor(levelSpeed.STOP));
   }
 
-  // TODO: intake command that will have the infrared sensor to stop the spin
+  // shoot to desired level
+  public Command shootTo() {
+    return Commands.sequence(
+        this.hookIntake(),
+        this.setSpeedWithTarget(),
+        new WaitCommand(1),
+        this.hookRelease(),
+        new WaitCommand(1),
+        this.stop(),
+        this.hookIntake());
+  }
+
+  // setting the target level
+  public Command setTargetLevel(levelSpeed level) {
+    return this.runOnce(() -> m_targetLevel = level);
+  }
+
+  // set the speed according to the target
+  public Command setSpeedWithTarget() {
+    return this.runOnce(() -> this.setSpeedFor(m_targetLevel));
+  }
+
+  // set hook to intake mode, then set target + speed until has note
   public Command intake() {
-    return this.run(() -> setShootingSpeed(shootSpeed.INTAKE)).until(this::hasNote).andThen(stop());
+    return Commands.sequence(
+        this.hookIntake(),
+        this.setTargetLevel(levelSpeed.INTAKE),
+        this.setSpeedWithTarget().until(this::hasNote),
+        this.stop());
   }
 
+  // infrared sensor to see if we have a note
   public boolean hasNote() {
     return !m_infraredSensor.get();
   }
 
+  // set down the hook
   public Command hookIntake() {
     return this.runOnce(() -> m_blocker.setAngle(kIntakeHookAngleClose));
   }
 
-  // si il a une note il attend 3 secondes avant de lever
+  // set up the hook
   public Command hookRelease() {
     return this.runOnce(() -> m_blocker.setAngle(kIntakeHookAngleOpen));
   }

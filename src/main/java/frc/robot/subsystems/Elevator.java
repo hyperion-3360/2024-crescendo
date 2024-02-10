@@ -13,7 +13,7 @@ import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
 
-  public enum e_elevatorLevel {
+  public enum elevatorHeight {
     HIGH,
     LOW,
     INTAKE
@@ -83,7 +83,7 @@ public class Elevator extends SubsystemBase {
   }
 
   // switch case statement for configuring elevator height
-  private void setElevator(e_elevatorLevel m_elevatorLevel) {
+  private void setElevator(elevatorHeight m_elevatorLevel) {
     switch (m_elevatorLevel) {
       case HIGH:
         this.m_elevatorTarget = ElevatorConstants.kHighTarget;
@@ -108,16 +108,8 @@ public class Elevator extends SubsystemBase {
   //   return m_encoder.getPosition() >= this.m_elevatorTarget;
   // }
 
-  public Command extendTheElevator(e_elevatorLevel m_elevatorLevel) {
+  public Command extendTheElevator(elevatorHeight m_elevatorLevel) {
     return this.runOnce(() -> setElevator(m_elevatorLevel));
-    // new SequentialCommandGroup(
-    //     this.runOnce(
-    //             () -> {
-    //               // this.m_pid.reset(m_encoder.getPosition());
-    //               this.setElevator(m_elevatorLevel);
-    //             })
-    //         .until(this::onTarget)
-    //         .andThen(run(() -> m_elevatorLeftMaster.set(0.03))));
   }
 
   public double getCurrentPosition() {
