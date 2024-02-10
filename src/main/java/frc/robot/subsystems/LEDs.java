@@ -10,15 +10,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class LEDs extends SubsystemBase {
-  private static PWM m_redLED;
-  private static PWM m_greenLED;
-  private static PWM m_blueLED;
-  private static PWM m_whiteLED;
-  private double m_lastToggleTime = 0;
-  private boolean m_whiteToggle = false;
 
+  /** each LED color has its own PWM output */
+  private PWM m_redLED, m_greenLED, m_blueLED, m_whiteLED;
+
+  /** ledValue structure to easily manipulate LED values in 8bit RGB */
   class ledValue {
     public int r, g, b, w;
+    static final int maxValue = 4096;
+    static final int max8bit = 255;
 
     ledValue(int r, int g, int b, int w) {
       this.r = r;
@@ -26,18 +26,12 @@ public class LEDs extends SubsystemBase {
       this.b = b;
       this.w = w;
     }
+
+    static int convertToPulse(int val8bit) {
+      return ((val8bit % max8bit) * maxValue) / max8bit;
+    }
   }
   ;
-
-  /*
-   * LED STATES DOCUMENTATION
-   * Intake white slow flash, when intake is rolling
-   * Detected note green, note in beam cutter triggered
-   * Aim activated white quick flash, with vision aim function running
-   * Aim ready blue, vision aim lock
-   * Shot done green, when shooting sequence is completed note has been shot
-   * Climb yellow, during the entire climb sequence
-   */
 
   public enum State {
     IDLE, // Idle orange, default
@@ -49,8 +43,10 @@ public class LEDs extends SubsystemBase {
     CLIMBING, // Climb yellow, during the entire climb sequence
   }
 
+  /* current LED state */
   private State m_ledState = State.IDLE;
 
+  /* used colors defined in RGB */
   private ledValue kOrange = new ledValue(255, 165, 0, 0);
   private ledValue kWhite = new ledValue(0, 0, 0, 255);
   private ledValue kBlue = new ledValue(0, 0, 255, 0);
@@ -58,13 +54,16 @@ public class LEDs extends SubsystemBase {
   private ledValue kYellow = new ledValue(255, 255, 0, 0);
   private ledValue kDark = new ledValue(0, 0, 0, 0);
 
+  /* current ledvalue, used for blinking */
   private ledValue m_currentValue;
 
   private int kSlowFlashingDelay = (1000000 / 4); // 4 times per second delay in usec
   private int kFastFlashingDelay = (1000000 / 8); // 8 times per second delay in usec
 
+  /* instance member for singleton implementation */
   private static LEDs m_instance = null;
 
+  /* next toggle time for blinking */
   long m_flashDuration = 0;
 
   /** Static function that creates and LED instance if it doesn't exists yet */
@@ -87,6 +86,7 @@ public class LEDs extends SubsystemBase {
     m_blueLED = new PWM(bluePort);
     m_whiteLED = new PWM(whitePort);
 
+    // TODO: is this needed?
     // redLED.enableDeadbandElimination(true);
     // greenLED.enableDeadbandElimination(true);
     // blueLED.enableDeadbandElimination(true);
@@ -97,7 +97,6 @@ public class LEDs extends SubsystemBase {
   public void setState(State state) {
     m_ledState = state;
 
-    // Set the new LED pattern
     switch (m_ledState) {
       case IDLE: // orange
         m_flashDuration = 0;
@@ -133,6 +132,7 @@ public class LEDs extends SubsystemBase {
     setRGB(m_currentValue);
   }
 
+  /* the periodic function is used for the blinking behavior */
   @Override
   public void periodic() {
     switch (m_ledState) {
@@ -155,10 +155,16 @@ public class LEDs extends SubsystemBase {
     }
   }
 
+  /**
+   * directly control each LED PWM output based on the 8bit values and convert them in the range
+   * 0-4096
+   *
+   * @param val 8bit LED value
+   */
   private void setRGB(ledValue val) {
-    m_redLED.setPulseTimeMicroseconds((val.r * 4096) / 255);
-    m_greenLED.setPulseTimeMicroseconds((val.g * 4096) / 255);
-    m_blueLED.setPulseTimeMicroseconds((val.b * 4096) / 255);
-    m_whiteLED.setPulseTimeMicroseconds((val.w * 4096) / 255);
+    m_redLED.setPulseTimeMicroseconds(ledValue.convertToPulse(val.r));
+    m_greenLED.setPulseTimeMicroseconds(ledValue.convertToPulse(val.g));
+    m_blueLED.setPulseTimeMicroseconds(ledValue.convertToPulse(val.b));
+    m_whiteLED.setPulseTimeMicroseconds(ledValue.convertToPulse(val.w));
   }
 }
