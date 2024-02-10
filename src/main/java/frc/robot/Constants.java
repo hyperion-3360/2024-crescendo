@@ -24,10 +24,10 @@ public final class Constants {
   public static final double stickDeadband = 0.1;
 
   public static final class LED {
-    public static final int kLEDredPWMPort = 0;
-    public static final int kLEDgreenPort = 1;
-    public static final int kLEDbluePort = 2;
-    public static final int kLEDwhitePort = 3;
+    public static final int kLEDredPWMPort = 1;
+    public static final int kLEDgreenPort = 0;
+    public static final int kLEDbluePort = 3;
+    public static final int kLEDwhitePort = 2;
   }
 
   public static final class Swerve {
