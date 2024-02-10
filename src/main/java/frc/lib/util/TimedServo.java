@@ -74,6 +74,28 @@ public class TimedServo extends Servo {
   }
 
   /**
+   * get the travel time
+   *
+   * @return total computed command travel time in seconds
+   */
+  public double travelTime() {
+    return (double) m_travelTime / (double) Constants.kSecondsToMicroSeconds;
+  }
+
+  /**
+   * Get the travel time given the completion ratio
+   *
+   * @param completionRatio from 0.0 to 1.0
+   * @return travel time in seconds given the completion ratio or 0 if the command is completed
+   */
+  public double travelTime(double completionRatio) {
+    if (!isDone())
+      return (double) (completionRatio * (double) m_travelTime)
+          / (double) Constants.kSecondsToMicroSeconds;
+    return 0.0;
+  }
+
+  /**
    * Check if the last command has completed
    *
    * @return true if the command travel time is expired, false otherwise

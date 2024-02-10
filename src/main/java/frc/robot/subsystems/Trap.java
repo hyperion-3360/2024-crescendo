@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.util.TimedServo;
 import frc.robot.Constants;
 
@@ -31,32 +32,32 @@ public class Trap extends SubsystemBase {
 
   public Command setZero() {
     return this.run(() -> m_servoWrist.setZero())
-        .until(() -> m_servoWrist.isDone(0.5))
+        .andThen(new WaitCommand(m_servoWrist.travelTime(0.5)))
         .andThen(() -> m_servoElbow.setZero())
-        .until(() -> m_servoElbow.isDone(0.5))
+        .andThen(new WaitCommand(m_servoElbow.travelTime(0.5)))
         .andThen(() -> m_servoShoulder.setZero())
-        .until(() -> m_servoShoulder.isDone());
+        .andThen(new WaitCommand(m_servoShoulder.travelTime()));
   }
 
   public Command grabPosition() {
     return this.run(
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldergrabPosition))
-        .until(() -> m_servoShoulder.isDone())
+        .andThen(new WaitCommand(m_servoShoulder.travelTime()))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowgrabPosition))
-        .until(() -> m_servoElbow.isDone(0.5))
+        .andThen(new WaitCommand(m_servoElbow.travelTime(0.5)))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristgrabPosition))
-        .until(() -> m_servoWrist.isDone(0.5));
+        .andThen(new WaitCommand(m_servoWrist.travelTime(0.5)));
   }
 
   public Command scoreNote() {
     return this.run(() -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderscoreNote))
-        .until(() -> m_servoShoulder.isDone())
+        .andThen(new WaitCommand(m_servoShoulder.travelTime()))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowscoreNote))
-        .until(() -> m_servoElbow.isDone(0.5))
+        .andThen(new WaitCommand(m_servoElbow.travelTime(0.5)))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristscoreNote))
-        .until(() -> m_servoWrist.isDone(0.5))
+        .andThen(new WaitCommand(m_servoWrist.travelTime(0.5)))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened))
-        .until(() -> m_servoFinger.isDone(0.5));
+        .andThen(new WaitCommand(m_servoFinger.travelTime(0.5)));
   }
 
   public Command limitSwitch() {
