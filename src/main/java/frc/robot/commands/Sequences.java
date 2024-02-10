@@ -44,4 +44,9 @@ public class Sequences {
     return Commands.sequence(
         m_elevator.extendTheElevator(elevatorHeight.LOW), m_shooter.setTargetLevel(levelSpeed.LOW));
   }
+
+  public static Command shoot(Shooter m_shooter, Elevator m_elevator) {
+    return Commands.sequence(
+        m_shooter.shootTo(), m_elevator.extendTheElevator(elevatorHeight.INTAKE));
+  }
 }

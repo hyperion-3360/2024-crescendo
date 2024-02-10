@@ -23,7 +23,7 @@ public class Shooter extends SubsystemBase {
   }
 
   private static double highSpeed = 0.8; // need to add perk to adjust speed according to distance
-  private static double lowSpeed = 0.6; // requires testing
+  private static double lowSpeed = 0.3; // requires testing
   private static double intakeSpeed = 0.4;
   private static double trapSpeed = 0; // requires testing
   private static double stopSpeed = 0;
@@ -94,6 +94,8 @@ public class Shooter extends SubsystemBase {
     // setting speed to motors
     m_leftMaster.set(m_speed);
     m_rightMaster.set(m_speed);
+
+    System.out.println(hasNote());
   }
 
   // switch case for different speeds according to the level
@@ -137,7 +139,7 @@ public class Shooter extends SubsystemBase {
         this.setSpeedWithTarget(),
         new WaitCommand(1),
         this.hookRelease(),
-        new WaitCommand(1),
+        new WaitCommand(0.7),
         this.stop(),
         this.hookIntake());
   }
@@ -154,11 +156,7 @@ public class Shooter extends SubsystemBase {
 
   // set hook to intake mode, then set target + speed until has note
   public Command intake() {
-    return Commands.sequence(
-        this.hookIntake(),
-        this.setTargetLevel(levelSpeed.INTAKE),
-        this.setSpeedWithTarget().until(this::hasNote),
-        this.stop());
+    return Commands.sequence(this.holdSpeed(levelSpeed.INTAKE).until(this::hasNote), this.stop());
   }
 
   // infrared sensor to see if we have a note

@@ -121,7 +121,7 @@ public class RobotContainer {
     // m_driverController.x().onTrue(m_trap.scoreNote());
     m_coDriverController.a().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter));
     m_coDriverController.y().onTrue(Sequences.elevatorLow(m_elevator, m_shooter));
-    m_coDriverController.x().onTrue(m_shooter.shootTo());
+    m_coDriverController.x().onTrue(Sequences.shoot(m_shooter, m_elevator));
 
     m_driverController.a().onTrue(m_shooter.intake());
 
