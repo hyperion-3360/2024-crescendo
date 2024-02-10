@@ -19,6 +19,8 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
 
+  public static final long kSecondsToMicroSeconds = 1000000;
+
   public static final double stickDeadband = 0.1;
 
   public static final class Swerve {

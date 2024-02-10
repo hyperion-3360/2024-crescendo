@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.TimedServo;
@@ -11,10 +10,17 @@ public class Trap extends SubsystemBase {
 
   private TimedServo m_servoShoulder =
       new TimedServo(Constants.TrapConstants.kservoShoulderId, 0.0);
-  private TimedServo m_servoElbow = new TimedServo(Constants.TrapConstants.kservoElbowId, 0.0);
+  private TimedServo m_servoElbow =
+      new TimedServo(
+          Constants.TrapConstants.kservoElbowId, 0.0, Constants.TrapConstants.kangleElbowsetZero);
   private TimedServo m_servoWrist =
-      new TimedServo(Constants.TrapConstants.kservoWristId, 1000000.0);
-  private TimedServo m_servoFinger = new TimedServo(Constants.TrapConstants.kservoFingerId, 0.0);
+      new TimedServo(
+          Constants.TrapConstants.kservoWristId,
+          1000000.0,
+          Constants.TrapConstants.kangleWristsetZero);
+  private TimedServo m_servoFinger =
+      new TimedServo(
+          Constants.TrapConstants.kservoFingerId, 0.0, Constants.TrapConstants.kfingerOpened);
   DigitalInput m_limitSwitch = new DigitalInput(Constants.TrapConstants.kfingerlimitswitchId);
 
   private boolean m_trap_ready = false;
@@ -43,38 +49,48 @@ public class Trap extends SubsystemBase {
   private Double servoTimer = null;
 
   public Command setZero() {
-    return this.run(
-            () -> {
-              if (servoZeroState == ServoZeroSeqStates.START) {
-
-                servoTimer = Timer.getFPGATimestamp();
-                m_servoShoulder.setAngle(
-                    Constants.TrapConstants
-                        .kangleShouldersetZeroDelayed); // delays the shoulder angle (goes to half
-                // angle then total angle)
-                servoZeroState = ServoZeroSeqStates.SHOULDER;
-
-              } else if (servoZeroState == ServoZeroSeqStates.SHOULDER) {
-                if (Timer.getFPGATimestamp() - servoTimer
-                    > 0.3) { // 0.3 seconds or 300 milliseconds (it's not calulated but works)
-
-                  servoZeroState = ServoZeroSeqStates.ZERO;
-                  m_servoElbow.setAngle(
-                      Constants.TrapConstants.kangleElbowsetZero); // all the complete angles
-                  m_servoWrist.setAngle(Constants.TrapConstants.kangleWristsetZero);
-                  m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldersetZero);
-                }
-              }
-            })
-        .until(
-            () -> {
-              return servoZeroState == ServoZeroSeqStates.ZERO;
-            })
-        .andThen(
-            () -> {
-              servoZeroState = ServoZeroSeqStates.START;
-            });
+    return this.run(() -> m_servoWrist.setZero())
+        .until(() -> m_servoWrist.isDone(0.5))
+        .andThen(() -> m_servoElbow.setZero())
+        .until(() -> m_servoElbow.isDone())
+        .andThen(() -> m_servoShoulder.setZero())
+        .until(() -> m_servoShoulder.isDone());
   }
+
+  //  public Command setZero() {
+  //    return this.run(
+  //            () -> {
+  //              if (servoZeroState == ServoZeroSeqStates.START) {
+  //
+  //                servoTimer = Timer.getFPGATimestamp();
+  //                m_servoShoulder.setAngle(
+  //                    Constants.TrapConstants
+  //                        .kangleShouldersetZeroDelayed); // delays the shoulder angle (goes to
+  // half
+  //                // angle then total angle)
+  //                servoZeroState = ServoZeroSeqStates.SHOULDER;
+  //
+  //              } else if (servoZeroState == ServoZeroSeqStates.SHOULDER) {
+  //                if (Timer.getFPGATimestamp() - servoTimer
+  //                    > 0.3) { // 0.3 seconds or 300 milliseconds (it's not calulated but works)
+  //
+  //                  servoZeroState = ServoZeroSeqStates.ZERO;
+  //                  m_servoElbow.setAngle(
+  //                      Constants.TrapConstants.kangleElbowsetZero); // all the complete angles
+  //                  m_servoWrist.setAngle(Constants.TrapConstants.kangleWristsetZero);
+  //                  m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldersetZero);
+  //                }
+  //              }
+  //            })
+  //        .until(
+  //            () -> {
+  //              return servoZeroState == ServoZeroSeqStates.ZERO;
+  //            })
+  //        .andThen(
+  //            () -> {
+  //              servoZeroState = ServoZeroSeqStates.START;
+  //            });
+  //  }
 
   public Command scoreNote() {
     return this.run(
