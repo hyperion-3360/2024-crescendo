@@ -21,7 +21,10 @@ public class Trap extends SubsystemBase {
           Constants.TrapConstants.kservoFingerId, 0.0, Constants.TrapConstants.kfingerOpened);
   DigitalInput m_limitSwitch = new DigitalInput(Constants.TrapConstants.kfingerlimitswitchId);
 
-  public Trap() {}
+  public void initDefaultCommand() {
+
+    setDefaultCommand(grabPosition());
+  }
 
   @Override
   public void periodic() {}
@@ -55,4 +58,11 @@ public class Trap extends SubsystemBase {
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened))
         .until(() -> m_servoFinger.isDone(0.5));
   }
+
+  public Command limitSwitch() {
+    if (!m_limitSwitch.get())
+      return this.run(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened));
+    return this.run(() -> m_limitSwitch.get());
+  }
 }
+// uwu
