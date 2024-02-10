@@ -28,10 +28,10 @@ public class Climber extends SubsystemBase {
   private RelativeEncoder m_encoder = m_climberRightMaster.getEncoder();
 
   private double m_climberRampRate = 2; // was .2
-  private double m_speed = 1.0;
+  private double m_speed = 0.2;
   private double m_climberTarget = ClimberConstants.kstartPos;
-  private boolean isTop = false;
-  private double m_climberStallSpeed;
+  private boolean isTop = true;
+  private double m_climberStallSpeed = 0.01;
 
   // declare 2 members, check fb for type and port, add port in constants
   public Climber() {
@@ -47,13 +47,11 @@ public class Climber extends SubsystemBase {
     m_climberRightMaster.setOpenLoopRampRate(m_climberRampRate);
     m_climberLeft.setOpenLoopRampRate(m_climberRampRate);
 
-    m_climberRightMaster.burnFlash();
-    m_climberLeft.burnFlash();
-
     m_climberRightMaster.setIdleMode(IdleMode.kBrake);
     m_climberLeft.setIdleMode(IdleMode.kBrake);
 
-    // setInitialPos();
+    m_climberRightMaster.burnFlash();
+    m_climberLeft.burnFlash();
   }
 
   @Override
@@ -67,7 +65,6 @@ public class Climber extends SubsystemBase {
     //   m_gyro.getRoll();
 
     //   repositionement();
-
   }
 
   private void setClimberLevel(climberPos m_climberCheck) {
@@ -91,7 +88,7 @@ public class Climber extends SubsystemBase {
         isTop = false;
         m_climberTarget = ClimberConstants.kstartPos;
         m_climberRightMaster.set(m_speed);
-        m_climberStallSpeed = 0.03;
+        m_climberStallSpeed = 0.01;
         break;
     }
   }
@@ -109,11 +106,8 @@ public class Climber extends SubsystemBase {
 
   //     }
   private boolean onTarget() {
-    if (isTop == true) {
-      return m_encoder.getPosition() <= m_climberTarget;
-    } else {
-      return m_encoder.getPosition() >= m_climberTarget;
-    }
+
+    return m_encoder.getPosition() >= m_climberTarget;
   }
 
   public Command climberGoToSelectedLevel(climberPos m_climberCheck) {

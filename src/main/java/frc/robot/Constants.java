@@ -167,12 +167,13 @@ public final class Constants {
     public static final int kLeftFollowerId = 13;
     public static final int kRightFollowerId = 15;
     public static final int kInfraredSensorId = 4;
+    public static final int kservoBlockerId = 5;
   }
 
   public static class ElevatorConstants {
     public static final double kDeadzone = 0.0035;
     public static final double kHighTarget = -69;
-    public static final double kLowTarget = 0.10;
+    public static final double kLowTarget = -63;
     public static final double kIntakeTarget = 0.0;
   }
 
@@ -189,7 +190,6 @@ public final class Constants {
     public static final int kservoWristId = 7;
     public static final int kservoFingerId = 6;
     public static final int kfingerlimitswitchId = 6;
-    public static final int kservoBlockerId = 5;
 
     public static final double kfingerClosed = 150.0; // angle of finger servo when closed/opened
     public static final double kfingerOpened = 90.0;

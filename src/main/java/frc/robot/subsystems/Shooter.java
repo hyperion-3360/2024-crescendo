@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -19,15 +20,19 @@ public class Shooter extends SubsystemBase {
     STOP
   }
 
-  private static double highSpeed = 0.5; // requires testing
-  private static double lowSpeed = 0.04; // requires testing
-  private static double intakeSpeed = 0.3;
+  private static double highSpeed = 0.8; // need to add perk to adjust speed according to distance
+  private static double lowSpeed = 0.6; // requires testing
+  private static double intakeSpeed = 0.4;
   private static double trapSpeed = 0; // requires testing
   private static double stopSpeed = 0;
-  private static double rampRate = 4; // to be tuned according to battery and time consumption
+  private static double rampRate = 1; // to be tuned according to battery and time consumption
 
   // declaring speed member
   private double m_speed = 0;
+
+  // blocker constants
+  private final double kIntakeHookAngleOpen = 0.0;
+  private final double kIntakeHookAngleClose = 23;
 
   // declaring motors for the shooter
   private CANSparkMax m_leftMaster =
@@ -38,9 +43,13 @@ public class Shooter extends SubsystemBase {
       new CANSparkMax(Constants.ShooterConstants.kLeftFollowerId, MotorType.kBrushless);
   private CANSparkMax m_rightFollower =
       new CANSparkMax(Constants.ShooterConstants.kRightFollowerId, MotorType.kBrushless);
+
   // infrared sensor for intake
   private DigitalInput m_infraredSensor =
       new DigitalInput(Constants.ShooterConstants.kInfraredSensorId);
+
+  // creating the blocker servo
+  private Servo m_blocker = new Servo(Constants.ShooterConstants.kservoBlockerId);
 
   public Shooter() {
 
@@ -72,6 +81,8 @@ public class Shooter extends SubsystemBase {
     m_leftFollower.burnFlash();
     m_rightFollower.burnFlash();
     m_leftMaster.burnFlash();
+
+    m_blocker.setAngle(kIntakeHookAngleClose);
   }
 
   @Override
@@ -125,5 +136,14 @@ public class Shooter extends SubsystemBase {
 
   public boolean hasNote() {
     return !m_infraredSensor.get();
+  }
+
+  public Command hookIntake() {
+    return this.runOnce(() -> m_blocker.setAngle(kIntakeHookAngleClose));
+  }
+
+  // si il a une note il attend 3 secondes avant de lever
+  public Command hookRelease() {
+    return this.runOnce(() -> m_blocker.setAngle(kIntakeHookAngleOpen));
   }
 }
