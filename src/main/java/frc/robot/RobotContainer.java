@@ -56,7 +56,7 @@ public class RobotContainer {
   // Slew Rate Limiters to limit acceleration of joystick inputs
   private final SlewRateLimiter translationLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter strafeLimiter = new SlewRateLimiter(0.5);
-  private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(0.5);
+  private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(2);
 
   private final double kJoystickDeadband = 0.1;
 
