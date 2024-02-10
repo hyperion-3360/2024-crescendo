@@ -15,125 +15,44 @@ public class Trap extends SubsystemBase {
           Constants.TrapConstants.kservoElbowId, 0.0, Constants.TrapConstants.kangleElbowsetZero);
   private TimedServo m_servoWrist =
       new TimedServo(
-          Constants.TrapConstants.kservoWristId,
-          1000000.0,
-          Constants.TrapConstants.kangleWristsetZero);
+          Constants.TrapConstants.kservoWristId, 0.0, Constants.TrapConstants.kangleWristsetZero);
   private TimedServo m_servoFinger =
       new TimedServo(
           Constants.TrapConstants.kservoFingerId, 0.0, Constants.TrapConstants.kfingerOpened);
   DigitalInput m_limitSwitch = new DigitalInput(Constants.TrapConstants.kfingerlimitswitchId);
 
-  private boolean m_trap_ready = false;
-
-  // private var m_timedServo = new TimedServo(TimedServo.TimedServo.);
-
   public Trap() {}
 
   @Override
-  public void periodic() {
-
-    // if (!m_limitSwitch.get() &&
-    if (m_trap_ready) {
-      m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened);
-      System.out.println("terminer");
-    }
-  }
-
-  enum ServoZeroSeqStates {
-    START,
-    SHOULDER,
-    ZERO
-  }
-
-  private ServoZeroSeqStates servoZeroState = ServoZeroSeqStates.START;
-  private Double servoTimer = null;
+  public void periodic() {}
 
   public Command setZero() {
     return this.run(() -> m_servoWrist.setZero())
         .until(() -> m_servoWrist.isDone(0.5))
         .andThen(() -> m_servoElbow.setZero())
-        .until(() -> m_servoElbow.isDone())
+        .until(() -> m_servoElbow.isDone(0.5))
         .andThen(() -> m_servoShoulder.setZero())
         .until(() -> m_servoShoulder.isDone());
   }
 
-  //  public Command setZero() {
-  //    return this.run(
-  //            () -> {
-  //              if (servoZeroState == ServoZeroSeqStates.START) {
-  //
-  //                servoTimer = Timer.getFPGATimestamp();
-  //                m_servoShoulder.setAngle(
-  //                    Constants.TrapConstants
-  //                        .kangleShouldersetZeroDelayed); // delays the shoulder angle (goes to
-  // half
-  //                // angle then total angle)
-  //                servoZeroState = ServoZeroSeqStates.SHOULDER;
-  //
-  //              } else if (servoZeroState == ServoZeroSeqStates.SHOULDER) {
-  //                if (Timer.getFPGATimestamp() - servoTimer
-  //                    > 0.3) { // 0.3 seconds or 300 milliseconds (it's not calulated but works)
-  //
-  //                  servoZeroState = ServoZeroSeqStates.ZERO;
-  //                  m_servoElbow.setAngle(
-  //                      Constants.TrapConstants.kangleElbowsetZero); // all the complete angles
-  //                  m_servoWrist.setAngle(Constants.TrapConstants.kangleWristsetZero);
-  //                  m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldersetZero);
-  //                }
-  //              }
-  //            })
-  //        .until(
-  //            () -> {
-  //              return servoZeroState == ServoZeroSeqStates.ZERO;
-  //            })
-  //        .andThen(
-  //            () -> {
-  //              servoZeroState = ServoZeroSeqStates.START;
-  //            });
-  //  }
+  public Command grabPosition() {
+    return this.run(
+            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldergrabPosition))
+        .until(() -> m_servoShoulder.isDone())
+        .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowgrabPosition))
+        .until(() -> m_servoElbow.isDone(0.5))
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristgrabPosition))
+        .until(() -> m_servoWrist.isDone(0.5));
+  }
 
   public Command scoreNote() {
-    return this.run(
-            () -> {
-              m_trap_ready = false;
-              m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderscoreNote);
-            }) // arm position to score note
+    return this.run(() -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderscoreNote))
+        .until(() -> m_servoShoulder.isDone())
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowscoreNote))
+        .until(() -> m_servoElbow.isDone(0.5))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristscoreNote))
-        .andThen(
-            () -> {
-              m_trap_ready = true;
-            });
-  }
-
-  public Command grabPosition() {
-    return this.runOnce(
-            () ->
-                m_servoShoulder.setAngle(
-                    Constants.TrapConstants
-                        .kangleShouldergrabPosition)) // arm position grabing note (from shooter)
-        .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowgrabPosition))
-        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristgrabPosition))
-        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kfingerOpened));
-  }
-
-  private boolean isActivated = false;
-
-  public Command test() {
-    return this.run(
-            () -> {
-              if (!isActivated) {
-                isActivated = true;
-                m_trap_ready = false;
-                m_servoWrist.setAngle(Constants.TrapConstants.kangleWristgrabPosition);
-              }
-              System.out.println("EN CORUS");
-            })
-        .until(() -> m_servoWrist.isDone())
-        .andThen(
-            () -> {
-              m_trap_ready = true;
-              isActivated = false;
-            });
+        .until(() -> m_servoWrist.isDone(0.5))
+        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened))
+        .until(() -> m_servoFinger.isDone(0.5));
   }
 }

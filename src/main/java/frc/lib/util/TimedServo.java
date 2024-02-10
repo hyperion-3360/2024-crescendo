@@ -68,10 +68,8 @@ public class TimedServo extends Servo {
           String.format("Rsetting Servo mapped on PWM %d at zero angle: %f", getChannel(), m_zero));
     super.setAngle(m_zero);
     m_currentAngle = m_zero;
-    m_completedTime =
-        (long)
-            (180.0 * m_angularSpeed * Constants.kSecondsToMicroSeconds
-                + RobotController.getFPGATime());
+    m_travelTime = (long) (180.0 * m_angularSpeed * Constants.kSecondsToMicroSeconds);
+    m_completedTime = m_travelTime + RobotController.getFPGATime();
     this.m_homed = true;
   }
 
