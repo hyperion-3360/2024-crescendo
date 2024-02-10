@@ -17,7 +17,7 @@ public class LEDs extends SubsystemBase {
   /** ledValue structure to easily manipulate LED values in 8bit RGB */
   class ledValue {
     public int r, g, b, w;
-    static final int maxValue = 4096;
+    static final int maxValue = 4095;
     static final int max8bit = 255;
 
     ledValue(int r, int g, int b, int w) {
