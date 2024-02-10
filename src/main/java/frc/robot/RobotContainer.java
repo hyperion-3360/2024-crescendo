@@ -16,7 +16,6 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Climber.climberPos;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.e_elevatorLevel;
 import frc.robot.subsystems.Shooter;
@@ -121,11 +120,13 @@ public class RobotContainer {
     // m_driverController.b().onTrue(m_trap.grabPosition());
     // m_driverController.x().onTrue(m_trap.scoreNote());
     m_coDriverController.a().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.HIGH));
-    m_coDriverController.x().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.LOW));
-    m_coDriverController.b().onTrue(Sequences.shootHigh(m_shooter, m_elevator));
-    m_coDriverController.y().onTrue(Sequences.shootLow(m_shooter, m_elevator));
+    m_coDriverController.y().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.LOW));
+    m_coDriverController.x().onTrue(Sequences.shootHigh(m_shooter, m_elevator));
+    m_coDriverController.b().onTrue(Sequences.shootLow(m_shooter, m_elevator));
     m_driverController.a().onTrue(m_shooter.intake());
-    m_driverController.leftBumper().onTrue(m_climber.climberGoToSelectedLevel(climberPos.INITAL));
+    // m_coDriverController
+    //     .leftBumper()
+    //     .onTrue(Sequences.shootHigh(m_shooter, m_elevator).unless(() -> !m_elevator.isHigh()));
     // m_coDriverController.y().onTrue(Sequences.shootHigh(m_shooter, m_servoBlocker, m_elevator));
     // m_driverController.b().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.INTAKE));
     // m_driverController.a().onTrue(m_shooter.intake());

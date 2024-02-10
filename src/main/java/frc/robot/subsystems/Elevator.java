@@ -73,13 +73,13 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
 
-    isAtBottom();
-
     m_elevatorLeftMaster.set(m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
 
     if (!bottomlimitSwitch.get()) {
       m_encoder.setPosition(0.0);
     }
+
+    System.out.println(isHigh());
   }
 
   // switch case statement for configuring elevator height
@@ -103,24 +103,10 @@ public class Elevator extends SubsystemBase {
     m_elevatorLeftMaster.stopMotor();
   }
 
-  // check if the limit switch is triggered
-  public boolean isAtBottom() {
-    return !bottomlimitSwitch.get();
-  }
+  // public boolean onTarget() {
 
-  // private double encoderConversions() {
-
-  //   double m_encoderPosition =
-  //       m_encoder.getPosition() / 360; // * 1/m_encoder.getCountsPerRevolution() *
-  //   // m_pulleyDiameter + m_beltRampUp * 3.14159265358979323846;
-
-  //   return m_encoderPosition;
+  //   return m_encoder.getPosition() >= this.m_elevatorTarget;
   // }
-
-  public boolean onTarget() {
-
-    return m_encoder.getPosition() >= this.m_elevatorTarget;
-  }
 
   public Command extendTheElevator(e_elevatorLevel m_elevatorLevel) {
     return this.runOnce(() -> setElevator(m_elevatorLevel));
@@ -132,5 +118,21 @@ public class Elevator extends SubsystemBase {
     //             })
     //         .until(this::onTarget)
     //         .andThen(run(() -> m_elevatorLeftMaster.set(0.03))));
+  }
+
+  public double getCurrentPosition() {
+    return m_encoder.getPosition();
+  }
+
+  public boolean isHigh() {
+    if (m_elevatorTarget == Constants.ElevatorConstants.kHighTarget) {
+      return true;
+    } else return false;
+  }
+
+  public boolean isLow() {
+    if (m_elevatorTarget == Constants.ElevatorConstants.kLowTarget) {
+      return true;
+    } else return false;
   }
 }
