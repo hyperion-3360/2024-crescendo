@@ -19,7 +19,16 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
 
+  public static final long kSecondsToMicroSeconds = 1000000;
+
   public static final double stickDeadband = 0.1;
+
+  public static final class LED {
+    public static final int kLEDredPWMPort = 0;
+    public static final int kLEDgreenPort = 1;
+    public static final int kLEDbluePort = 2;
+    public static final int kLEDwhitePort = 3;
+  }
 
   public static final class Swerve {
     public static final int pigeonID = 1;
@@ -165,12 +174,13 @@ public final class Constants {
     public static final int kLeftFollowerId = 13;
     public static final int kRightFollowerId = 15;
     public static final int kInfraredSensorId = 4;
+    public static final int kservoBlockerId = 5;
   }
 
   public static class ElevatorConstants {
     public static final double kDeadzone = 0.0035;
     public static final double kHighTarget = -69;
-    public static final double kLowTarget = 0.10;
+    public static final double kLowTarget = -63;
     public static final double kIntakeTarget = 0.0;
   }
 
@@ -187,7 +197,6 @@ public final class Constants {
     public static final int kservoWristId = 7;
     public static final int kservoFingerId = 6;
     public static final int kfingerlimitswitchId = 6;
-    public static final int kservoBlockerId = 5;
 
     public static final double kfingerClosed = 150.0; // angle of finger servo when closed/opened
     public static final double kfingerOpened = 90.0;
