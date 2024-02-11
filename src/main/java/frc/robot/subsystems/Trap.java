@@ -31,7 +31,7 @@ public class Trap extends SubsystemBase {
   public void periodic() {}
 
   public Command setZero() {
-    return this.run(() -> m_servoWrist.setZero())
+    return this.runOnce(() -> m_servoWrist.setZero())
         .andThen(new WaitCommand(m_servoWrist.travelTime(0.5)))
         .andThen(() -> m_servoElbow.setZero())
         .andThen(new WaitCommand(m_servoElbow.travelTime(0.5)))
@@ -40,7 +40,7 @@ public class Trap extends SubsystemBase {
   }
 
   public Command grabPosition() {
-    return this.run(
+    return this.runOnce(
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldergrabPosition))
         .andThen(new WaitCommand(m_servoShoulder.travelTime()))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowgrabPosition))
@@ -50,7 +50,8 @@ public class Trap extends SubsystemBase {
   }
 
   public Command scoreNote() {
-    return this.run(() -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderscoreNote))
+    return this.runOnce(
+            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderscoreNote))
         .andThen(new WaitCommand(m_servoShoulder.travelTime()))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowscoreNote))
         .andThen(new WaitCommand(m_servoElbow.travelTime(0.5)))
@@ -62,8 +63,16 @@ public class Trap extends SubsystemBase {
 
   public Command limitSwitch() {
     if (!m_limitSwitch.get())
-      return this.run(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened));
-    return this.run(() -> m_limitSwitch.get());
+      return this.runOnce(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened));
+    return this.runOnce(() -> m_limitSwitch.get());
   }
+  
+public Command test() {
+    return this.runOnce(
+            () -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowsetZero))
+        .andThen(new WaitCommand(m_servoElbow.travelTime()))
+            return this.runOnce(
+            () -> m_servoElbow.setAngle(Constants.TrapConstants.kangleShouldergrabPosition))
+        .andThen(new WaitCommand(m_servoElbow.travelTime()));
 }
 // uwu
