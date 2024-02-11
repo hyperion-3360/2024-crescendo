@@ -67,11 +67,13 @@ public class Trap extends SubsystemBase {
     return this.runOnce(() -> m_limitSwitch.get());
   }
 
-  public Command test() {
-    return this.runOnce(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowsetZero))
-        .andThen(new WaitCommand(m_servoElbow.travelTime()))
-        .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleShouldergrabPosition))
-        .andThen(new WaitCommand(m_servoElbow.travelTime()));
+  public Command test0() {
+    return this.runOnce(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowsetZero));
+  }
+
+  public Command test50() {
+    return this.runOnce(
+        () -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowgrabPosition));
   }
 }
 
