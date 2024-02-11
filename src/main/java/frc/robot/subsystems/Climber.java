@@ -56,6 +56,8 @@ public class Climber extends SubsystemBase {
 
     m_climberRightMaster.burnFlash();
     m_climberLeft.burnFlash();
+
+    climberGoToSelectedLevel(climberPos.INITAL);
   }
 
   @Override
