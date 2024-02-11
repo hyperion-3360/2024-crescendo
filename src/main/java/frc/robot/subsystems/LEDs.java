@@ -60,14 +60,14 @@ public class LEDs extends SubsystemBase {
   private ledValue kWhite = new ledValue(0, 0, 0, 255);
   private ledValue kBlue = new ledValue(0, 0, 255, 0);
   private ledValue kGreen = new ledValue(0, 255, 0, 0);
-  private ledValue kYellow = new ledValue(255, 255, 0, 0);
+  private ledValue kYellow = new ledValue(255, 0, 255, 0);
   private ledValue kDark = new ledValue(0, 0, 0, 0);
 
   /* current ledvalue, used for blinking */
   private ledValue m_currentValue;
 
   private int kSlowFlashingDelay = (1000000 / 4); // 4 times per second delay in usec
-  private int kFastFlashingDelay = (1000000 / 8); // 8 times per second delay in usec
+  private int kFastFlashingDelay = (1000000 / 10); // 10 times per second delay in usec
 
   /* instance member for singleton implementation */
   private static LEDs m_instance = null;
