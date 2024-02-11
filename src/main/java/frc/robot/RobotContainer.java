@@ -17,6 +17,7 @@ import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Shooter.levelSpeed;
 import frc.robot.subsystems.Trap;
@@ -41,6 +42,7 @@ public class RobotContainer {
   private final Climber m_climber = new Climber();
   public static final Elevator m_elevator = new Elevator();
   private static final Shooter m_shooter = new Shooter();
+  private static final LEDs m_led = LEDs.getInstance();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -124,6 +126,7 @@ public class RobotContainer {
     m_coDriverController.x().onTrue(Sequences.shoot(m_shooter, m_elevator));
 
     m_driverController.a().onTrue(m_shooter.intake());
+    m_driverController.b().onTrue(m_led.test());
 
     // m_coDriverController
     //     .leftBumper()

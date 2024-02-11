@@ -95,7 +95,7 @@ public class Shooter extends SubsystemBase {
     m_leftMaster.set(m_speed);
     m_rightMaster.set(m_speed);
 
-    System.out.println(hasNote());
+    //    System.out.println(hasNote());
   }
 
   // switch case for different speeds according to the level

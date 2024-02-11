@@ -79,7 +79,7 @@ public class Elevator extends SubsystemBase {
       m_encoder.setPosition(0.0);
     }
 
-    System.out.println(isHigh());
+    //    System.out.println(isHigh());
   }
 
   // switch case statement for configuring elevator height

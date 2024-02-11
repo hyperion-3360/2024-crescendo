@@ -6,13 +6,17 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 
 public class LEDs extends SubsystemBase {
 
   /** each LED color has its own PWM output */
   private PWM m_redLED, m_greenLED, m_blueLED, m_whiteLED;
+
+  private boolean m_debug = false;
 
   /** ledValue structure to easily manipulate LED values in 8bit RGB */
   class ledValue {
@@ -28,7 +32,12 @@ public class LEDs extends SubsystemBase {
     }
 
     static int convertToPulse(int val8bit) {
-      return ((val8bit % max8bit) * maxValue) / max8bit;
+      return ((val8bit % (max8bit + 1)) * maxValue) / max8bit;
+    }
+
+    @Override
+    public String toString() {
+      return String.format("R: %d, G: %d, B: %d, W: %d", r, g, b, w);
     }
   }
   ;
@@ -95,6 +104,7 @@ public class LEDs extends SubsystemBase {
   }
 
   public void setState(State state) {
+    if (m_debug) System.out.println(String.format("New sate: %s", state));
     m_ledState = state;
 
     switch (m_ledState) {
@@ -162,9 +172,27 @@ public class LEDs extends SubsystemBase {
    * @param val 8bit LED value
    */
   private void setRGB(ledValue val) {
+    if (m_debug) System.out.println(val);
     m_redLED.setPulseTimeMicroseconds(ledValue.convertToPulse(val.r));
     m_greenLED.setPulseTimeMicroseconds(ledValue.convertToPulse(val.g));
     m_blueLED.setPulseTimeMicroseconds(ledValue.convertToPulse(val.b));
     m_whiteLED.setPulseTimeMicroseconds(ledValue.convertToPulse(val.w));
+  }
+
+  public Command test() {
+    return this.runOnce(() -> setState(State.IDLE))
+        .andThen(new WaitCommand(3))
+        .andThen(() -> setState(State.NOTE_INSIDE))
+        .andThen(new WaitCommand(3))
+        .andThen(() -> setState(State.INTAKE_ROLLING))
+        .andThen(new WaitCommand(3))
+        .andThen(() -> setState(State.SHOOT_READY))
+        .andThen(new WaitCommand(3))
+        .andThen(() -> setState(State.SHOT_DONE))
+        .andThen(new WaitCommand(3))
+        .andThen(() -> setState(State.PREPARE_SHOT))
+        .andThen(new WaitCommand(3))
+        .andThen(() -> setState(State.CLIMBING))
+        .andThen(new WaitCommand(3));
   }
 }
