@@ -32,7 +32,7 @@ public class Sequences {
                     .andThen(m_trap.scoreNote())));
   }
 
-  // the sequence to set the elevator to high
+  // the sequence to set the elevator to high and change led, as well as set shooter target level
   public static Command elevatorHigh(Elevator m_elevator, Shooter m_shooter, LEDs m_LED) {
     return Commands.sequence(
         Commands.runOnce(() -> m_LED.setState(State.PREPARE_SHOT_SPEAKER)),
@@ -44,7 +44,7 @@ public class Sequences {
         m_shooter.setTargetLevel(levelSpeed.HIGH));
   }
 
-  // the sequence to set the elevator to low
+  // the sequence to set the elevator to low and change led, as well as set shooter target level
   public static Command elevatorLow(Elevator m_elevator, Shooter m_shooter, LEDs m_LED) {
     return Commands.sequence(
         Commands.runOnce(() -> m_LED.setState(State.PREPARE_SHOT_AMP)),
@@ -55,7 +55,7 @@ public class Sequences {
         m_shooter.setTargetLevel(levelSpeed.LOW));
   }
 
-  // the sequence to make the shooter shoot to the desired level
+  // the sequence to make the shooter shoot to the desired level and change leds
   public static Command shoot(Shooter m_shooter, Elevator m_elevator, LEDs m_LED) {
     return Commands.sequence(
         m_shooter.shootTo().andThen(() -> m_LED.setState(State.SHOT_DONE)),
@@ -65,6 +65,7 @@ public class Sequences {
             .andThen(() -> m_LED.setState(State.IDLE)));
   }
 
+  // intake sequence to set leds to the right state
   public static Command intakeSequence(Shooter m_shooter, LEDs m_LED) {
     return Commands.sequence(
         Commands.runOnce(() -> m_LED.setState(State.INTAKE_ROLLING)),
@@ -74,6 +75,7 @@ public class Sequences {
             .andThen(new WaitCommand(2).andThen(() -> m_LED.setState(State.IDLE))));
   }
 
+  // sequence to feed the note to the trap and store it
   public static Command trapShoot(Shooter m_shooter, Trap m_trap) {
     return Commands.sequence(
         m_shooter.hookRelease(),

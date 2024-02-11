@@ -94,8 +94,6 @@ public class Shooter extends SubsystemBase {
     // setting speed to motors
     m_leftMaster.set(m_speed);
     m_rightMaster.set(m_speed);
-
-    //    System.out.println(hasNote());
   }
 
   // switch case for different speeds according to the level
@@ -124,10 +122,12 @@ public class Shooter extends SubsystemBase {
     }
   }
 
+  // command to hold speed according to the target level
   public Command holdSpeed(levelSpeed level) {
     return this.run(() -> this.setSpeedFor(level));
   }
 
+  // stop the motors
   public Command stop() {
     return this.runOnce(() -> this.setSpeedFor(levelSpeed.STOP));
   }
