@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.Shuffleboard3360;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
@@ -55,7 +56,7 @@ public class RobotContainer {
 
   // Slew Rate Limiters to limit acceleration of joystick inputs
   private final SlewRateLimiter translationLimiter = new SlewRateLimiter(2);
-  private final SlewRateLimiter strafeLimiter = new SlewRateLimiter(0.5);
+  private final SlewRateLimiter strafeLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(2);
 
   private final double kJoystickDeadband = 0.1;
@@ -74,8 +75,6 @@ public class RobotContainer {
     return -limiter.calculate(
         MathUtil.applyDeadband(m_driverController.getRawAxis(axis), deadband));
   }
-
-  private ModeAuto m_autoHandler = new ModeAuto();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -114,16 +113,11 @@ public class RobotContainer {
     m_driverController.a().onTrue(m_trap.setZero());
     m_driverController.b().onTrue(m_trap.grabPosition());
     // m_driverController.x().onTrue(m_trap.scoreNote());
-    // m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter));
-    // m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter));
+    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
+    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
     // m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator));
 
-    m_driverController.a().onTrue(m_shooter.intake());
-  }
-
-  public void autoInit() {
-    // TODO Selectionner le mode auto du shuffleboard
-    m_autoHandler.follow(ModeAuto.Mode.RED_AUTO1);
+    m_coDriverController.b().onTrue(Sequences.intakeSequence(m_shooter, m_led));
   }
 
   public Command highGoal() {
@@ -148,7 +142,11 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getAutonomousCommand'");
+    // Load the path you want to follow using its name in the GUI
+    //    PathPlannerPath path = PathPlannerPath.fromPathFile("test_path");
+
+    // Create a path following command using AutoBuilder. This will also trigger event markers.
+    //   return AutoBuilder.followPath(path);
+    return null;
   }
 }

@@ -7,46 +7,59 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Climber.climberPos;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.elevatorHeight;
+import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.LEDs.State;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Shooter.levelSpeed;
+import frc.robot.subsystems.Trap;
 
 public class Sequences {
-
-  // trap isn't finished
-  // public static Command automaticTrapSequence(Trap m_trap, Shooter m_shooter) {
-  //   return Commands.sequence(
-  //     m_trap.grabPosition().andThen(m_shooter.shoot(shootSpeed.TRAP),
-  //     (new WaitUntilCommand()))
-  //   );
-  // }
-
-  // public static Command manualTrapCommand(Trap m_trap) {
-  //   return Commands.sequence(
-
-  //   );
-  // }
-
-  public static Command climberSequence(Climber m_climber) {
+  // makes the climber sequence
+  public static Command climberSequence(Climber m_climber, LEDs m_LED, Trap m_trap) {
     return Commands.sequence(
+        Commands.runOnce(() -> m_LED.setState(State.CLIMBING)),
         m_climber
             .climberGoToSelectedLevel(climberPos.TOP)
-            .alongWith(new WaitCommand(2))
-            .andThen(m_climber.climberGoToSelectedLevel(climberPos.INITAL)));
+            .andThen(new WaitCommand(2))
+            .andThen(m_climber.climberGoToSelectedLevel(climberPos.INITAL)),
+        // Commands.runOnce(() -> m_LED.setState(State.)),
+        m_trap.grabPosition().andThen(m_trap.scoreNote())
+        // .andThen(() -> m_LED.setState(State.)
+        );
   }
 
-  public static Command elevatorHigh(Elevator m_elevator, Shooter m_shooter) {
+  // the sequence to set the elevator to high
+  public static Command elevatorHigh(Elevator m_elevator, Shooter m_shooter, LEDs m_LED) {
     return Commands.sequence(
-        m_elevator.extendTheElevator(elevatorHeight.HIGH),
+        Commands.runOnce(() -> m_LED.setState(State.PREPARE_SHOT)),
+        m_elevator
+            .extendTheElevator(elevatorHeight.HIGH)
+            .andThen(() -> m_LED.setState(State.SHOOT_READY)),
         m_shooter.setTargetLevel(levelSpeed.HIGH));
   }
 
-  public static Command elevatorLow(Elevator m_elevator, Shooter m_shooter) {
+  // the sequence to set the elevator to low
+  public static Command elevatorLow(Elevator m_elevator, Shooter m_shooter, LEDs m_LED) {
     return Commands.sequence(
-        m_elevator.extendTheElevator(elevatorHeight.LOW), m_shooter.setTargetLevel(levelSpeed.LOW));
+        Commands.runOnce(() -> m_LED.setState(State.PREPARE_SHOT)),
+        m_elevator
+            .extendTheElevator(elevatorHeight.LOW)
+            .andThen(() -> m_LED.setState(State.SHOOT_READY)),
+        m_shooter.setTargetLevel(levelSpeed.LOW));
   }
 
-  public static Command shoot(Shooter m_shooter, Elevator m_elevator) {
+  // the sequence to make the shooter shoot to the desired level
+  public static Command shoot(Shooter m_shooter, Elevator m_elevator, LEDs m_LED) {
     return Commands.sequence(
-        m_shooter.shootTo(), m_elevator.extendTheElevator(elevatorHeight.INTAKE));
+        m_shooter.shootTo().andThen(() -> m_LED.setState(State.SHOT_DONE)),
+        m_elevator
+            .extendTheElevator(elevatorHeight.INTAKE)
+            .andThen(() -> m_LED.setState(State.IDLE)));
+  }
+
+  public static Command intakeSequence(Shooter m_shooter, LEDs m_LED) {
+    return Commands.sequence(
+        Commands.runOnce(() -> m_LED.setState(State.INTAKE_ROLLING)),
+        m_shooter.intake().andThen(() -> m_LED.setState(State.NOTE_INSIDE)));
   }
 }

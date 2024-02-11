@@ -4,13 +4,14 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ClimberConstants;
 
 public class Climber extends SubsystemBase {
-
+  // different states for the climber position
   public enum climberPos {
     TOP,
     STOP,
@@ -18,15 +19,17 @@ public class Climber extends SubsystemBase {
     STALL
   }
 
+  // instantiate the two neo 550 motors that are going to be used for the  climber
   private CANSparkMax m_climberLeft =
       new CANSparkMax(Constants.SubsystemConstants.kclimberLeftId, MotorType.kBrushless);
   private CANSparkMax m_climberRightMaster =
       new CANSparkMax(Constants.SubsystemConstants.kclimberRightId, MotorType.kBrushless);
 
   // private WPI_PigeonIMU m_gyro = new WPI_PigeonIMU(0);
-
+  // instantiating a relative encoder to detect the motors postion
   private RelativeEncoder m_encoder = m_climberRightMaster.getEncoder();
 
+  // class variables to help control and set the climber
   private double m_climberRampRate = 2; // was .2
   private double m_speed = 0.2;
   private double m_climberTarget = ClimberConstants.kstartPos;
@@ -35,6 +38,7 @@ public class Climber extends SubsystemBase {
 
   // declare 2 members, check fb for type and port, add port in constants
   public Climber() {
+    // configurating the motors and encoders
     m_climberLeft.restoreFactoryDefaults();
     m_climberRightMaster.restoreFactoryDefaults();
 
@@ -56,17 +60,19 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
-
-    // if (DriverStation.isDisabled()) {
-    //   m_climberTarget = m_encoder.getPosition();
-    //   m_climberRightMaster.set(0.0);
-    // }
+    /*  sets the climber to its current postion when disabling
+    the driver station to prevent sudden movements */
+    if (DriverStation.isDisabled()) {
+      m_climberTarget = m_encoder.getPosition();
+      m_climberRightMaster.set(0.0);
+    }
 
     //   m_gyro.getRoll();
 
     //   repositionement();
   }
 
+  // private method to set the behavior for each state
   private void setClimberLevel(climberPos m_climberCheck) {
     switch (m_climberCheck) {
       case TOP:
@@ -105,11 +111,14 @@ public class Climber extends SubsystemBase {
   //          goToTarget();
 
   //     }
+
+  // boolean checking if the motors has reached its target
   private boolean onTarget() {
 
     return m_encoder.getPosition() >= m_climberTarget;
   }
 
+  // command to set the desired elevator state
   public Command climberGoToSelectedLevel(climberPos m_climberCheck) {
     return this.run(() -> setClimberLevel(m_climberCheck))
         .until(this::onTarget)
