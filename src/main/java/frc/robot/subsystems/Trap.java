@@ -34,13 +34,15 @@ public class Trap extends SubsystemBase {
   public Command setZero() {
     return this.runOnce(() -> m_servoWrist.setZero())
         .andThen(new WaitCommand(m_servoWrist.travelTime()))
-        .andThen(() -> m_servoElbow.setZero())
-        .andThen(new WaitCommand(m_servoElbow.travelTime()))
         .andThen(
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldersetZeroDelayed))
-        .andThen(new WaitCommand(m_servoShoulder.travelTime()))
+        .andThen(new WaitCommand(0.3))
+        .andThen(() -> m_servoElbow.setZero())
+        .andThen(new WaitCommand(m_servoElbow.travelTime()))
         .andThen(() -> m_servoShoulder.setZero())
-        .andThen(new WaitCommand(m_servoShoulder.travelTime()));
+        .andThen(new WaitCommand(m_servoShoulder.travelTime()))
+        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened))
+        .andThen(new WaitCommand(m_servoFinger.travelTime()));
   }
 
   public Command grabPosition() {
@@ -60,27 +62,11 @@ public class Trap extends SubsystemBase {
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderscoreNote))
         .andThen(new WaitCommand(m_servoShoulder.travelTime()))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowscoreNote))
-        .andThen(new WaitCommand(m_servoElbow.travelTime(0.5)))
+        .andThen(new WaitCommand(m_servoElbow.travelTime()))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristscoreNote))
-        .andThen(new WaitCommand(m_servoWrist.travelTime(0.5)))
+        .andThen(new WaitCommand(m_servoWrist.travelTime()))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened))
-        .andThen(new WaitCommand(m_servoFinger.travelTime(0.5)));
-  }
-
-  public Command limitSwitch() {
-    if (!m_limitSwitch.get())
-      return this.runOnce(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened));
-    return this.runOnce(() -> m_limitSwitch.get());
-  }
-
-  public Command test0() {
-    return this.runOnce(
-        () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldersetZero));
-  }
-
-  public Command test50() {
-    return this.runOnce(
-        () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldergrabPosition));
+        .andThen(new WaitCommand(m_servoFinger.travelTime()));
   }
 }
 

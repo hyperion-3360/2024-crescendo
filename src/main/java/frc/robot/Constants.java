@@ -210,9 +210,9 @@ public final class Constants {
     public static final double kangleElbowgrabPosition = 95.0;
     public static final double kangleWristgrabPosition = 102.0;
     // not finished
-    public static final double kangleShoulderscoreNote = 65.0; // SCORENOTE
-    public static final double kangleElbowscoreNote = 100.5;
-    public static final double kangleWristscoreNote = 102.0;
+    public static final double kangleShoulderscoreNote = 70.0; // SCORENOTE
+    public static final double kangleElbowscoreNote = 90.0;
+    public static final double kangleWristscoreNote = 120.0;
   }
 
   public static class AutoConstants {

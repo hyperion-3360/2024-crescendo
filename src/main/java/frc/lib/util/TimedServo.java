@@ -79,7 +79,9 @@ public class TimedServo extends Servo {
    * @return total computed command travel time in seconds
    */
   public double travelTime() {
-    return (double) m_travelTime / (double) Constants.kSecondsToMicroSeconds;
+    var travTime = (double) m_travelTime / (double) Constants.kSecondsToMicroSeconds;
+    if (mDebug) System.out.println(String.format("traveltime: %f", travTime));
+    return travTime;
   }
 
   /**
