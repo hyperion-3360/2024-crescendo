@@ -117,15 +117,16 @@ public class RobotContainer {
     // );
 
     // m_driverController.a().onTrue(m_shooter.intake());
-    // m_driverController.a().onTrue(m_trap.setZero());
-    m_driverController.b().onTrue(m_trap.test0());
-    m_driverController.x().onTrue(m_trap.test50());
-    // m_coDriverController.a().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter));
+    m_driverController.a().onTrue(m_trap.setZero());
+    m_driverController.b().onTrue(m_trap.grabPosition());
+    //    m_driverController.b().onTrue(m_trap.test0());
+    //   m_driverController.x().onTrue(m_trap.test50());
+    //  m_coDriverController.a().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter));
     // m_coDriverController.y().onTrue(Sequences.elevatorLow(m_elevator, m_shooter));
     // m_coDriverController.x().onTrue(Sequences.shoot(m_shooter, m_elevator));
 
     // m_driverController.a().onTrue(m_shooter.intake());
-    // m_driverController.b().onTrue(m_led.test());
+    m_driverController.x().onTrue(m_led.test());
 
     // m_coDriverController
     //     .leftBumper()
