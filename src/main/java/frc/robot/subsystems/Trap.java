@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.lib.util.TimedServo;
 import frc.robot.Constants;
 
@@ -48,7 +49,9 @@ public class Trap extends SubsystemBase {
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowgrabPosition))
         .andThen(new WaitCommand(m_servoElbow.travelTime()))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristgrabPosition))
-        .andThen(new WaitCommand(m_servoWrist.travelTime()));
+        .andThen(new WaitCommand(m_servoWrist.travelTime()))
+        .andThen(new WaitUntilCommand(() -> !m_limitSwitch.get()))
+        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));
   }
 
   public Command scoreNote() {
