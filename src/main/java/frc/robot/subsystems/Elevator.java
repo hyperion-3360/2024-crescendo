@@ -103,10 +103,11 @@ public class Elevator extends SubsystemBase {
     m_elevatorLeftMaster.stopMotor();
   }
 
-  // public boolean onTarget() {
+  // this is used for the leds in the sequences
+  public boolean onTarget() {
 
-  //   return m_encoder.getPosition() >= this.m_elevatorTarget;
-  // }
+    return m_encoder.getPosition() >= this.m_elevatorTarget;
+  }
 
   public Command extendTheElevator(elevatorHeight m_elevatorLevel) {
     return this.runOnce(() -> setElevator(m_elevatorLevel));
