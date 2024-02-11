@@ -9,6 +9,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.Shuffleboard3360;
@@ -17,6 +18,7 @@ import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.LEDs.State;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Shooter.levelSpeed;
 import frc.robot.subsystems.Trap;
@@ -118,7 +120,15 @@ public class RobotContainer {
     // m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter));
     // m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator));
 
-    m_driverController.a().onTrue(m_shooter.intake());
+    m_driverController
+        .a()
+        .onTrue(
+            m_shooter
+                .intake()
+                .alongWith(
+                    Commands.run(() -> m_led.setState(State.INTAKE_ROLLING))
+                        .until(() -> m_shooter.hasNote())
+                        .andThen(Commands.runOnce(() -> m_led.setState(State.NOTE_INSIDE)))));
   }
 
   public void autoInit() {
