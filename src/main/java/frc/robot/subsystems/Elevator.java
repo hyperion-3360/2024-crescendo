@@ -32,8 +32,8 @@ public class Elevator extends SubsystemBase {
 
   private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
 
-  private double kP = 0.013;
-  private double kI = 0;
+  private double kP = 0.0075;
+  private double kI = 0.0005;
   private double kD = 0;
 
   private PIDController m_pid = new PIDController(kP, kI, kD);
@@ -75,11 +75,12 @@ public class Elevator extends SubsystemBase {
 
     m_elevatorLeftMaster.set(m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
 
-    if (!bottomlimitSwitch.get()) {
+    if (bottomlimitSwitch.get() && m_elevatorTarget == ElevatorConstants.kIntakeTarget) {
+      m_elevatorLeftMaster.stopMotor();
       m_encoder.setPosition(0.0);
     }
 
-    //    System.out.println(isHigh());
+    System.out.println(m_encoder.getPosition());
   }
 
   // switch case statement for configuring elevator height
