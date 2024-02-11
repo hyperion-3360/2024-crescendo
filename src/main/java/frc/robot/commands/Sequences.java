@@ -56,4 +56,10 @@ public class Sequences {
             .extendTheElevator(elevatorHeight.INTAKE)
             .andThen(() -> m_LED.setState(State.IDLE)));
   }
+
+  public static Command intakeSequence(Shooter m_shooter, LEDs m_LED) {
+    return Commands.sequence(
+        Commands.runOnce(() -> m_LED.setState(State.INTAKE_ROLLING)),
+        m_shooter.intake().andThen(() -> m_LED.setState(State.NOTE_INSIDE)));
+  }
 }
