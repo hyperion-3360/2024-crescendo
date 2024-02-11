@@ -25,7 +25,7 @@ public class Shooter extends SubsystemBase {
   private static double highSpeed = 0.8; // need to add perk to adjust speed according to distance
   private static double lowSpeed = 0.3; // requires testing
   private static double intakeSpeed = 0.4;
-  private static double trapSpeed = 0; // requires testing
+  private static double trapSpeed = 0.15; // requires testing
   private static double stopSpeed = 0;
   private static double rampRate = 1; // to be tuned according to battery and time consumption
 
@@ -156,7 +156,8 @@ public class Shooter extends SubsystemBase {
 
   // set hook to intake mode, then set target + speed until has note
   public Command intake() {
-    return Commands.sequence(this.holdSpeed(levelSpeed.INTAKE).until(this::hasNote), this.stop());
+    return Commands.sequence(
+        this.hookIntake(), this.holdSpeed(levelSpeed.INTAKE).until(this::hasNote), this.stop());
   }
 
   // infrared sensor to see if we have a note

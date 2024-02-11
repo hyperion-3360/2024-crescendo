@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Climber.climberPos;
 import frc.robot.subsystems.Elevator;
@@ -61,5 +62,14 @@ public class Sequences {
     return Commands.sequence(
         Commands.runOnce(() -> m_LED.setState(State.INTAKE_ROLLING)),
         m_shooter.intake().andThen(() -> m_LED.setState(State.NOTE_INSIDE)));
+  }
+
+  public static Command trapShoot(Shooter m_shooter, Trap m_trap) {
+    return Commands.sequence(
+        m_shooter.hookRelease(),
+        m_shooter.setTargetLevel(levelSpeed.TRAP),
+        m_shooter.setSpeedWithTarget(),
+        new WaitUntilCommand(m_trap::trapHasNote),
+        m_shooter.stop());
   }
 }
