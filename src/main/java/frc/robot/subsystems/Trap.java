@@ -32,9 +32,11 @@ public class Trap extends SubsystemBase {
 
   public Command setZero() {
     return this.runOnce(() -> m_servoWrist.setZero())
-        .andThen(new WaitCommand(m_servoWrist.travelTime(0.5)))
+        .andThen(new WaitCommand(m_servoWrist.travelTime()))
         .andThen(() -> m_servoElbow.setZero())
-        .andThen(new WaitCommand(m_servoElbow.travelTime(0.5)))
+        .andThen(new WaitCommand(m_servoElbow.travelTime()))
+        .andThen(() -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldersetZeroDelayed))
+        .andThen(new WaitCommand(m_servoShoulder.travelTime()));
         .andThen(() -> m_servoShoulder.setZero())
         .andThen(new WaitCommand(m_servoShoulder.travelTime()));
   }
@@ -44,9 +46,9 @@ public class Trap extends SubsystemBase {
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldergrabPosition))
         .andThen(new WaitCommand(m_servoShoulder.travelTime()))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowgrabPosition))
-        .andThen(new WaitCommand(m_servoElbow.travelTime(0.5)))
+        .andThen(new WaitCommand(m_servoElbow.travelTime()))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristgrabPosition))
-        .andThen(new WaitCommand(m_servoWrist.travelTime(0.5)));
+        .andThen(new WaitCommand(m_servoWrist.travelTime()));
   }
 
   public Command scoreNote() {
