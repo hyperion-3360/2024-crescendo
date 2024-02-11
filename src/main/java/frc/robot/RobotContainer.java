@@ -58,7 +58,7 @@ public class RobotContainer {
 
   // Slew Rate Limiters to limit acceleration of joystick inputs
   private final SlewRateLimiter translationLimiter = new SlewRateLimiter(2);
-  private final SlewRateLimiter strafeLimiter = new SlewRateLimiter(0.5);
+  private final SlewRateLimiter strafeLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(2);
 
   private final double kJoystickDeadband = 0.1;
@@ -145,7 +145,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // Load the path you want to follow using its name in the GUI
-    PathPlannerPath path = PathPlannerPath.fromPathFile("Red center (mn)");
+    PathPlannerPath path = PathPlannerPath.fromPathFile("test_path");
 
     // Create a path following command using AutoBuilder. This will also trigger event markers.
     return AutoBuilder.followPath(path);
