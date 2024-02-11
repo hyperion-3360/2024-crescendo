@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.Shuffleboard3360;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
@@ -111,32 +112,14 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    // m_driverController.y()
-    // .onTrue(
-    // Sequences.switchToHigh(m_elevator)
-    // );
+    // m_driverController.a().onTrue(m_trap.setZero());
+    // m_driverController.b().onTrue(m_trap.test0());
+    // m_driverController.x().onTrue(m_trap.test50());
+    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter));
+    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter));
+    m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator));
 
-    // m_driverController.a().onTrue(m_shooter.intake());
-    m_driverController.a().onTrue(m_trap.setZero());
-    m_driverController.b().onTrue(m_trap.grabPosition());
-    //    m_driverController.b().onTrue(m_trap.test0());
-    //   m_driverController.x().onTrue(m_trap.test50());
-    //  m_coDriverController.a().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter));
-    // m_coDriverController.y().onTrue(Sequences.elevatorLow(m_elevator, m_shooter));
-    // m_coDriverController.x().onTrue(Sequences.shoot(m_shooter, m_elevator));
-
-    // m_driverController.a().onTrue(m_shooter.intake());
-    m_driverController.x().onTrue(m_led.test());
-
-    // m_coDriverController
-    //     .leftBumper()
-    //     .onTrue(Sequences.shootLow(m_shooter, m_elevator).unless(() -> !m_elevator.isLow()));
-    // m_coDriverController.y().onTrue(Sequences.shootHigh(m_shooter, m_servoBlocker, m_elevator));
-    // m_driverController.b().onTrue(m_elevator.extendTheElevator(e_elevatorLevel.INTAKE));
-    // m_driverController.a().onTrue(m_shooter.intake());
-    // m_coDriverController.a().onTrue(m_climber.climberGoToSelectedLevel(climberPos.TOP));
-    // m_driverController.y().onTrue(Sequences.climberSequence(m_climber));
-    // m_coDriverController.b().onTrue(m_climber.climberGoToSelectedLevel(climberPos.INITAL));
+    m_driverController.a().onTrue(m_shooter.intake());
   }
 
   public void autoInit() {

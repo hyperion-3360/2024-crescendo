@@ -48,6 +48,7 @@ public class Swerve extends SubsystemBase {
       positions[mod.moduleNumber] = mod.getPosition();
     }
     ;
+
     m_odometry =
         new SwerveDriveOdometry(
             Constants.Swerve.swerveKinematics,
