@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
@@ -77,8 +79,6 @@ public class RobotContainer {
         MathUtil.applyDeadband(m_driverController.getRawAxis(axis), deadband));
   }
 
-  private ModeAuto m_autoHandler = new ModeAuto();
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -131,11 +131,6 @@ public class RobotContainer {
                         .andThen(Commands.runOnce(() -> m_led.setState(State.NOTE_INSIDE)))));
   }
 
-  public void autoInit() {
-    // TODO Selectionner le mode auto du shuffleboard
-    m_autoHandler.follow(ModeAuto.Mode.RED_AUTO1);
-  }
-
   public Command highGoal() {
     return m_elevator
         .extendTheElevator(Elevator.elevatorHeight.HIGH)
@@ -158,7 +153,10 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getAutonomousCommand'");
+    // Load the path you want to follow using its name in the GUI
+    PathPlannerPath path = PathPlannerPath.fromPathFile("Red center (mn)");
+
+    // Create a path following command using AutoBuilder. This will also trigger event markers.
+    return AutoBuilder.followPath(path);
   }
 }

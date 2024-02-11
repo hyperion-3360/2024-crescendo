@@ -28,6 +28,7 @@ public class SwerveModule {
   private final DutyCycleOut driveDutyCycle = new DutyCycleOut(0);
   private final VelocityVoltage driveVelocity = new VelocityVoltage(0);
   private final VoltageOut m_voltageOutControl = new VoltageOut(0.0);
+  private boolean m_debug = true;
 
   /* angle motor control requests */
   private final PositionVoltage anglePosition = new PositionVoltage(0);
@@ -59,6 +60,7 @@ public class SwerveModule {
       driveDutyCycle.Output = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
       mDriveMotor.setControl(driveDutyCycle);
     } else {
+      if (m_debug) System.out.println(String.format("setSpeed velocity : %s", driveVelocity));
       driveVelocity.Velocity =
           Conversions.MPSToRPS(
               desiredState.speedMetersPerSecond, Constants.Swerve.wheelCircumference);

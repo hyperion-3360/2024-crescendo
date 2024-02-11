@@ -30,6 +30,7 @@ public class Swerve extends SubsystemBase {
   private final WPI_PigeonIMU m_gyro;
   private final Field2d m_field2d;
   public SwerveDriveOdometry m_odometry;
+  private boolean m_debug = true;
 
   public Swerve() {
     m_gyro = new WPI_PigeonIMU(0);
@@ -97,6 +98,13 @@ public class Swerve extends SubsystemBase {
   }
 
   public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
+    if (m_debug)
+      System.out.println(
+          String.format(
+              "driveRobotRelative: omega: %f, vx: %f, vy : %f",
+              robotRelativeSpeeds.omegaRadiansPerSecond,
+              robotRelativeSpeeds.vxMetersPerSecond,
+              robotRelativeSpeeds.vyMetersPerSecond));
     ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
 
     SwerveModuleState[] targetStates =
