@@ -113,7 +113,7 @@ public class Climber extends SubsystemBase {
   //     }
 
   // boolean checking if the motors has reached its target
-  private boolean onTarget() {
+  public boolean onClimberTarget() {
 
     return m_encoder.getPosition() >= m_climberTarget;
   }
@@ -121,7 +121,7 @@ public class Climber extends SubsystemBase {
   // command to set the desired elevator state
   public Command climberGoToSelectedLevel(climberPos m_climberCheck) {
     return this.run(() -> setClimberLevel(m_climberCheck))
-        .until(this::onTarget)
+        .until(this::onClimberTarget)
         .andThen(() -> setClimberLevel(climberPos.STALL));
   }
 }

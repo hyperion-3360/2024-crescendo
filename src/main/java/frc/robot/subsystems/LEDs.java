@@ -46,10 +46,13 @@ public class LEDs extends SubsystemBase {
     IDLE, // Idle orange, default
     INTAKE_ROLLING, // Intake white slow flash, when intake is rolling
     NOTE_INSIDE, // Detected note green, note in beam cutter triggered
-    PREPARE_SHOT, // Aim activated white quick flash, with vision aim function running
-    SHOOT_READY, // Aim ready blue, vision aim lock
+    PREPARE_SHOT_SPEAKER, // Aim activated white quick flash, with vision aim function running
+    SHOOT_READY_SPEAKER, // Aim ready blue, vision aim lock
     SHOT_DONE, // Shot done green, when shooting sequence is completed note has been shot
     CLIMBING, // Climb yellow, during the entire climb sequence
+    PREPARE_SHOT_AMP, // Aim activated pale yellow quick flash, with vision aim function running
+    SHOOT_READY_AMP, // Aim ready deep purple, vision aim lock
+    TRAP_HAS_NOTE, // Limit switch activated, purple
   }
 
   /* current LED state */
@@ -60,7 +63,9 @@ public class LEDs extends SubsystemBase {
   private ledValue kWhite = new ledValue(0, 0, 0, 255);
   private ledValue kBlue = new ledValue(0, 0, 255, 0);
   private ledValue kGreen = new ledValue(0, 255, 0, 0);
-  private ledValue kYellow = new ledValue(255, 0, 255, 0);
+  private ledValue kpurple = new ledValue(255, 0, 255, 0);
+  private ledValue kpaleYellow = new ledValue(255, 254, 0, 145);
+  private ledValue kdeepPurple = new ledValue(265, 0, 305, 0);
   private ledValue kDark = new ledValue(0, 0, 0, 0);
 
   /* current ledvalue, used for blinking */
@@ -120,11 +125,11 @@ public class LEDs extends SubsystemBase {
         m_flashDuration = 0;
         m_currentValue = kGreen;
         break;
-      case PREPARE_SHOT: // flashing white
+      case PREPARE_SHOT_SPEAKER: // flashing white
         m_currentValue = kWhite;
         m_flashDuration = RobotController.getFPGATime() + kFastFlashingDelay;
         break;
-      case SHOOT_READY:
+      case SHOOT_READY_SPEAKER:
         m_flashDuration = 0;
         m_currentValue = kBlue;
         break;
@@ -134,7 +139,17 @@ public class LEDs extends SubsystemBase {
         break;
       case CLIMBING:
         m_flashDuration = 0;
-        m_currentValue = kYellow;
+        m_currentValue = kpurple;
+        break;
+      case PREPARE_SHOT_AMP:
+        m_currentValue = kpaleYellow;
+        m_flashDuration = RobotController.getFPGATime() + kFastFlashingDelay;
+      case SHOOT_READY_AMP:
+        m_currentValue = kdeepPurple;
+        m_flashDuration = 0;
+      case TRAP_HAS_NOTE:
+        m_flashDuration = 0;
+        m_currentValue = kpurple;
         break;
       default:
         break;
@@ -153,10 +168,23 @@ public class LEDs extends SubsystemBase {
           setRGB(m_currentValue);
         }
         break;
-      case PREPARE_SHOT:
+      case PREPARE_SHOT_SPEAKER:
         if (RobotController.getFPGATime() > m_flashDuration) {
           m_currentValue = m_currentValue == kWhite ? kDark : kWhite;
           m_flashDuration = RobotController.getFPGATime() + kFastFlashingDelay;
+          setRGB(m_currentValue);
+        }
+        break;
+      case PREPARE_SHOT_AMP:
+        if (RobotController.getFPGATime() > m_flashDuration) {
+          m_currentValue = m_currentValue == kpaleYellow ? kDark : kpaleYellow;
+          m_flashDuration = RobotController.getFPGATime() + kFastFlashingDelay;
+          setRGB(m_currentValue);
+        }
+      case TRAP_HAS_NOTE:
+        if (RobotController.getFPGATime() > m_flashDuration) {
+          m_currentValue = m_currentValue == kpurple ? kDark : kpurple;
+          m_flashDuration = RobotController.getFPGATime() + kSlowFlashingDelay;
           setRGB(m_currentValue);
         }
         break;
@@ -186,13 +214,17 @@ public class LEDs extends SubsystemBase {
         .andThen(new WaitCommand(3))
         .andThen(() -> setState(State.INTAKE_ROLLING))
         .andThen(new WaitCommand(3))
-        .andThen(() -> setState(State.SHOOT_READY))
+        .andThen(() -> setState(State.SHOOT_READY_SPEAKER))
         .andThen(new WaitCommand(3))
         .andThen(() -> setState(State.SHOT_DONE))
         .andThen(new WaitCommand(3))
-        .andThen(() -> setState(State.PREPARE_SHOT))
+        .andThen(() -> setState(State.PREPARE_SHOT_SPEAKER))
         .andThen(new WaitCommand(3))
         .andThen(() -> setState(State.CLIMBING))
+        .andThen(new WaitCommand(3))
+        .andThen(() -> setState(State.PREPARE_SHOT_AMP))
+        .andThen(new WaitCommand(3))
+        .andThen(() -> setState(State.SHOOT_READY_AMP))
         .andThen(new WaitCommand(3));
   }
 }
