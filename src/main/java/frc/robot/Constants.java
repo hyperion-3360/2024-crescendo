@@ -217,10 +217,10 @@ public final class Constants {
     public static final double kangleShoulderstoreNote = 1.0; // STORENOTE
     public static final double kangleElbowstoreNote = 120.0;
     public static final double kangleWriststoreNote = 155.0;
-
-    // public static final double kangleShoulderstoreNote = 1.0; //
-    // public static final double kangleElbowstoreNote = 120.0;
-    // public static final double kangleWriststoreNote = 155.0;
+    // not finish
+    public static final double kangleShoulderprepareToClimb = 0.0; // PREPARETOCLIMB
+    public static final double kangleElbowprepareToClimb = 145.0;
+    public static final double kangleWristprepareToClimb = 155.0;
   }
 
   public static class AutoConstants {

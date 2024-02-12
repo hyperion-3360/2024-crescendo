@@ -83,11 +83,11 @@ public class Trap extends SubsystemBase {
 
   public Command prepareToClimb() {
     return this.runOnce(
-            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderstoreNote))
+            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderprepareToClimb))
         .andThen(new WaitCommand(m_servoShoulder.travelTime()))
-        .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowstoreNote))
+        .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowprepareToClimb))
         .andThen(new WaitCommand(m_servoElbow.travelTime()))
-        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWriststoreNote))
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristprepareToClimb))
         .andThen(new WaitCommand(m_servoWrist.travelTime()))
         .andThen(new WaitUntilCommand(() -> !m_limitSwitch.get()))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));
@@ -101,3 +101,4 @@ public class Trap extends SubsystemBase {
 // 250ms for shoulder
 
 // uwu
+// :3
