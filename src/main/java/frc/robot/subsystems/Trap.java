@@ -29,9 +29,7 @@ public class Trap extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    System.out.println(trapHasNote());
-  }
+  public void periodic() {}
 
   public Command setZero() {
     return this.runOnce(() -> m_servoWrist.setZero())
@@ -73,11 +71,23 @@ public class Trap extends SubsystemBase {
 
   public Command storeNote() {
     return this.runOnce(
-            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldergrabPosition))
+            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderstoreNote))
         .andThen(new WaitCommand(m_servoShoulder.travelTime()))
-        .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowgrabPosition))
+        .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowstoreNote))
         .andThen(new WaitCommand(m_servoElbow.travelTime()))
-        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristgrabPosition))
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWriststoreNote))
+        .andThen(new WaitCommand(m_servoWrist.travelTime()))
+        .andThen(new WaitUntilCommand(() -> !m_limitSwitch.get()))
+        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));
+  }
+
+  public Command prepareToClimb() {
+    return this.runOnce(
+            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderstoreNote))
+        .andThen(new WaitCommand(m_servoShoulder.travelTime()))
+        .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowstoreNote))
+        .andThen(new WaitCommand(m_servoElbow.travelTime()))
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWriststoreNote))
         .andThen(new WaitCommand(m_servoWrist.travelTime()))
         .andThen(new WaitUntilCommand(() -> !m_limitSwitch.get()))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));

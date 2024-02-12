@@ -198,7 +198,7 @@ public final class Constants {
     public static final int kservoFingerId = 6;
     public static final int kfingerlimitswitchId = 6;
 
-    public static final double kfingerClosed = 150.0; // angle of finger servo when closed/opened
+    public static final double kfingerClosed = 170.0; // angle of finger servo when closed/opened
     public static final double kfingerOpened = 90.0;
     // good
     public static final double kangleShouldersetZero = 0.0; // SETZERO   //higher number = higher
@@ -211,12 +211,16 @@ public final class Constants {
     public static final double kangleWristgrabPosition = 72.0;
     // not finished
     public static final double kangleShoulderscoreNote = 90.0; // SCORENOTE
-    public static final double kangleElbowscoreNote = 90.0;
+    public static final double kangleElbowscoreNote = 85.0;
     public static final double kangleWristscoreNote = 155.0;
     // not finished
     public static final double kangleShoulderstoreNote = 1.0; // STORENOTE
-    public static final double kangleElbowstoreNote = 125.0;
+    public static final double kangleElbowstoreNote = 120.0;
     public static final double kangleWriststoreNote = 155.0;
+
+    // public static final double kangleShoulderstoreNote = 1.0; //
+    // public static final double kangleElbowstoreNote = 120.0;
+    // public static final double kangleWriststoreNote = 155.0;
   }
 
   public static class AutoConstants {

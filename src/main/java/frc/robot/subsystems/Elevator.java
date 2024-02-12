@@ -79,8 +79,6 @@ public class Elevator extends SubsystemBase {
       m_elevatorLeftMaster.stopMotor();
       m_encoder.setPosition(0.0);
     }
-
-    System.out.println(m_encoder.getPosition());
   }
 
   // switch case statement for configuring elevator height
