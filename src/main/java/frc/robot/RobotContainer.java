@@ -112,16 +112,15 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    m_driverController.a().onTrue(m_trap.setZero());
-    m_driverController.b().onTrue(m_trap.grabPosition());
-    m_driverController.x().onTrue(m_trap.scoreNote());
-    m_coDriverController.x().onTrue(m_trap.storeNote());
+    // m_driverController.a().onTrue(m_trap.setZero());
+    // m_driverController.b().onTrue(m_trap.grabPosition());
+    // m_driverController.x().onTrue(m_trap.scoreNote());
     m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
-    // m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter));
-    // m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator));
+    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
+    m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
 
-    m_driverController.y().onTrue(m_shooter.intake());
-    m_coDriverController.a().onTrue(Sequences.trapShoot(m_shooter, m_trap));
+    // m_driverController.y().onTrue(m_shooter.intake());
+    // m_coDriverController.a().onTrue(Sequences.trapShoot(m_shooter, m_trap));
   }
 
   public void autoInit() {
