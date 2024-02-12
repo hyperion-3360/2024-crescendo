@@ -69,6 +69,11 @@ public class Climber extends SubsystemBase {
       m_climberRightMaster.set(0.0);
     }
 
+    // TODO I have no fucking clue if this actually works 👀
+    if (m_encoder.getPosition() != ClimberConstants.kTopTarget) {
+      m_speed = m_climberStallSpeed;
+    }
+
     //   m_gyro.getRoll();
 
     //   repositionement();
@@ -84,6 +89,7 @@ public class Climber extends SubsystemBase {
         m_climberStallSpeed = 0;
         break;
 
+        // Quoicoubeh
       case STALL:
         m_climberRightMaster.set(m_climberStallSpeed);
         break;
