@@ -30,21 +30,15 @@ public class Elevator extends SubsystemBase {
 
   private RelativeEncoder m_encoder = m_elevatorLeftMaster.getEncoder();
 
+  // creating a target
   private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
 
+  // creating the pid constants + pid member
   private double kP = 0.0075;
   private double kI = 0.0005;
   private double kD = 0;
 
   private PIDController m_pid = new PIDController(kP, kI, kD);
-
-  // private final ProfiledPIDController m_pid =
-  // new ProfiledPIDController(kp, 0.0 ,0.0, new Constraints(m_velocity, m_acceleration));
-
-  // just in case
-  // private double m_pulleyDiameter = 0.05445;
-
-  // private double m_beltRampUp = 0.0;
 
   // creating an elevator
   public Elevator() {
@@ -56,11 +50,6 @@ public class Elevator extends SubsystemBase {
 
     m_elevatorRight.follow(m_elevatorLeftMaster, true);
 
-    // m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
-    // m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
-
-    // m_elevatorLeftMaster.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
-    // m_elevatorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 10);
     m_elevatorLeftMaster.setIdleMode(IdleMode.kBrake);
     m_elevatorRight.setIdleMode(IdleMode.kBrake);
 
@@ -73,10 +62,11 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
 
+    // calculate speed with pid
     m_elevatorLeftMaster.set(m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
 
-    if (bottomlimitSwitch.get() && m_elevatorTarget == ElevatorConstants.kIntakeTarget) {
-      m_elevatorLeftMaster.stopMotor();
+    // if the elevator touches the limit switch at the bottom of the rail set position to 0.0
+    if (bottomlimitSwitch.get()) {
       m_encoder.setPosition(0.0);
     }
   }
@@ -98,33 +88,21 @@ public class Elevator extends SubsystemBase {
 
   // stops the motors
   public void stop() {
-
     m_elevatorLeftMaster.stopMotor();
   }
 
   // this is used for the leds in the sequences
   public boolean onTarget() {
-
     return m_encoder.getPosition() >= this.m_elevatorTarget;
   }
 
+  // extends the elevator to set target
   public Command extendTheElevator(elevatorHeight m_elevatorLevel) {
     return this.runOnce(() -> setElevator(m_elevatorLevel));
   }
 
+  // returns current position (not used in anything YET)
   public double getCurrentPosition() {
     return m_encoder.getPosition();
-  }
-
-  public boolean isHigh() {
-    if (m_elevatorTarget == Constants.ElevatorConstants.kHighTarget) {
-      return true;
-    } else return false;
-  }
-
-  public boolean isLow() {
-    if (m_elevatorTarget == Constants.ElevatorConstants.kLowTarget) {
-      return true;
-    } else return false;
   }
 }
