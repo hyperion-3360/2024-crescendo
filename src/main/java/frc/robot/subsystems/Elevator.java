@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -38,6 +39,8 @@ public class Elevator extends SubsystemBase {
   private double kI = 0.0005;
   private double kD = 0;
 
+  private String height;
+
   private PIDController m_pid = new PIDController(kP, kI, kD);
 
   // creating an elevator
@@ -69,6 +72,8 @@ public class Elevator extends SubsystemBase {
     if (bottomlimitSwitch.get()) {
       m_encoder.setPosition(0.0);
     }
+
+    Shuffleboard.getTab("Driver").addString("Elevator Target", () -> height);
   }
 
   // switch case statement for configuring elevator height
@@ -76,12 +81,15 @@ public class Elevator extends SubsystemBase {
     switch (m_elevatorLevel) {
       case HIGH:
         this.m_elevatorTarget = ElevatorConstants.kHighTarget;
+        height = "Speaker";
         break;
       case LOW:
         this.m_elevatorTarget = ElevatorConstants.kLowTarget;
+        height = "Amp";
         break;
       case INTAKE:
         this.m_elevatorTarget = ElevatorConstants.kIntakeTarget;
+        height = "Intake";
         break;
     }
   }
