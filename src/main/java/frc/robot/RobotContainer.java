@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.Shuffleboard3360;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
@@ -42,7 +41,6 @@ public class RobotContainer {
   private final Swerve m_swerveDrive = new Swerve();
   private final Trap m_trap = new Trap();
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
-  private final Shuffleboard3360 shuffleboard = Shuffleboard3360.getInstance();
   private final Climber m_climber = new Climber();
   private static final Elevator m_elevator = new Elevator();
   private static final Shooter m_shooter = new Shooter();
@@ -96,9 +94,7 @@ public class RobotContainer {
 
     // creates a choosable list widget
     m_autoList =
-        Shuffleboard.getTab("input tab here")
-            .add(m_autoChooser)
-            .withWidget(BuiltInWidgets.kComboBoxChooser);
+        Shuffleboard.getTab("Auto").add(m_autoChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
 
     m_swerveDrive.resetModulesToAbsolute();
 
