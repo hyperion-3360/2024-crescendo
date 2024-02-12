@@ -8,6 +8,10 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -38,10 +42,9 @@ public class RobotContainer {
   private final Swerve m_swerveDrive = new Swerve();
   private final Trap m_trap = new Trap();
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
-
   private final Shuffleboard3360 shuffleboard = Shuffleboard3360.getInstance();
   private final Climber m_climber = new Climber();
-  public static final Elevator m_elevator = new Elevator();
+  private static final Elevator m_elevator = new Elevator();
   private static final Shooter m_shooter = new Shooter();
   private static final LEDs m_led = LEDs.getInstance();
 
@@ -62,6 +65,9 @@ public class RobotContainer {
 
   private final double kJoystickDeadband = 0.1;
 
+  SendableChooser<Command> m_autoChooser;
+  ComplexWidget m_autoList;
+
   /***
    * conditionJoystick
    * Condition a joystick axis value given a slewrate limiter and deadband
@@ -81,6 +87,18 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    // create mode auto chooser and widget
+    m_autoChooser = new SendableChooser<>();
+
+    // example:
+    m_autoChooser.addOption("add name here", getAutonomousCommand());
+
+    // creates a choosable list widget
+    m_autoList =
+        Shuffleboard.getTab("input tab here")
+            .add(m_autoChooser)
+            .withWidget(BuiltInWidgets.kComboBoxChooser);
 
     m_swerveDrive.resetModulesToAbsolute();
 
