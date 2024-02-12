@@ -86,4 +86,8 @@ public class Sequences {
         new WaitCommand(2),
         m_shooter.stop());
   }
+
+  public static Command PLGoofyAahShoot(Shooter m_shooter) {
+    return Commands.sequence(m_shooter.holdSpeed(levelSpeed.PL));
+  }
 }

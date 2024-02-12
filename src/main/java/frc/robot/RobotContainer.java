@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
@@ -20,7 +19,6 @@ import frc.robot.subsystems.Climber.climberPos;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Shooter.levelSpeed;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
@@ -92,12 +90,14 @@ public class RobotContainer {
             () -> conditionJoystick(rotationAxis, rotationLimiter, kJoystickDeadband),
             () -> false));
 
-    String shoot = "shoot hight";
-    NamedCommands.registerCommand(shoot, highGoal());
-    String shootlow = "shoot low";
-    NamedCommands.registerCommand(shootlow, lowGoal());
-    String take = "take";
-    NamedCommands.registerCommand(take, takeNote());
+    // String shoot = "shoot hight";
+    // NamedCommands.registerCommand(shoot, highGoal());
+    // String shootlow = "shoot low";
+    // NamedCommands.registerCommand(shootlow, lowGoal());
+    // String take = "take";
+    // NamedCommands.registerCommand(take, takeNote());
+
+    m_led.setDefaultCommand(m_led.reverbOff());
 
     configureBindings();
   }
@@ -113,49 +113,19 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    // m_driverController.a().onTrue(m_trap.setZero());
-    // m_driverController.b().onTrue(m_trap.grabPosition());
-    // m_driverController.x().onTrue(m_trap.scoreNote());
-    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
-    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
-    m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
-
     // control pos with triggers but idk if it works
-    m_coDriverController
+    m_driverController
         .leftTrigger()
         .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.INITAL));
-    m_coDriverController
-        .rightTrigger()
-        .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.TOP));
+    m_driverController.rightTrigger().whileTrue(m_climber.climberGoToSelectedLevel(climberPos.TOP));
 
-    // m_driverController.y().onTrue(m_shooter.intake());
-    // m_coDriverController.a().onTrue(Sequences.trapShoot(m_shooter, m_trap));
+    m_driverController.a().toggleOnTrue(Sequences.PLGoofyAahShoot(m_shooter));
+    m_driverController.x().toggleOnTrue(m_led.reverbOn());
   }
 
   public void autoInit() {
     // TODO Selectionner le mode auto du shuffleboard
     m_autoHandler.follow(ModeAuto.Mode.RED_AUTO1);
-  }
-
-  public Command highGoal() {
-    return m_elevator
-        .extendTheElevator(Elevator.elevatorHeight.HIGH)
-        .andThen(m_shooter.setTargetLevel(levelSpeed.HIGH).andThen(m_shooter.shootTo()));
-  }
-
-  public Command lowGoal() {
-    return m_elevator
-        .extendTheElevator(Elevator.elevatorHeight.LOW)
-        .andThen(m_shooter.setTargetLevel(levelSpeed.LOW).andThen(m_shooter.shootTo()));
-  }
-
-  public Command takeNote() {
-    return m_elevator
-        .extendTheElevator(Elevator.elevatorHeight.INTAKE)
-        .andThen(
-            () -> {
-              m_shooter.intake();
-            });
   }
 
   public Command getAutonomousCommand() {

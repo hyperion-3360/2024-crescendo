@@ -19,7 +19,8 @@ public class Shooter extends SubsystemBase {
     LOW,
     INTAKE,
     TRAP,
-    STOP
+    STOP,
+    PL
   }
 
   private static double highSpeed = 0.8; // need to add perk to adjust speed according to distance
@@ -28,6 +29,7 @@ public class Shooter extends SubsystemBase {
   private static double trapSpeed = 0.15; // requires testing
   private static double stopSpeed = 0;
   private static double rampRate = 1; // to be tuned according to battery and time consumption
+  private static double PLGoBrr = 1.0;
 
   // declaring speed member
   private double m_speed = 0;
@@ -94,6 +96,10 @@ public class Shooter extends SubsystemBase {
     // setting speed to motors
     m_leftMaster.set(m_speed);
     m_rightMaster.set(m_speed);
+
+    if (m_speed == PLGoBrr) {
+      System.out.println("PL go brrrrrrrrrrrrrrrrrrrrr");
+    }
   }
 
   // switch case for different speeds according to the level
@@ -118,6 +124,10 @@ public class Shooter extends SubsystemBase {
 
       case INTAKE:
         m_speed = intakeSpeed;
+        break;
+
+      case PL:
+        m_speed = PLGoBrr;
         break;
     }
   }
