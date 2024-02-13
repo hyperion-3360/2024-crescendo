@@ -5,7 +5,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -95,7 +95,7 @@ public class Shooter extends SubsystemBase {
     // setting speed to motors
     m_leftMaster.set(m_speed);
     m_rightMaster.set(m_speed);
-    Shuffleboard.getTab("Driver").addBoolean("Has Note?", () -> hasNote());
+    SmartDashboard.putBoolean("Has Note?", hasNote());
   }
 
   // switch case for different speeds according to the level

@@ -8,15 +8,10 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Climber.climberPos;
@@ -63,8 +58,8 @@ public class RobotContainer {
 
   private final double kJoystickDeadband = 0.1;
 
-  SendableChooser<Command> m_autoChooser;
-  ComplexWidget m_autoList;
+  // SendableChooser<Command> m_autoChooser;
+  // ComplexWidget m_autoList;
 
   /***
    * conditionJoystick
@@ -87,14 +82,15 @@ public class RobotContainer {
   public RobotContainer() {
 
     // create mode auto chooser and widget
-    m_autoChooser = new SendableChooser<>();
+    // m_autoChooser = new SendableChooser<>();
 
-    // example:
-    m_autoChooser.addOption("add name here", getAutonomousCommand());
+    // // example:
+    // m_autoChooser.addOption("add name here", new WaitCommand(1));
 
     // creates a choosable list widget
-    m_autoList =
-        Shuffleboard.getTab("Auto").add(m_autoChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
+    // m_autoList =
+    //
+    // Shuffleboard.getTab("Auto").add(m_autoChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
 
     m_swerveDrive.resetModulesToAbsolute();
 
@@ -130,9 +126,9 @@ public class RobotContainer {
     // m_driverController.a().onTrue(m_trap.setZero());
     // m_driverController.b().onTrue(m_trap.grabPosition());
     // m_driverController.x().onTrue(m_trap.scoreNote());
-    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
-    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
-    m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
+    // m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
+    // m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
+    // m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
 
     // control pos with triggers but idk if it works
     m_coDriverController
