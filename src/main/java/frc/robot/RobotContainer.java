@@ -38,7 +38,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final Swerve m_swerveDrive = new Swerve();
-  private final Trap m_trap = new Trap();
+  // private final Trap m_trap = new Trap();
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
   private final Climber m_climber = new Climber();
   private static final Elevator m_elevator = new Elevator();
@@ -128,7 +128,7 @@ public class RobotContainer {
   private void configureBindings() {
 
     /* TRAP DEBUGGING */
-    m_driverController.a().onTrue(m_trap.setZero());
+    // m_driverController.a().onTrue(m_trap.setZero());
     // m_driverController.b().onTrue(m_trap.grabPosition());
     // m_driverController.x().onTrue(m_trap.scoreNote());
     // map joystick POV primary direction to each joint of the arm
@@ -151,16 +151,16 @@ public class RobotContainer {
      *           WRIST
      */
     // spotless:on
-    for (var joint_pair : jointMap) {
-      m_driverController
-          .x()
-          .and(joint_pair.getSecond())
-          .whileTrue(new RepeatCommand(m_trap.manualControl(joint_pair.getFirst(), true)));
-      m_driverController
-          .y()
-          .and(joint_pair.getSecond())
-          .whileTrue(new RepeatCommand(m_trap.manualControl(joint_pair.getFirst(), false)));
-    }
+    // for (var joint_pair : jointMap) {
+    //   m_driverController
+    //       .x()
+    //       .and(joint_pair.getSecond())
+    //       .whileTrue(new RepeatCommand(m_trap.manualControl(joint_pair.getFirst(), true)));
+    //   m_driverController
+    //       .y()
+    //       .and(joint_pair.getSecond())
+    //       .whileTrue(new RepeatCommand(m_trap.manualControl(joint_pair.getFirst(), false)));
+    // }
 
     // m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
     // m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
