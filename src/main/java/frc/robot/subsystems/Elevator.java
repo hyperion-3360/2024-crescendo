@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -68,6 +69,14 @@ public class Elevator extends SubsystemBase {
     // if the elevator touches the limit switch at the bottom of the rail set position to 0.0
     if (bottomlimitSwitch.get()) {
       m_encoder.setPosition(0.0);
+      m_elevatorLeftMaster.stopMotor();
+      m_elevatorTarget = m_encoder.getPosition();
+    }
+
+    if (DriverStation.isDisabled()) {
+      extendTheElevator(elevatorHeight.HIGH).cancel();
+      extendTheElevator(elevatorHeight.LOW).cancel();
+      extendTheElevator(elevatorHeight.INTAKE).cancel();
     }
   }
 
