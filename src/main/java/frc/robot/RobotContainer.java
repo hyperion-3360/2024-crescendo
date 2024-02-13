@@ -183,7 +183,7 @@ public class RobotContainer {
 
   public void autoInit() {
     // TODO Selectionner le mode auto du shuffleboard
-    m_autoHandler.follow(ModeAuto.Mode.RED_AUTO1);
+    m_autoHandler.follow(ModeAuto.Mode.BLUE_AUTO1);
   }
 
   public Command highGoal() {

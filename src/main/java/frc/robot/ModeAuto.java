@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ModeAuto extends SubsystemBase {
   // TODO Changer pour avoir les bons noms de fichiers
   public enum Mode {
-    RED_AUTO1("Red center (mn)"),
-    RED_AUTO2("Red right (mn)"),
-    RED_AUTO3("Red left (mn)"),
-    BLUE_AUTO1("Blue center (mn)"),
-    BLUE_AUTO2("Blue right (mn)"),
-    BLUE_AUTO3("Blue left (mn)");
+    BLUE_AUTO1("Test"),
+    BLUE_AUTO2("BlueRight1"),
+    BLUE_AUTO3("BlueLeft1"),
+    BLUE_AUTO4("BlueCenter2"),
+    BLUE_AUTO5("BlueRight2"),
+    BLUE_AUTO6("BlueLeft2");
 
     private String m_path;
 
