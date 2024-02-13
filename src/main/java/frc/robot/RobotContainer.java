@@ -6,9 +6,11 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -23,6 +25,8 @@ import frc.robot.subsystems.Shooter.levelSpeed;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -124,9 +128,41 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    // m_driverController.a().onTrue(m_trap.setZero());
+    /* TRAP DEBUGGING */
+    m_driverController.a().onTrue(m_trap.setZero());
     // m_driverController.b().onTrue(m_trap.grabPosition());
     // m_driverController.x().onTrue(m_trap.scoreNote());
+    // map joystick POV primary direction to each joint of the arm
+    List<Pair<Trap.Joint, Trigger>> jointMap = new ArrayList<Pair<Trap.Joint, Trigger>>();
+    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.SHOULDER, m_driverController.povUp()));
+    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.ELBOW, m_driverController.povRight()));
+    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.WRIST, m_driverController.povDown()));
+    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.FINGER, m_driverController.povLeft()));
+
+    // spotless:off
+    /**
+     *  using the POV of the controller
+     * 
+     *          SHOULDER                            Y   -> DECREASE ANGLE by 1 degree
+     *             x 
+     *             x 
+     *   FINGER xxx xxx ELBOW         X   -> INCREASE ANGLE by 1 degree
+     *             x 
+     *             x 
+     *           WRIST
+     */
+    // spotless:on
+    for (var joint_pair : jointMap) {
+      m_driverController
+          .x()
+          .and(joint_pair.getSecond())
+          .whileTrue(new RepeatCommand(m_trap.manualControl(joint_pair.getFirst(), true)));
+      m_driverController
+          .y()
+          .and(joint_pair.getSecond())
+          .whileTrue(new RepeatCommand(m_trap.manualControl(joint_pair.getFirst(), false)));
+    }
+
     m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
     m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
     m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));

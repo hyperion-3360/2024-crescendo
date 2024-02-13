@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -23,13 +24,36 @@ public class Trap extends SubsystemBase {
           Constants.TrapConstants.kservoFingerId, 260, Constants.TrapConstants.kfingerOpened);
   DigitalInput m_limitSwitch = new DigitalInput(Constants.TrapConstants.kfingerlimitswitchId);
 
+  public enum Joint {
+    SHOULDER, // Idle orange, default
+    ELBOW, // Intake white slow flash, when intake is rolling
+    WRIST, // Detected note green, note in beam cutter triggered
+    FINGER, // Aim activated white quick flash, with vision aim function running
+  }
+
+  private boolean m_debug = true;
+
+  private final TimedServo m_jointArray[] =
+      new TimedServo[] {m_servoShoulder, m_servoElbow, m_servoWrist, m_servoFinger};
+
+  /* TODO: WHY???
   public void initDefaultCommand() {
 
     setDefaultCommand(grabPosition());
   }
+  */
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    if (m_debug) {
+      for (Joint j : Joint.values()) {
+        var s = m_jointArray[j.ordinal()];
+        SmartDashboard.putString(
+            String.format("%s : %d", j.name(), s.getChannel()),
+            String.format("@ :%f deg", s.getAngle()));
+      }
+    }
+  }
 
   public Command setZero() {
     return this.runOnce(() -> m_servoWrist.setZero())
@@ -91,6 +115,16 @@ public class Trap extends SubsystemBase {
         .andThen(new WaitCommand(m_servoWrist.travelTime()))
         .andThen(new WaitUntilCommand(() -> !m_limitSwitch.get()))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));
+  }
+
+  public Command manualControl(Joint j, boolean increase) {
+    var s = m_jointArray[j.ordinal()];
+    var new_angle = s.getAngle();
+    if (increase) new_angle = new_angle < 180 ? new_angle + 1 : 180;
+    else new_angle = new_angle > 0 ? new_angle - 1 : 0;
+    var lambda_angle = new_angle; // making it effectively final so java lambda is happy.. :)
+    return this.runOnce(() -> s.setAngle(lambda_angle))
+        .andThen(new WaitUntilCommand(s.travelTime()));
   }
 
   public boolean trapHasNote() {
