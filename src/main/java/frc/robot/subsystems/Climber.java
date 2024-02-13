@@ -132,4 +132,14 @@ public class Climber extends SubsystemBase {
         .until(this::onClimberTarget)
         .andThen(() -> setClimberLevel(climberPos.STALL));
   }
+
+  public Command climberManualControl(climberPos m_climberCheck) {
+    return this.run(
+        () -> {
+          setClimberLevel(m_climberCheck);
+          if (m_climberRightMaster.get() == m_climberStallSpeed) {
+            m_climberTarget = m_encoder.getPosition();
+          }
+        });
+  }
 }
