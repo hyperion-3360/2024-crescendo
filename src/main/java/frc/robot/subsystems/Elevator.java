@@ -81,8 +81,6 @@ public class Elevator extends SubsystemBase {
       extendTheElevator(elevatorHeight.LOW).cancel();
       extendTheElevator(elevatorHeight.INTAKE).cancel();
     }
-
-    // System.out.println("pos: " + m_encoder.getPosition() + " tagret: " + m_elevatorTarget);
     SmartDashboard.putString("Elevator Target", height);
   }
 
