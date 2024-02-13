@@ -71,8 +71,11 @@ public class Elevator extends SubsystemBase {
     // if the elevator touches the limit switch at the bottom of the rail set position to 0.0
     if (bottomlimitSwitch.get()) {
       m_encoder.setPosition(0.0);
+      m_elevatorLeftMaster.stopMotor();
+      m_elevatorTarget = m_encoder.getPosition();
     }
 
+    System.out.println("pos: " + m_encoder.getPosition() + " tagret: " + m_elevatorTarget);
     SmartDashboard.putString("Elevator Target", height);
   }
 

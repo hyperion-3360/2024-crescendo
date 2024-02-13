@@ -12,10 +12,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Climber.climberPos;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Elevator.elevatorHeight;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Shooter.levelSpeed;
@@ -126,17 +127,18 @@ public class RobotContainer {
     // m_driverController.a().onTrue(m_trap.setZero());
     // m_driverController.b().onTrue(m_trap.grabPosition());
     // m_driverController.x().onTrue(m_trap.scoreNote());
-    // m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
-    // m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
+    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
+    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
+    m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
     // m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
 
     // control pos with triggers but idk if it works
-    m_coDriverController
-        .leftTrigger()
-        .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.INITAL));
-    m_coDriverController
-        .rightTrigger()
-        .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.TOP));
+    // m_coDriverController
+    //     .leftTrigger()
+    //     .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.INITAL));
+    // m_coDriverController
+    //     .rightTrigger()
+    //     .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.TOP));
 
     // m_driverController.y().onTrue(m_shooter.intake());
     // m_coDriverController.a().onTrue(Sequences.trapShoot(m_shooter, m_trap));
