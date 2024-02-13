@@ -62,11 +62,11 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
-    /*  sets the climber to its current postion when disabling
-    the driver station to prevent sudden movements */
+    // safety measures to prevent the motors from burning on reenable
     if (DriverStation.isDisabled()) {
-      m_climberTarget = m_encoder.getPosition();
-      m_climberRightMaster.set(0.0);
+      climberGoToSelectedLevel(climberPos.TOP).cancel();
+      climberGoToSelectedLevel(climberPos.INITAL).cancel();
+      climberGoToSelectedLevel(climberPos.STALL).cancel();
     }
 
     // // TODO I have no fucking clue if this actually works 👀
