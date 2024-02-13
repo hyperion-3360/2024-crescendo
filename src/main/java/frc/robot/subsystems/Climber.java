@@ -89,7 +89,6 @@ public class Climber extends SubsystemBase {
         m_climberStallSpeed = 0;
         break;
 
-        // Quoicoubeh
       case STALL:
         m_climberRightMaster.set(m_climberStallSpeed);
         break;
@@ -102,7 +101,7 @@ public class Climber extends SubsystemBase {
         isTop = false;
         m_climberTarget = ClimberConstants.kstartPos;
         m_climberRightMaster.set(m_speed);
-        m_climberStallSpeed = 0.01;
+        m_climberStallSpeed = 0.0;
         break;
     }
   }
@@ -133,12 +132,50 @@ public class Climber extends SubsystemBase {
         .andThen(() -> setClimberLevel(climberPos.STALL));
   }
 
+  // it's big it's ugly but it works
+  /* sets the climber into manual mode to be controlled with the triggers
+   * limits the climber to it's assigned position while maintaining the ability
+   * to change course
+   */
   public Command climberManualControl(climberPos m_climberCheck) {
     return this.run(
         () -> {
           setClimberLevel(m_climberCheck);
           if (m_climberRightMaster.get() == m_climberStallSpeed) {
             m_climberTarget = m_encoder.getPosition();
+          }
+          if (m_encoder.getPosition() > ClimberConstants.kstartPos) {
+            switch (m_climberCheck) {
+              case TOP:
+                isTop = true;
+                m_climberTarget = Constants.ClimberConstants.kTopTarget;
+                m_climberRightMaster.set(-0.1);
+                m_climberStallSpeed = 0;
+                break;
+
+              case INITAL:
+                this.m_climberRightMaster.set(m_climberStallSpeed);
+                break;
+
+              default:
+                break;
+            }
+            if (m_encoder.getPosition() < ClimberConstants.kTopTarget) {
+              switch (m_climberCheck) {
+                case TOP:
+                  break;
+
+                case INITAL:
+                  isTop = false;
+                  m_climberTarget = ClimberConstants.kstartPos;
+                  m_climberRightMaster.set(m_speed);
+                  m_climberStallSpeed = 0.0;
+                  break;
+
+                default:
+                  break;
+              }
+            }
           }
         });
   }
