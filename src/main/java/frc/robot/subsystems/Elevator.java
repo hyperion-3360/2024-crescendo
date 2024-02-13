@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -73,6 +74,12 @@ public class Elevator extends SubsystemBase {
       m_encoder.setPosition(0.0);
       m_elevatorLeftMaster.stopMotor();
       m_elevatorTarget = m_encoder.getPosition();
+    }
+
+    if (DriverStation.isDisabled()) {
+      extendTheElevator(elevatorHeight.HIGH).cancel();
+      extendTheElevator(elevatorHeight.LOW).cancel();
+      extendTheElevator(elevatorHeight.INTAKE).cancel();
     }
 
     System.out.println("pos: " + m_encoder.getPosition() + " tagret: " + m_elevatorTarget);
