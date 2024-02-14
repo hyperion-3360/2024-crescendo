@@ -105,6 +105,8 @@ public class RobotContainer {
             () -> conditionJoystick(rotationAxis, rotationLimiter, kJoystickDeadband),
             () -> false));
 
+    m_led.setDefaultCommand(m_led.reverbOff());
+
     String shoot = "shoot hight";
     NamedCommands.registerCommand(shoot, highGoal());
     String shootlow = "shoot low";
