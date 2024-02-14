@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import org.ejml.equation.Sequence;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
@@ -104,16 +102,15 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led))
-m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
-m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
-
+    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
+    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
+    m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
   }
 
-  // public void autoInit() {
-  //   // TODO Selectionner le mode auto du shuffleboard
-  //   m_autoHandler.follow(ModeAuto.Mode.RED_AUTO1);
-  // }
+  public void autoInit() {
+    // TODO Selectionner le mode auto du shuffleboard
+    m_autoHandler.follow(ModeAuto.Mode.BLUE_AUTO1);
+  }
 
   public Command getAutonomousCommand() {
     // TODO Auto-generated method stub
