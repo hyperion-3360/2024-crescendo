@@ -202,7 +202,7 @@ public final class Constants {
     public static final double kfingerOpened = 90.0;
     // good
     public static final double kangleShouldersetZero = 0.0; // SETZERO   //higher number = higher
-    public static final double kangleElbowsetZero = 145.5; // higher number = lower
+    public static final double kangleElbowsetZero = 142.0; // higher number = lower
     public static final double kangleWristsetZero = 155.0; // higher number = higher
     public static final double kangleShouldersetZeroDelayed = 10.0;
     // good
@@ -210,16 +210,17 @@ public final class Constants {
     public static final double kangleElbowgrabPosition = 85.0;
     public static final double kangleWristgrabPosition = 72.0;
     // not finished
-    public static final double kangleShoulderscoreNote = 90.0; // SCORENOTE
-    public static final double kangleElbowscoreNote = 85.0;
+    public static final double kangleShoulderscoreNote = 110.0; // SCORENOTE
+    public static final double kangleElbowscoreNote = 40.0;
     public static final double kangleWristscoreNote = 155.0;
     // not finished
     public static final double kangleShoulderstoreNote = 1.0; // STORENOTE
     public static final double kangleElbowstoreNote = 120.0;
     public static final double kangleWriststoreNote = 155.0;
     // not finish
-    public static final double kangleShoulderprepareToClimb = 0.0; // PREPARETOCLIMB
-    public static final double kangleElbowprepareToClimb = 145.0;
+    public static final double kangleShoulderprepareToClimb =
+        110.0; // PREPARETOCLIMBgetAutonomousCommand()
+    public static final double kangleElbowprepareToClimb = 60.0;
     public static final double kangleWristprepareToClimb = 155.0;
   }
 
