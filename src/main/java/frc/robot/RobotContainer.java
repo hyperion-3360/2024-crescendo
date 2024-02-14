@@ -4,27 +4,24 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.NamedCommands;
+import org.ejml.equation.Sequence;
+
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Climber.climberPos;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Shooter.levelSpeed;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -37,10 +34,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final Swerve m_swerveDrive = new Swerve();
-  // private final Trap m_trap = new Trap();
+  private final Trap m_trap = new Trap();
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
   private final Climber m_climber = new Climber();
-  private static final Elevator m_elevator = new Elevator();
+  public static final Elevator m_elevator = new Elevator();
   private static final Shooter m_shooter = new Shooter();
   private static final LEDs m_led = LEDs.getInstance();
 
@@ -60,9 +57,6 @@ public class RobotContainer {
   private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(2);
 
   private final double kJoystickDeadband = 0.1;
-
-  // SendableChooser<Command> m_autoChooser;
-  // ComplexWidget m_autoList;
 
   /***
    * conditionJoystick
@@ -84,17 +78,6 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    // create mode auto chooser and widget
-    // m_autoChooser = new SendableChooser<>();
-
-    // // example:
-    // m_autoChooser.addOption("add name here", new WaitCommand(1));
-
-    // creates a choosable list widget
-    // m_autoList =
-    //
-    // Shuffleboard.getTab("Auto").add(m_autoChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
-
     m_swerveDrive.resetModulesToAbsolute();
 
     m_swerveDrive.setDefaultCommand(
@@ -105,14 +88,7 @@ public class RobotContainer {
             () -> conditionJoystick(rotationAxis, rotationLimiter, kJoystickDeadband),
             () -> false));
 
-    m_led.setDefaultCommand(m_led.reverbOff());
-
-    String shoot = "shoot hight";
-    NamedCommands.registerCommand(shoot, highGoal());
-    String shootlow = "shoot low";
-    NamedCommands.registerCommand(shootlow, lowGoal());
-    String take = "take";
-    NamedCommands.registerCommand(take, takeNote());
+    m_shooter.setDefaultCommand(m_shooter.stop());
 
     configureBindings();
   }
@@ -128,85 +104,16 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    /* TRAP DEBUGGING */
-    // m_driverController.a().onTrue(m_trap.setZero());
-    // m_driverController.b().onTrue(m_trap.grabPosition());
-    // m_driverController.x().onTrue(m_trap.scoreNote());
-    // map joystick POV primary direction to each joint of the arm
-    List<Pair<Trap.Joint, Trigger>> jointMap = new ArrayList<Pair<Trap.Joint, Trigger>>();
-    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.SHOULDER, m_driverController.povUp()));
-    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.ELBOW, m_driverController.povRight()));
-    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.WRIST, m_driverController.povDown()));
-    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.FINGER, m_driverController.povLeft()));
+m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led))
+m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
+m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
 
-    // spotless:off
-    /**
-     *  using the POV of the controller
-     * 
-     *          SHOULDER                            Y   -> DECREASE ANGLE by 1 degree
-     *             x 
-     *             x 
-     *   FINGER xxx xxx ELBOW         X   -> INCREASE ANGLE by 1 degree
-     *             x 
-     *             x 
-     *           WRIST
-     */
-    // spotless:on
-    // for (var joint_pair : jointMap) {
-    //   m_driverController
-    //       .x()
-    //       .and(joint_pair.getSecond())
-    //       .whileTrue(new RepeatCommand(m_trap.manualControl(joint_pair.getFirst(), true)));
-    //   m_driverController
-    //       .y()
-    //       .and(joint_pair.getSecond())
-    //       .whileTrue(new RepeatCommand(m_trap.manualControl(joint_pair.getFirst(), false)));
-    // }
-
-    // m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
-    // m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
-    // m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
-    // m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
-
-    // control pos with triggers but idk if it works
-    m_coDriverController
-        .leftTrigger()
-        .whileTrue(m_climber.climberManualControl(climberPos.INITAL))
-        .onFalse(m_climber.climberManualControl(climberPos.STALL));
-    m_coDriverController
-        .rightTrigger()
-        .whileTrue(m_climber.climberManualControl(climberPos.TOP))
-        .onFalse(m_climber.climberManualControl(climberPos.STALL));
-
-    // m_driverController.y().onTrue(m_shooter.intake());
-    // m_coDriverController.a().onTrue(Sequences.trapShoot(m_shooter, m_trap));
   }
 
-  public void autoInit() {
-    // TODO Selectionner le mode auto du shuffleboard
-    m_autoHandler.follow(ModeAuto.Mode.BLUE_AUTO1);
-  }
-
-  public Command highGoal() {
-    return m_elevator
-        .extendTheElevator(Elevator.elevatorHeight.HIGH)
-        .andThen(m_shooter.setTargetLevel(levelSpeed.HIGH).andThen(m_shooter.shootTo()));
-  }
-
-  public Command lowGoal() {
-    return m_elevator
-        .extendTheElevator(Elevator.elevatorHeight.LOW)
-        .andThen(m_shooter.setTargetLevel(levelSpeed.LOW).andThen(m_shooter.shootTo()));
-  }
-
-  public Command takeNote() {
-    return m_elevator
-        .extendTheElevator(Elevator.elevatorHeight.INTAKE)
-        .andThen(
-            () -> {
-              m_shooter.intake();
-            });
-  }
+  // public void autoInit() {
+  //   // TODO Selectionner le mode auto du shuffleboard
+  //   m_autoHandler.follow(ModeAuto.Mode.RED_AUTO1);
+  // }
 
   public Command getAutonomousCommand() {
     // TODO Auto-generated method stub
