@@ -213,13 +213,12 @@ public final class Constants {
     public static final double kangleShoulderscoreNote = 110.0; // SCORENOTE
     public static final double kangleElbowscoreNote = 40.0;
     public static final double kangleWristscoreNote = 155.0;
-    // not finished
+    // good
     public static final double kangleShoulderstoreNote = 1.0; // STORENOTE
     public static final double kangleElbowstoreNote = 120.0;
     public static final double kangleWriststoreNote = 155.0;
-    // not finish
-    public static final double kangleShoulderprepareToClimb =
-        110.0; // PREPARETOCLIMBgetAutonomousCommand()
+    // good
+    public static final double kangleShoulderprepareToClimb = 110.0; // PREPARETOCLIMB
     public static final double kangleElbowprepareToClimb = 60.0;
     public static final double kangleWristprepareToClimb = 155.0;
   }
