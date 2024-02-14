@@ -95,20 +95,8 @@ public class RobotContainer {
     configureBindings();
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-  private void configureBindings() {
-    /* TRAP DEBUGGING */
-    // m_driverController.a().onTrue(m_trap.setZero());
-    // m_driverController.b().onTrue(m_trap.grabPosition());
-    // m_driverController.x().onTrue(m_trap.scoreNote());
+  /** Configure Joystick bindings for manually controlling and debugging the Trap arm */
+  public void configureTrapDebugBindings() {
     // map joystick POV primary direction to each joint of the arm
     List<Pair<Trap.Joint, Trigger>> jointMap = new ArrayList<Pair<Trap.Joint, Trigger>>();
     jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.SHOULDER, m_driverController.povUp()));
@@ -118,15 +106,15 @@ public class RobotContainer {
 
     // spotless:off
     /**
-     *  using the POV of the controller
+     * using the POV of the controller
      * 
-     *          SHOULDER                            Y   -> DECREASE ANGLE by 1 degree
-     *             x 
-     *             x 
-     *   FINGER xxx xxx ELBOW         X   -> INCREASE ANGLE by 1 degree
-     *             x 
-     *             x 
-     *           WRIST
+     * SHOULDER Y -> DECREASE ANGLE by 1 degree
+     * x
+     * x
+     * FINGER xxx xxx ELBOW X -> INCREASE ANGLE by 1 degree
+     * x
+     * x
+     * WRIST
      */
     // spotless:on
     for (var joint_pair : jointMap) {
@@ -139,6 +127,20 @@ public class RobotContainer {
           .and(joint_pair.getSecond())
           .whileTrue(new RepeatCommand(m_trap.manualControl(joint_pair.getFirst(), false)));
     }
+  }
+
+  /**
+   * Use this method to define your trigger->command mappings. Triggers can be created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * predicate, or via the named factories in {@link
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
+   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * joysticks}.
+   */
+  private void configureBindings() {
+
+    configureTrapDebugBindings();
 
     m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
     m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
