@@ -108,13 +108,13 @@ public class RobotContainer {
     /**
      * using the POV of the controller
      * 
-     * SHOULDER Y -> DECREASE ANGLE by 1 degree
-     * x
-     * x
+     *       SHOULDER Y -> DECREASE ANGLE by 1 degree
+     *           x
+     *           x
      * FINGER xxx xxx ELBOW X -> INCREASE ANGLE by 1 degree
-     * x
-     * x
-     * WRIST
+     *           x
+     *           x
+     *         WRIST
      */
     // spotless:on
     for (var joint_pair : jointMap) {
