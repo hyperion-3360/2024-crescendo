@@ -31,7 +31,7 @@ public class Climber extends SubsystemBase {
 
   // class variables to help control and set the climber
   private double m_climberRampRate = 2; // was .2
-  private double m_speed = 0.2;
+  private double m_speed = 0.0;
   private double m_climberTarget = ClimberConstants.kstartPos;
   private boolean isTop = true;
   private double m_climberStallSpeed = 0.01;
@@ -56,8 +56,6 @@ public class Climber extends SubsystemBase {
 
     m_climberRightMaster.burnFlash();
     m_climberLeft.burnFlash();
-
-    climberGoToSelectedLevel(climberPos.INITAL);
   }
 
   @Override
@@ -77,6 +75,11 @@ public class Climber extends SubsystemBase {
     //   m_gyro.getRoll();
 
     //   repositionement();
+    onClimberTarget();
+  }
+
+  public double setManualSpeed(double m_manualSpeed) {
+    return this.m_speed = Math.cbrt(m_manualSpeed);
   }
 
   // private method to set the behavior for each state
@@ -121,6 +124,9 @@ public class Climber extends SubsystemBase {
 
   // boolean checking if the motors has reached its target
   public boolean onClimberTarget() {
+    if (isTop == true) {
+      return m_encoder.getPosition() <= m_climberTarget;
+    }
 
     return m_encoder.getPosition() >= m_climberTarget;
   }
@@ -140,6 +146,7 @@ public class Climber extends SubsystemBase {
   public Command climberManualControl(climberPos m_climberCheck) {
     return this.run(
         () -> {
+          System.out.println("ENCODER VALUES " + m_encoder.getPosition() + "speed " + m_speed);
           setClimberLevel(m_climberCheck);
           if (m_climberRightMaster.get() == m_climberStallSpeed) {
             m_climberTarget = m_encoder.getPosition();
@@ -149,7 +156,7 @@ public class Climber extends SubsystemBase {
               case TOP:
                 isTop = true;
                 m_climberTarget = Constants.ClimberConstants.kTopTarget;
-                m_climberRightMaster.set(-0.1);
+                m_climberRightMaster.set(-m_speed);
                 m_climberStallSpeed = 0;
                 break;
 

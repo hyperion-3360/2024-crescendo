@@ -16,6 +16,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Climber.climberPos;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Shooter;
@@ -145,6 +146,22 @@ public class RobotContainer {
     m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
     m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
     m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
+
+    m_coDriverController
+        .leftTrigger()
+        .whileTrue(
+            m_climber
+                .climberManualControl(climberPos.INITAL)
+                .andThen(() -> m_climber.setManualSpeed(m_coDriverController.getLeftTriggerAxis())))
+        .onFalse(m_climber.climberManualControl(climberPos.STALL));
+    m_coDriverController
+        .rightTrigger()
+        .whileTrue(
+            m_climber
+                .climberManualControl(climberPos.TOP)
+                .andThen(
+                    () -> m_climber.setManualSpeed(m_coDriverController.getRightTriggerAxis())))
+        .onFalse(m_climber.climberManualControl(climberPos.STALL));
   }
 
   public void autoInit() {
