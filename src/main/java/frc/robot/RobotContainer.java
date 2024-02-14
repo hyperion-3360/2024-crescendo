@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.Shuffleboard3360;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
@@ -36,8 +35,6 @@ public class RobotContainer {
   private final Swerve m_swerveDrive = new Swerve();
   private final Trap m_trap = new Trap();
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
-
-  private final Shuffleboard3360 shuffleboard = Shuffleboard3360.getInstance();
   private final Climber m_climber = new Climber();
   public static final Elevator m_elevator = new Elevator();
   private static final Shooter m_shooter = new Shooter();
@@ -89,13 +86,6 @@ public class RobotContainer {
             () -> conditionJoystick(strafeAxis, strafeLimiter, kJoystickDeadband),
             () -> conditionJoystick(rotationAxis, rotationLimiter, kJoystickDeadband),
             () -> false));
-
-    // String shoot = "shoot hight";
-    // NamedCommands.registerCommand(shoot, highGoal());
-    // String shootlow = "shoot low";
-    // NamedCommands.registerCommand(shootlow, lowGoal());
-    // String take = "take";
-    // NamedCommands.registerCommand(take, takeNote());
 
     m_led.setDefaultCommand(m_led.reverbOff());
     m_shooter.setDefaultCommand(m_shooter.stop());
