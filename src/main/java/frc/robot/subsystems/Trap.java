@@ -58,11 +58,11 @@ public class Trap extends SubsystemBase {
   public Command setZero() {
     return this.runOnce(() -> m_servoWrist.setZero())
         .andThen(new WaitCommand(m_servoWrist.travelTime()))
+        .andThen(() -> m_servoElbow.setZero())
+        .andThen(new WaitCommand(m_servoElbow.travelTime()))
         .andThen(
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldersetZeroDelayed))
         .andThen(new WaitCommand(0.2))
-        .andThen(() -> m_servoElbow.setZero())
-        .andThen(new WaitCommand(m_servoElbow.travelTime()))
         .andThen(() -> m_servoShoulder.setZero())
         .andThen(new WaitCommand(m_servoShoulder.travelTime()))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened))
