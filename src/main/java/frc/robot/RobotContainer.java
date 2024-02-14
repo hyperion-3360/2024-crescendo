@@ -98,6 +98,7 @@ public class RobotContainer {
     // NamedCommands.registerCommand(take, takeNote());
 
     m_led.setDefaultCommand(m_led.reverbOff());
+    m_shooter.setDefaultCommand(m_shooter.stop());
 
     configureBindings();
   }
@@ -120,7 +121,6 @@ public class RobotContainer {
     m_driverController.rightTrigger().whileTrue(m_climber.climberGoToSelectedLevel(climberPos.TOP));
 
     m_driverController.a().toggleOnTrue(Sequences.PLGoofyAahShoot(m_shooter));
-    m_driverController.x().toggleOnTrue(m_led.reverbOn());
   }
 
   public void autoInit() {

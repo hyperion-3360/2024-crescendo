@@ -88,6 +88,6 @@ public class Sequences {
   }
 
   public static Command PLGoofyAahShoot(Shooter m_shooter) {
-    return Commands.sequence(m_shooter.holdSpeed(levelSpeed.PL));
+    return Commands.sequence(m_shooter.hookRelease(), m_shooter.holdSpeed(levelSpeed.PL));
   }
 }

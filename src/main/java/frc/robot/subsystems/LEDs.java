@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -18,7 +19,7 @@ public class LEDs extends SubsystemBase {
   /** each LED color has its own PWM output */
   private PWM m_redLED, m_greenLED, m_blueLED, m_whiteLED;
 
-  private PowerDistribution m_reverb = new PowerDistribution(22, ModuleType.kRev);
+  private PowerDistribution m_reverb = new PowerDistribution(20, ModuleType.kRev);
 
   private boolean m_debug = false;
 
@@ -195,6 +196,8 @@ public class LEDs extends SubsystemBase {
       default:
         break;
     }
+
+    m_reverb.setSwitchableChannel(DriverStation.isEnabled());
   }
 
   /**
