@@ -105,12 +105,12 @@ public class RobotContainer {
   private void configureBindings() {
 
     // control pos with triggers but idk if it works
-    m_driverController
-        .leftTrigger()
-        .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.INITAL));
+    m_driverController.y().onTrue(m_climber.climberGoToSelectedLevel(climberPos.INITAL));
     m_driverController.rightTrigger().whileTrue(m_climber.climberGoToSelectedLevel(climberPos.TOP));
 
     m_driverController.a().toggleOnTrue(Sequences.PLGoofyAahShoot(m_shooter));
+
+    m_driverController.x().onTrue(m_shooter.hookRelease());
   }
 
   public void autoInit() {

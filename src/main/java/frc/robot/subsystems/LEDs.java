@@ -234,12 +234,4 @@ public class LEDs extends SubsystemBase {
         .andThen(() -> setState(State.SHOOT_READY_AMP))
         .andThen(new WaitCommand(3));
   }
-
-  public Command reverbOn() {
-    return this.runOnce(() -> m_reverb.setSwitchableChannel(true));
-  }
-
-  public Command reverbOff() {
-    return this.runOnce(() -> m_reverb.setSwitchableChannel(false));
-  }
 }
