@@ -34,7 +34,7 @@ public class Climber extends SubsystemBase {
   private double m_speed;
   private double m_climberRampRate = 2; // was .2
   private double m_climberTarget = ClimberConstants.kTopTarget;
-  private boolean isTop = false;
+  private boolean isrunning = false;
   private double m_climberStallSpeed = 0.01;
 
   private double kP = 0.05;
@@ -67,48 +67,40 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
-    System.out.println(
-        "ENCODER VALUES " + m_encoder.getPosition() + " SPEED " + m_climberRightMaster.get());
-
-    m_climberRightMaster.set(m_PID.calculate(m_encoder.getPosition(), m_climberTarget));
+    if (isrunning == true) {
+      m_climberRightMaster.set(m_PID.calculate(m_encoder.getPosition(), m_climberTarget));
+    }
     // safety measures to prevent the motors from burning on reenable
     if (DriverStation.isDisabled()) {
       climberGoToSelectedLevel(climberPos.TOP).cancel();
       climberGoToSelectedLevel(climberPos.INITAL).cancel();
       climberGoToSelectedLevel(climberPos.STALL).cancel();
     }
-
-    //   m_gyro.getRoll();
-
-    //   repositionement();
-  }
-
-  public double setManualSpeed(double m_manualSpeed) {
-    return m_speed = Math.cbrt(m_manualSpeed);
   }
 
   // private method to set the behavior for each state
   private void setClimberLevel(climberPos m_climberCheck) {
     switch (m_climberCheck) {
       case TOP:
-        isTop = true;
+        isrunning = true;
         m_climberTarget = Constants.ClimberConstants.kTopTarget;
         m_climberRightMaster.set(-m_speed);
         m_climberStallSpeed = 0;
         break;
 
       case STALL:
-        m_climberRightMaster.set(m_climberStallSpeed);
+        isrunning = true;
         m_climberTarget = m_encoder.getPosition();
         m_PID.reset();
         break;
 
       case STOP:
+        isrunning = false;
         m_climberRightMaster.stopMotor();
         break;
 
       case INITAL:
-        isTop = false;
+        isrunning = true;
         m_climberTarget = ClimberConstants.kstartPos;
         m_climberRightMaster.set(m_speed);
         m_climberStallSpeed = 0.0;
@@ -134,8 +126,6 @@ public class Climber extends SubsystemBase {
     return this.runOnce(
         () -> {
           setClimberLevel(m_climberCheck);
-          System.out.println(
-              "ENCODER VALUES " + m_encoder.getPosition() + " SPEED " + m_climberRightMaster.get());
         });
   }
 }
