@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Climber.climberPos;
@@ -142,11 +143,11 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    configureTrapDebugBindings();
+    // configureTrapDebugBindings();
 
-    //    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
-    //    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
-    //    m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
+    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
+    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
+    m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
 
     m_coDriverController
         .leftTrigger()
@@ -163,6 +164,8 @@ public class RobotContainer {
                 .andThen(
                     () -> m_climber.setManualSpeed(m_coDriverController.getRightTriggerAxis())))
         .onFalse(m_climber.climberManualControl(climberPos.STALL));
+
+    m_driverController.a().onTrue(m_shooter.intake());
   }
 
   public void autoInit() {
