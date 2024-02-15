@@ -153,17 +153,17 @@ public class RobotContainer {
         .leftTrigger()
         .whileTrue(
             m_climber
-                .climberManualControl(climberPos.INITAL)
+                .climberGoToSelectedLevel(climberPos.INITAL)
                 .andThen(() -> m_climber.setManualSpeed(m_coDriverController.getLeftTriggerAxis())))
-        .onFalse(m_climber.climberManualControl(climberPos.STALL));
+        .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
     m_coDriverController
         .rightTrigger()
         .whileTrue(
             m_climber
-                .climberManualControl(climberPos.TOP)
+                .climberGoToSelectedLevel(climberPos.TOP)
                 .andThen(
                     () -> m_climber.setManualSpeed(m_coDriverController.getRightTriggerAxis())))
-        .onFalse(m_climber.climberManualControl(climberPos.STALL));
+        .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
 
     m_driverController.a().onTrue(m_shooter.intake());
   }

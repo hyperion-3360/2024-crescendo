@@ -4,8 +4,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Climber.climberPos;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.elevatorHeight;
 import frc.robot.subsystems.LEDs;
@@ -16,21 +14,20 @@ import frc.robot.subsystems.Trap;
 
 public class Sequences {
   // makes the climber sequence
-  // commented for now until climber is mechanicaly done
-  public static Command climberSequence(Climber m_climber, LEDs m_LED, Trap m_trap) {
-    return Commands.sequence(
-        Commands.runOnce(() -> m_LED.setState(State.CLIMBING)),
-        m_climber
-            .climberGoToSelectedLevel(climberPos.TOP)
-            .andThen(new WaitCommand(2))
-            .andThen(m_climber.climberGoToSelectedLevel(climberPos.INITAL)),
-        new WaitUntilCommand(() -> m_climber.onClimberTarget())
-            .andThen(
-                m_trap
-                    .grabPosition()
-                    .andThen(new WaitUntilCommand(0))
-                    .andThen(m_trap.scoreNote())));
-  }
+  //   public static Command climberSequence(Climber m_climber, LEDs m_LED, Trap m_trap) {
+  //     return Commands.sequence(
+  //         Commands.runOnce(() -> m_LED.setState(State.CLIMBING)),
+  //         m_climber
+  //             .climberGoToSelectedLevel(climberPos.TOP)
+  //             .andThen(new WaitCommand(2))
+  //             .andThen(m_climber.climberGoToSelectedLevel(climberPos.INITAL)),
+  //         new WaitUntilCommand(() -> m_climber.onClimberTarget())
+  //             .andThen(
+  //                 m_trap
+  //                     .grabPosition()
+  //                     .andThen(new WaitUntilCommand(0))
+  //                     .andThen(m_trap.scoreNote())));
+  //   }
 
   // the sequence to set the elevator to high and change led, as well as set shooter target level
   public static Command elevatorHigh(Elevator m_elevator, Shooter m_shooter, LEDs m_LED) {

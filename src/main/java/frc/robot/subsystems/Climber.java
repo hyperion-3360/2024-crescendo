@@ -31,15 +31,15 @@ public class Climber extends SubsystemBase {
   private RelativeEncoder m_encoder = m_climberRightMaster.getEncoder();
 
   // class variables to help control and set the climber
+  private double m_speed;
   private double m_climberRampRate = 2; // was .2
-  private double m_speed = 0.0;
-  private double m_climberTarget = ClimberConstants.kstartPos;
-  private boolean isTop = true;
+  private double m_climberTarget = ClimberConstants.kTopTarget;
+  private boolean isTop = false;
   private double m_climberStallSpeed = 0.01;
 
   private double kP = 0.05;
   private double kI = 0.007;
-  private double kD = 0.0001;
+  private double kD = 0.005;
 
   private PIDController m_PID = new PIDController(kP, kI, kD);
 
@@ -58,8 +58,8 @@ public class Climber extends SubsystemBase {
     m_climberRightMaster.setOpenLoopRampRate(m_climberRampRate);
     m_climberLeft.setOpenLoopRampRate(m_climberRampRate);
 
-    m_climberRightMaster.setIdleMode(IdleMode.kBrake);
-    m_climberLeft.setIdleMode(IdleMode.kBrake);
+    m_climberRightMaster.setIdleMode(IdleMode.kCoast);
+    m_climberLeft.setIdleMode(IdleMode.kCoast);
 
     m_climberRightMaster.burnFlash();
     m_climberLeft.burnFlash();
@@ -67,7 +67,10 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
-    m_PID.calculate(m_encoder.getPosition(), m_climberTarget);
+    System.out.println(
+        "ENCODER VALUES " + m_encoder.getPosition() + " SPEED " + m_climberRightMaster.get());
+
+    m_climberRightMaster.set(m_PID.calculate(m_encoder.getPosition(), m_climberTarget));
     // safety measures to prevent the motors from burning on reenable
     if (DriverStation.isDisabled()) {
       climberGoToSelectedLevel(climberPos.TOP).cancel();
@@ -78,11 +81,10 @@ public class Climber extends SubsystemBase {
     //   m_gyro.getRoll();
 
     //   repositionement();
-    onClimberTarget();
   }
 
   public double setManualSpeed(double m_manualSpeed) {
-    return this.m_speed = Math.cbrt(m_manualSpeed);
+    return m_speed = Math.cbrt(m_manualSpeed);
   }
 
   // private method to set the behavior for each state
@@ -91,12 +93,14 @@ public class Climber extends SubsystemBase {
       case TOP:
         isTop = true;
         m_climberTarget = Constants.ClimberConstants.kTopTarget;
-        m_climberRightMaster.set(-0.1);
+        m_climberRightMaster.set(-m_speed);
         m_climberStallSpeed = 0;
         break;
 
       case STALL:
         m_climberRightMaster.set(m_climberStallSpeed);
+        m_climberTarget = m_encoder.getPosition();
+        m_PID.reset();
         break;
 
       case STOP:
@@ -125,29 +129,13 @@ public class Climber extends SubsystemBase {
 
   //     }
 
-  // boolean checking if the motors has reached its target
-  public boolean onClimberTarget() {
-    return m_encoder.getPosition() >= m_climberTarget;
-  }
-
-  // command to set the desired elevator state
+  // command to set the desired climber state
   public Command climberGoToSelectedLevel(climberPos m_climberCheck) {
-    return this.runOnce(() -> setClimberLevel(m_climberCheck));
-  }
-
-  // it's big it's ugly but it works
-  /* sets the climber into manual mode to be controlled with the triggers
-   * limits the climber to it's assigned position while maintaining the ability
-   * to change course
-   */
-  public Command climberManualControl(climberPos m_climberCheck) {
     return this.runOnce(
         () -> {
-          System.out.println("ENCODER VALUES " + m_encoder.getPosition());
           setClimberLevel(m_climberCheck);
-          if (m_climberRightMaster.get() == m_climberStallSpeed) {
-            m_climberTarget = m_encoder.getPosition();
-          }
+          System.out.println(
+              "ENCODER VALUES " + m_encoder.getPosition() + " SPEED " + m_climberRightMaster.get());
         });
   }
 }
