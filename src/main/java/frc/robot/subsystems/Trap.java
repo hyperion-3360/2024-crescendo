@@ -31,7 +31,7 @@ public class Trap extends SubsystemBase {
     FINGER, // Aim activated white quick flash, with vision aim function running
   }
 
-  private boolean m_debug = true;
+  private boolean m_debug = false;
 
   private final TimedServo m_jointArray[] =
       new TimedServo[] {m_servoShoulder, m_servoElbow, m_servoWrist, m_servoFinger};

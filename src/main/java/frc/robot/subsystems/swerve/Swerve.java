@@ -30,7 +30,7 @@ public class Swerve extends SubsystemBase {
   private final WPI_PigeonIMU m_gyro;
   private final Field2d m_field2d;
   public SwerveDriveOdometry m_odometry;
-  private boolean m_debug = true;
+  private boolean m_debug = false;
 
   public Swerve() {
     m_gyro = new WPI_PigeonIMU(0);
