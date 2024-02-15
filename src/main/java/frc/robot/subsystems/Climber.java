@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,6 +37,12 @@ public class Climber extends SubsystemBase {
   private boolean isTop = true;
   private double m_climberStallSpeed = 0.01;
 
+  private double kP = 0.05;
+  private double kI = 0.007;
+  private double kD = 0.0001;
+
+  private PIDController m_PID = new PIDController(kP, kI, kD);
+
   // declare 2 members, check fb for type and port, add port in constants
   public Climber() {
     // configurating the motors and encoders
@@ -60,17 +67,13 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
+    m_PID.calculate(m_encoder.getPosition(), m_climberTarget);
     // safety measures to prevent the motors from burning on reenable
     if (DriverStation.isDisabled()) {
       climberGoToSelectedLevel(climberPos.TOP).cancel();
       climberGoToSelectedLevel(climberPos.INITAL).cancel();
       climberGoToSelectedLevel(climberPos.STALL).cancel();
     }
-
-    // // TODO I have no fucking clue if this actually works 👀
-    // if (m_encoder.getPosition() != ClimberConstants.kTopTarget) {
-    //   m_speed = m_climberStallSpeed;
-    // }
 
     //   m_gyro.getRoll();
 
@@ -124,18 +127,12 @@ public class Climber extends SubsystemBase {
 
   // boolean checking if the motors has reached its target
   public boolean onClimberTarget() {
-    if (isTop == true) {
-      return m_encoder.getPosition() <= m_climberTarget;
-    }
-
     return m_encoder.getPosition() >= m_climberTarget;
   }
 
   // command to set the desired elevator state
   public Command climberGoToSelectedLevel(climberPos m_climberCheck) {
-    return this.run(() -> setClimberLevel(m_climberCheck))
-        .until(this::onClimberTarget)
-        .andThen(() -> setClimberLevel(climberPos.STALL));
+    return this.runOnce(() -> setClimberLevel(m_climberCheck));
   }
 
   // it's big it's ugly but it works
@@ -144,45 +141,12 @@ public class Climber extends SubsystemBase {
    * to change course
    */
   public Command climberManualControl(climberPos m_climberCheck) {
-    return this.run(
+    return this.runOnce(
         () -> {
-          System.out.println("ENCODER VALUES " + m_encoder.getPosition() + "speed " + m_speed);
+          System.out.println("ENCODER VALUES " + m_encoder.getPosition());
           setClimberLevel(m_climberCheck);
           if (m_climberRightMaster.get() == m_climberStallSpeed) {
             m_climberTarget = m_encoder.getPosition();
-          }
-          if (m_encoder.getPosition() > ClimberConstants.kstartPos) {
-            switch (m_climberCheck) {
-              case TOP:
-                isTop = true;
-                m_climberTarget = Constants.ClimberConstants.kTopTarget;
-                m_climberRightMaster.set(-m_speed);
-                m_climberStallSpeed = 0;
-                break;
-
-              case INITAL:
-                this.m_climberRightMaster.set(m_climberStallSpeed);
-                break;
-
-              default:
-                break;
-            }
-            if (m_encoder.getPosition() < ClimberConstants.kTopTarget) {
-              switch (m_climberCheck) {
-                case TOP:
-                  break;
-
-                case INITAL:
-                  isTop = false;
-                  m_climberTarget = ClimberConstants.kstartPos;
-                  m_climberRightMaster.set(m_speed);
-                  m_climberStallSpeed = 0.0;
-                  break;
-
-                default:
-                  break;
-              }
-            }
           }
         });
   }
