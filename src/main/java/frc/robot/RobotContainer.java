@@ -9,11 +9,9 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Climber.climberPos;
@@ -98,6 +96,9 @@ public class RobotContainer {
 
   /** Configure Joystick bindings for manually controlling and debugging the Trap arm */
   public void configureTrapDebugBindings() {
+
+    m_driverController.b().onTrue(m_trap.setZero());
+
     // map joystick POV primary direction to each joint of the arm
     List<Pair<Trap.Joint, Trigger>> jointMap = new ArrayList<Pair<Trap.Joint, Trigger>>();
     jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.SHOULDER, m_driverController.povUp()));
@@ -109,10 +110,10 @@ public class RobotContainer {
     /**
      * using the POV of the controller
      * 
-     *       SHOULDER Y -> DECREASE ANGLE by 1 degree
+     *       SHOULDER         Y -> DECREASE ANGLE by 1 degree
      *           x
      *           x
-     * FINGER xxx xxx ELBOW X -> INCREASE ANGLE by 1 degree
+     * FINGER xxx xxx ELBOW   X -> INCREASE ANGLE by 1 degree
      *           x
      *           x
      *         WRIST
@@ -122,11 +123,11 @@ public class RobotContainer {
       m_driverController
           .x()
           .and(joint_pair.getSecond())
-          .whileTrue(new RepeatCommand(m_trap.manualControl(joint_pair.getFirst(), true)));
+          .whileTrue(m_trap.manualControl(joint_pair.getFirst(), true));
       m_driverController
           .y()
           .and(joint_pair.getSecond())
-          .whileTrue(new RepeatCommand(m_trap.manualControl(joint_pair.getFirst(), false)));
+          .whileTrue(m_trap.manualControl(joint_pair.getFirst(), false));
     }
   }
 
@@ -143,9 +144,9 @@ public class RobotContainer {
 
     configureTrapDebugBindings();
 
-    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
-    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
-    m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
+    //    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
+    //    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
+    //    m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
 
     m_coDriverController
         .leftTrigger()

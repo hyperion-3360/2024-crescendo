@@ -118,13 +118,14 @@ public class Trap extends SubsystemBase {
   }
 
   public Command manualControl(Joint j, boolean increase) {
-    var s = m_jointArray[j.ordinal()];
-    var new_angle = s.getAngle();
-    if (increase) new_angle = new_angle < 180 ? new_angle + 1 : 180;
-    else new_angle = new_angle > 0 ? new_angle - 1 : 0;
-    var lambda_angle = new_angle; // making it effectively final so java lambda is happy.. :)
-    return this.runOnce(() -> s.setAngle(lambda_angle))
-        .andThen(new WaitUntilCommand(s.travelTime()));
+    return this.runOnce(
+        () -> {
+          var new_angle = m_jointArray[j.ordinal()].getAngle();
+          if (increase) new_angle = new_angle < 180 ? new_angle + 1 : 180;
+          else new_angle = new_angle > 0 ? new_angle - 1 : 0;
+          var lambda_angle = new_angle; // making it effectively final so java lambda is happy.. :)
+          m_jointArray[j.ordinal()].setAngle(lambda_angle);
+        });
   }
 
   public boolean trapHasNote() {
