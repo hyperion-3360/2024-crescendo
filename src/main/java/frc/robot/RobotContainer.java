@@ -158,7 +158,7 @@ public class RobotContainer {
         .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.TOP))
         .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
 
-    m_driverController.a().onTrue(m_shooter.intake());
+    m_driverController.a().toggleOnTrue((m_shooter.intake()));
   }
 
   public void autoInit() {
