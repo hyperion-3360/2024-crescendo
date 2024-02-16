@@ -28,7 +28,7 @@ public class SwerveModule {
   private final DutyCycleOut driveDutyCycle = new DutyCycleOut(0);
   private final VelocityVoltage driveVelocity = new VelocityVoltage(0);
   private final VoltageOut m_voltageOutControl = new VoltageOut(0.0);
-  private boolean m_debug = true;
+  private boolean m_debug = false;
 
   /* angle motor control requests */
   private final PositionVoltage anglePosition = new PositionVoltage(0);
@@ -80,10 +80,11 @@ public class SwerveModule {
 
   public void resetToAbsolute() {
     double magRotations = getMagEncoderPos().getRotations();
-    System.out.println(
-        String.format(
-            "Module : %d -> magRotations = %f, angle=%f",
-            this.moduleNumber, magRotations, angleOffset.getRotations()));
+    if (m_debug)
+      System.out.println(
+          String.format(
+              "Module : %d -> magRotations = %f, angle=%f",
+              this.moduleNumber, magRotations, angleOffset.getRotations()));
     double absolutePosition = getMagEncoderPos().getRotations() - angleOffset.getRotations();
     mAngleMotor.setPosition(absolutePosition);
   }
