@@ -97,7 +97,7 @@ public class RobotContainer {
   /** Configure Joystick bindings for manually controlling and debugging the Trap arm */
   public void configureTrapDebugBindings() {
 
-    m_driverController.b().onTrue(m_trap.setZero());
+    // m_driverController.b().onTrue(m_trap.setZero());
 
     // map joystick POV primary direction to each joint of the arm
     List<Pair<Trap.Joint, Trigger>> jointMap = new ArrayList<Pair<Trap.Joint, Trigger>>();
@@ -119,16 +119,16 @@ public class RobotContainer {
      *         WRIST
      */
     // spotless:on
-    for (var joint_pair : jointMap) {
-      m_driverController
-          .x()
-          .and(joint_pair.getSecond())
-          .whileTrue(m_trap.manualControl(joint_pair.getFirst(), true));
-      m_driverController
-          .y()
-          .and(joint_pair.getSecond())
-          .whileTrue(m_trap.manualControl(joint_pair.getFirst(), false));
-    }
+    // for (var joint_pair : jointMap) {
+    //   m_driverController
+    //       .x()
+    //       .and(joint_pair.getSecond())
+    //       .whileTrue(m_trap.manualControl(joint_pair.getFirst(), true));
+    //   m_driverController
+    //       .y()
+    //       .and(joint_pair.getSecond())
+    //       .whileTrue(m_trap.manualControl(joint_pair.getFirst(), false));
+    // }
   }
 
   /**
@@ -158,6 +158,7 @@ public class RobotContainer {
         .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
 
     m_driverController.a().toggleOnTrue((m_shooter.intake()));
+    m_driverController.b().toggleOnTrue((m_shooter.vomit()));
   }
 
   public Command getAutonomousCommand() {
