@@ -44,6 +44,13 @@ public class Sequences {
         m_shooter.setTargetLevel(levelSpeed.HIGH));
   }
 
+  public static Command trapElevator(Elevator m_elevator, Trap m_trap) {
+    return Commands.sequence(
+        m_trap.prepareToClimb(),
+        new WaitCommand(1.5),
+        m_elevator.extendTheElevator(elevatorHeight.HIGH));
+  }
+
   // the sequence to set the elevator to low and change led, as well as set shooter target level
   public static Command elevatorLow(Elevator m_elevator, Shooter m_shooter, LEDs m_LED) {
     return Commands.sequence(
