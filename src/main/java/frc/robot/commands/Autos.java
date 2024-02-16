@@ -4,15 +4,32 @@
 
 package frc.robot.commands;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.wpilibj2.command.Command;
+
 public final class Autos {
-  /** Example static factory for an autonomous command. */
-  // public static Command exampleAuto(ExampleSubsystem subsystem) {
-  //
+  public enum Mode { // TODO Ajouter au shuffleboard
+    BLUE_AUTO1("Test"),
+    BLUE_AUTO2("BlueRight1"),
+    BLUE_AUTO3("BlueLeft1"),
+    BLUE_AUTO4("BlueCenter2"),
+    BLUE_AUTO5("BlueRight2"),
+    BLUE_AUTO6("BlueLeft2");
 
-  //   return Commands.sequence(subsystem.exampleMethodCommand(), new ExampleCommand(subsystem));
-  // }
+    private String m_path;
 
-  private Autos() {
-    throw new UnsupportedOperationException("This is a utility class!");
+    private Mode(String path) {
+      m_path = path;
+    }
+
+    public String toString() {
+      return m_path;
+    }
+  }
+
+  public static Command followPath(Mode automode) {
+    PathPlannerPath path = PathPlannerPath.fromPathFile(automode.toString());
+    return AutoBuilder.followPath(path);
   }
 }
