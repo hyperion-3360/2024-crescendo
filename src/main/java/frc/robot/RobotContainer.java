@@ -87,7 +87,6 @@ public class RobotContainer {
             () -> conditionJoystick(rotationAxis, rotationLimiter, kJoystickDeadband),
             () -> false));
 
-    m_led.setDefaultCommand(m_led.reverbOff());
     m_shooter.setDefaultCommand(m_shooter.stop());
 
     configureBindings();
