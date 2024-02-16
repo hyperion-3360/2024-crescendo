@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Autos;
 import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
@@ -74,8 +75,6 @@ public class RobotContainer {
     return -limiter.calculate(
         MathUtil.applyDeadband(m_driverController.getRawAxis(axis), deadband));
   }
-
-  private ModeAuto m_autoHandler = new ModeAuto();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -161,13 +160,7 @@ public class RobotContainer {
     m_driverController.a().onTrue(m_shooter.intake());
   }
 
-  public void autoInit() {
-    // TODO Selectionner le mode auto du shuffleboard
-    m_autoHandler.follow(ModeAuto.Mode.BLUE_AUTO1);
-  }
-
   public Command getAutonomousCommand() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getAutonomousCommand'");
+    return Autos.followPath(Autos.Mode.BLUE_AUTO1);
   }
 }
