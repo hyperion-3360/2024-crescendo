@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
@@ -32,6 +33,7 @@ public class Shooter extends SubsystemBase {
 
   // declaring speed member
   private double m_speed = 0;
+  private double m_prev_speed = m_speed;
   private levelSpeed m_targetLevel = levelSpeed.STOP;
 
   // blocker constants
@@ -93,14 +95,11 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     // setting speed to motors
-    m_leftMaster.set(m_speed);
-    m_rightMaster.set(m_speed);
     SmartDashboard.putBoolean("Has Note?", hasNote());
   }
 
   // switch case for different speeds according to the level
   private void setSpeedFor(levelSpeed shoot) {
-
     switch (shoot) {
       case LOW:
         m_speed = lowSpeed;
@@ -122,11 +121,11 @@ public class Shooter extends SubsystemBase {
         m_speed = intakeSpeed;
         break;
     }
-  }
-
-  // command to hold speed according to the target level
-  public Command holdSpeed(levelSpeed level) {
-    return this.run(() -> this.setSpeedFor(level));
+    if (m_speed != m_prev_speed) {
+      m_prev_speed = m_speed;
+      m_leftMaster.set(m_speed);
+      m_rightMaster.set(m_speed);
+    }
   }
 
   // stop the motors
@@ -159,7 +158,10 @@ public class Shooter extends SubsystemBase {
   // set hook to intake mode, then set target + speed until has note
   public Command intake() {
     return Commands.sequence(
-        this.hookIntake(), this.holdSpeed(levelSpeed.INTAKE).until(this::hasNote), this.stop());
+        this.hookIntake(),
+        this.runOnce(() -> {this.setSpeedFor(levelSpeed.INTAKE);}),
+        new WaitUntilCommand(this::hasNote),
+        this.stop());
   }
 
   // infrared sensor to see if we have a note

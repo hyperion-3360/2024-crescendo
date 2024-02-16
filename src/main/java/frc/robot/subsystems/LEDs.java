@@ -165,29 +165,30 @@ public class LEDs extends SubsystemBase {
   /* the periodic function is used for the blinking behavior */
   @Override
   public void periodic() {
+    long currentTime = RobotController.getFPGATime();
     switch (m_ledState) {
       case INTAKE_ROLLING:
-        if (RobotController.getFPGATime() > m_flashDuration) {
+        if (currentTime > m_flashDuration) {
           m_currentValue = m_currentValue == kWhite ? kDark : kWhite;
           m_flashDuration = RobotController.getFPGATime() + kSlowFlashingDelay;
           setRGB(m_currentValue);
         }
         break;
       case PREPARE_SHOT_SPEAKER:
-        if (RobotController.getFPGATime() > m_flashDuration) {
+        if (currentTime > m_flashDuration) {
           m_currentValue = m_currentValue == kWhite ? kDark : kWhite;
           m_flashDuration = RobotController.getFPGATime() + kFastFlashingDelay;
           setRGB(m_currentValue);
         }
         break;
       case PREPARE_SHOT_AMP:
-        if (RobotController.getFPGATime() > m_flashDuration) {
+        if (currentTime > m_flashDuration) {
           m_currentValue = m_currentValue == kpaleYellow ? kDark : kpaleYellow;
           m_flashDuration = RobotController.getFPGATime() + kFastFlashingDelay;
           setRGB(m_currentValue);
         }
       case TRAP_HAS_NOTE:
-        if (RobotController.getFPGATime() > m_flashDuration) {
+        if (currentTime > m_flashDuration) {
           m_currentValue = m_currentValue == kpurple ? kDark : kpurple;
           m_flashDuration = RobotController.getFPGATime() + kSlowFlashingDelay;
           setRGB(m_currentValue);
