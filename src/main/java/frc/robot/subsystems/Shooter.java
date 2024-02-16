@@ -165,7 +165,10 @@ public class Shooter extends SubsystemBase {
   public Command intake() {
     return Commands.sequence(
         this.hookIntake(),
-        this.runOnce(() -> {this.setSpeedFor(levelSpeed.INTAKE);}),
+        this.runOnce(
+            () -> {
+              this.setSpeedFor(levelSpeed.INTAKE);
+            }),
         new WaitUntilCommand(this::hasNote),
         this.stop());
   }
