@@ -20,7 +20,8 @@ public class Shooter extends SubsystemBase {
     LOW,
     INTAKE,
     TRAP,
-    STOP
+    STOP,
+    VOMIT
   }
 
   private static double highSpeed = 0.8; // need to add perk to adjust speed according to distance
@@ -28,6 +29,7 @@ public class Shooter extends SubsystemBase {
   private static double intakeSpeed = 0.4;
   private static double trapSpeed = 0.15; // requires testing
   private static double stopSpeed = 0;
+  private static double vomitSpeed = -0.5;
   private static double rampRate = 1; // to be tuned according to battery and time consumption
 
   // declaring speed member
@@ -121,6 +123,10 @@ public class Shooter extends SubsystemBase {
       case INTAKE:
         m_speed = intakeSpeed;
         break;
+
+      case VOMIT:
+        m_speed = vomitSpeed;
+        break;
     }
   }
 
@@ -175,5 +181,15 @@ public class Shooter extends SubsystemBase {
   // set up the hook
   public Command hookRelease() {
     return this.runOnce(() -> m_blocker.setAngle(kIntakeHookAngleOpen));
+  }
+
+  // EMERGENCY command in case of intake anomaly
+  public Command vomit() {
+    return Commands.sequence(
+        setTargetLevel(levelSpeed.VOMIT),
+        setSpeedWithTarget(),
+        new WaitCommand(4),
+        setTargetLevel(levelSpeed.STOP),
+        setSpeedWithTarget());
   }
 }
