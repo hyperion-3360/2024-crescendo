@@ -13,10 +13,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Climber.climberPos;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Elevator.elevatorHeight;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Trap;
@@ -89,6 +91,7 @@ public class RobotContainer {
             () -> false));
 
     m_shooter.setDefaultCommand(m_shooter.stop());
+    m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
     configureBindings();
   }
@@ -143,10 +146,12 @@ public class RobotContainer {
 
     // configureTrapDebugBindings();
 
-    // m_coDriverController.y().onTrue(ElevatorHeight.elevatorHigh());
-    // m_coDriverController.a().onTrue(ElevatorHeight.elevatorLow());
-    // m_coDriverController.x().onTrue(ElevatorHeight.elevatorIntake());
-    // m_coDriverController.b().onTrue(Shoot.shoot());
+    m_driverController.leftBumper().onTrue(m_trap.setZero());
+
+    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
+    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
+    m_coDriverController.x().onTrue(Sequences.elevatorFarHigh(m_elevator, m_shooter, m_led));
+    m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
 
     m_coDriverController
         .leftTrigger()
@@ -157,8 +162,10 @@ public class RobotContainer {
         .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.TOP))
         .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
 
-    m_driverController.a().toggleOnTrue((m_shooter.intake()));
-    m_driverController.b().toggleOnTrue((m_shooter.vomit()));
+    m_driverController.a().toggleOnTrue(m_shooter.intake());
+    m_driverController.b().toggleOnTrue(m_shooter.vomit());
+    m_driverController.y().toggleOnTrue(m_shooter.eject());
+    m_driverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
   }
 
   public Command getAutonomousCommand() {
