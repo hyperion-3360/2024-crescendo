@@ -69,8 +69,6 @@ public class LEDs extends SubsystemBase {
   private ledValue kBlue = new ledValue(0, 0, 255, 0);
   private ledValue kGreen = new ledValue(0, 255, 0, 0);
   private ledValue kpurple = new ledValue(255, 0, 255, 0);
-  private ledValue kpaleYellow = new ledValue(255, 254, 0, 145);
-  private ledValue kdeepPurple = new ledValue(265, 0, 305, 0);
   private ledValue kDark = new ledValue(0, 0, 0, 0);
 
   /* current ledvalue, used for blinking */
@@ -146,12 +144,6 @@ public class LEDs extends SubsystemBase {
         m_flashDuration = 0;
         m_currentValue = kpurple;
         break;
-      case PREPARE_SHOT_AMP:
-        m_currentValue = kpaleYellow;
-        m_flashDuration = RobotController.getFPGATime() + kFastFlashingDelay;
-      case SHOOT_READY_AMP:
-        m_currentValue = kdeepPurple;
-        m_flashDuration = 0;
       case TRAP_HAS_NOTE:
         m_flashDuration = 0;
         m_currentValue = kpurple;
@@ -181,12 +173,6 @@ public class LEDs extends SubsystemBase {
           setRGB(m_currentValue);
         }
         break;
-      case PREPARE_SHOT_AMP:
-        if (currentTime > m_flashDuration) {
-          m_currentValue = m_currentValue == kpaleYellow ? kDark : kpaleYellow;
-          m_flashDuration = RobotController.getFPGATime() + kFastFlashingDelay;
-          setRGB(m_currentValue);
-        }
       case TRAP_HAS_NOTE:
         if (currentTime > m_flashDuration) {
           m_currentValue = m_currentValue == kpurple ? kDark : kpurple;

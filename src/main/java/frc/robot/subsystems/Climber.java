@@ -75,6 +75,7 @@ public class Climber extends SubsystemBase {
       climberGoToSelectedLevel(climberPos.TOP).cancel();
       climberGoToSelectedLevel(climberPos.INITAL).cancel();
       climberGoToSelectedLevel(climberPos.STALL).cancel();
+      m_PID.reset();
     }
   }
 
