@@ -29,18 +29,6 @@ public class Sequences {
   //                     .andThen(m_trap.scoreNote())));
   //   }
 
-  // the sequence to set the elevator to high and change led, as well as set shooter target level
-  public static Command elevatorHigh(Elevator m_elevator, Shooter m_shooter, LEDs m_LED) {
-    return Commands.sequence(
-        Commands.runOnce(() -> m_LED.setState(State.PREPARE_SHOT_SPEAKER)),
-        m_shooter.setTargetLevel(levelSpeed.HIGH),
-        m_elevator
-            .extendTheElevator(elevatorHeight.HIGH)
-            .andThen(new WaitCommand(2.5))
-            // .andThen(new WaitUntilCommand(() -> m_elevator.onTarget()))
-            .andThen(() -> m_LED.setState(State.SHOOT_READY_SPEAKER)));
-  }
-
   public static Command trapElevator(Elevator m_elevator, Trap m_trap) {
     return Commands.sequence(
         m_trap.prepareToClimb(),
@@ -48,35 +36,53 @@ public class Sequences {
         m_elevator.extendTheElevator(elevatorHeight.HIGH));
   }
 
-  // the sequence to set the elevator to low and change led, as well as set shooter target level
-  public static Command elevatorLow(Elevator m_elevator, Shooter m_shooter, LEDs m_LED) {
+  public static Command elevatorHigh(Elevator elevator, Shooter shooter, LEDs leds) {
     return Commands.sequence(
-        Commands.runOnce(() -> m_LED.setState(State.PREPARE_SHOT_AMP)),
-        m_shooter.setTargetLevel(levelSpeed.LOW),
-        m_elevator
-            .extendTheElevator(elevatorHeight.LOW)
-            .andThen(new WaitCommand(2.5))
-            .andThen(() -> m_LED.setState(State.SHOOT_READY_AMP)));
+            leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
+            elevator.extendTheElevator(elevatorHeight.HIGH),
+            new WaitCommand(1.5))
+        .andThen(
+            shooter
+                .holdSpeed(levelSpeed.HIGH)
+                .alongWith(
+                    new WaitCommand(1).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
-  public static Command elevatorFarHigh(Elevator m_elevator, Shooter m_shooter, LEDs m_LED) {
+  public static Command elevatorFarHigh(Elevator elevator, Shooter shooter, LEDs leds) {
     return Commands.sequence(
-        Commands.runOnce(() -> m_LED.setState(State.PREPARE_SHOT_AMP)),
-        m_shooter.setTargetLevel(levelSpeed.FAR_HIGH),
-        m_elevator
-            .extendTheElevator(elevatorHeight.FAR_HIGH)
-            .andThen(new WaitCommand(2.0))
-            .andThen(() -> m_LED.setState(State.SHOOT_READY_AMP)));
+            leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
+            elevator.extendTheElevator(elevatorHeight.FAR_HIGH),
+            new WaitCommand(1.5))
+        .andThen(
+            shooter
+                .holdSpeed(levelSpeed.FAR_HIGH)
+                .alongWith(
+                    new WaitCommand(1.2).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
-  // the sequence to make the shooter shoot to the desired level and change leds
-  public static Command shoot(Shooter m_shooter, Elevator m_elevator, LEDs m_LED) {
+  // TODO this is first test
+  public static Command elevatorLow(Elevator elevator, Shooter shooter, LEDs leds) {
     return Commands.sequence(
-        m_shooter.shootTo().andThen(() -> m_LED.setState(State.SHOT_DONE)),
-        m_elevator
-            .extendTheElevator(elevatorHeight.INTAKE)
-            .andThen(new WaitCommand(2))
-            .andThen(() -> m_LED.setState(State.IDLE)));
+            leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
+            elevator.extendTheElevator(elevatorHeight.LOW),
+            new WaitCommand(1.5))
+        .andThen(
+            shooter
+                .holdSpeed(levelSpeed.LOW)
+                .alongWith(
+                    new WaitCommand(0.7).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
+  }
+
+  public static Command shoot(Shooter shooter, Elevator elevator, LEDs leds) {
+    return Commands.sequence(
+        shooter.hookRelease(),
+        new WaitCommand(0.7),
+        leds.runOnce(() -> leds.setState(State.SHOT_DONE)),
+        shooter.stop(),
+        elevator.extendTheElevator(elevatorHeight.INTAKE),
+        shooter.hookIntake(),
+        new WaitCommand(1.5),
+        leds.runOnce(() -> leds.setState(State.IDLE)));
   }
 
   // intake sequence to set leds to the right state
