@@ -165,7 +165,7 @@ public final class Constants {
 
   public static class ClimberConstants {
     public static final double kTopTarget = 1;
-    public static final double kstartPos = 14;
+    public static final double kstartPos = 57;
   }
 
   public static class ShooterConstants {

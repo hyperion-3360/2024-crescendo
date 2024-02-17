@@ -72,12 +72,15 @@ public class Elevator extends SubsystemBase {
     // if the elevator touches the limit switch at the bottom of the rail set position to 0.0
     if (bottomlimitSwitch.get()) {
       m_encoder.setPosition(0.0);
+      m_pid.reset();
     }
 
     if (DriverStation.isDisabled()) {
       extendTheElevator(elevatorHeight.HIGH).cancel();
       extendTheElevator(elevatorHeight.LOW).cancel();
       extendTheElevator(elevatorHeight.INTAKE).cancel();
+      m_pid.reset();
+      m_elevatorTarget = 0.0;
     }
     SmartDashboard.putString("Elevator Target", height);
   }

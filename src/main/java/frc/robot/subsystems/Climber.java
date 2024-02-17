@@ -37,9 +37,9 @@ public class Climber extends SubsystemBase {
   private boolean isrunning = false;
   private double m_climberStallSpeed = 0.01;
 
-  private double kP = 0.02;
-  private double kI = 0.001;
-  private double kD = 0.0005;
+  private double kP = 0.025;
+  private double kI = 0.0001;
+  private double kD = 0.0001;
 
   private PIDController m_PID = new PIDController(kP, kI, kD);
 
