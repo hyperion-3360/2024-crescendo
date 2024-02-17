@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.9355664308465854,
-      "y": 3.0069227905064206
+      "x": 0.0,
+      "y": 0.0
     },
     "rotation": 0
   },
@@ -12,9 +12,34 @@
     "data": {
       "commands": [
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 3.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shoot"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Test"
+            "pathName": "1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2"
           }
         }
       ]

@@ -4,13 +4,11 @@
 
 package frc.robot.commands;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
 
 public final class Autos {
+
   public enum Mode {
     BLUE_AUTO1("BlueCenter1"),
     BLUE_AUTO2("BlueRight1"),
