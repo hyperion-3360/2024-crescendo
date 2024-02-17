@@ -44,7 +44,7 @@ public class Sequences {
   public static Command trapElevator(Elevator m_elevator, Trap m_trap) {
     return Commands.sequence(
         m_trap.prepareToClimb(),
-        new WaitCommand(1.5),
+        // new WaitCommand(0.5),
         m_elevator.extendTheElevator(elevatorHeight.HIGH));
   }
 

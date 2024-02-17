@@ -13,10 +13,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Climber.climberPos;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Shooter;
@@ -98,6 +96,7 @@ public class RobotContainer {
   public void configureTrapDebugBindings() {
 
     // m_driverController.b().onTrue(m_trap.setZero());
+    // m_driverController.a().onTrue(Sequences.trapElevator(m_elevator, m_trap));
 
     // map joystick POV primary direction to each joint of the arm
     List<Pair<Trap.Joint, Trigger>> jointMap = new ArrayList<Pair<Trap.Joint, Trigger>>();
@@ -119,16 +118,16 @@ public class RobotContainer {
      *         WRIST
      */
     // spotless:on
-    // for (var joint_pair : jointMap) {
-    //   m_driverController
-    //       .x()
-    //       .and(joint_pair.getSecond())
-    //       .whileTrue(m_trap.manualControl(joint_pair.getFirst(), true));
-    //   m_driverController
-    //       .y()
-    //       .and(joint_pair.getSecond())
-    //       .whileTrue(m_trap.manualControl(joint_pair.getFirst(), false));
-    // }
+    for (var joint_pair : jointMap) {
+      m_driverController
+          .x()
+          .and(joint_pair.getSecond())
+          .whileTrue(m_trap.manualControl(joint_pair.getFirst(), true));
+      m_driverController
+          .y()
+          .and(joint_pair.getSecond())
+          .whileTrue(m_trap.manualControl(joint_pair.getFirst(), false));
+    }
   }
 
   /**
@@ -142,23 +141,23 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    // configureTrapDebugBindings();
+    configureTrapDebugBindings();
 
-    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
-    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
-    m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
+    // m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
+    // m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
+    // m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
 
-    m_coDriverController
-        .leftTrigger()
-        .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.INITAL))
-        .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
-    m_coDriverController
-        .rightTrigger()
-        .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.TOP))
-        .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
+    // m_coDriverController
+    //     .leftTrigger()
+    //     .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.INITAL))
+    //     .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
+    // m_coDriverController
+    //     .rightTrigger()
+    //     .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.TOP))
+    //     .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
 
-    m_driverController.a().toggleOnTrue((m_shooter.intake()));
-    m_driverController.b().toggleOnTrue((m_shooter.vomit()));
+    // m_driverController.a().toggleOnTrue((m_shooter.intake()));
+    // m_driverController.b().toggleOnTrue((m_shooter.vomit()));
   }
 
   public Command getAutonomousCommand() {
