@@ -14,8 +14,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.TeleopSwerve;
-import frc.robot.sequences.ElevatorHeight;
-import frc.robot.sequences.Shoot;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Climber.climberPos;
 import frc.robot.subsystems.Elevator;
@@ -145,10 +143,10 @@ public class RobotContainer {
 
     // configureTrapDebugBindings();
 
-    m_coDriverController.y().onTrue(ElevatorHeight.elevatorHigh());
-    m_coDriverController.a().onTrue(ElevatorHeight.elevatorLow());
-    m_coDriverController.x().onTrue(ElevatorHeight.elevatorIntake());
-    m_coDriverController.b().onTrue(Shoot.shoot());
+    // m_coDriverController.y().onTrue(ElevatorHeight.elevatorHigh());
+    // m_coDriverController.a().onTrue(ElevatorHeight.elevatorLow());
+    // m_coDriverController.x().onTrue(ElevatorHeight.elevatorIntake());
+    // m_coDriverController.b().onTrue(Shoot.shoot());
 
     m_coDriverController
         .leftTrigger()
