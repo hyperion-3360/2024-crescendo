@@ -4,9 +4,8 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -182,8 +181,10 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // return Autos.followPath(Autos.getSelectedOption());
-    PathPlannerPath path = PathPlannerPath.fromPathFile("Test");
-    m_swerveDrive.setPose(path.getStartingDifferentialPose());
-    return AutoBuilder.followPath(path);
+    return new PathPlannerAuto("Test");
   }
+
+  // public Command getAutonomousCommand() {
+  //   return Autos.getSelectedOption();
+  // }
 }
