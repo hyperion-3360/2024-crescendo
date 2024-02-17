@@ -27,6 +27,10 @@ import frc.robot.subsystems.swerve.Swerve;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -93,6 +97,8 @@ public class RobotContainer {
     m_shooter.setDefaultCommand(m_shooter.stop());
     m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
+    NamedCommands.registerCommand("Shoot", Sequences.autoShoot(m_elevator, m_shooter));
+    NamedCommands.registerCommand("take", Sequences.intakeSequence(m_shooter, m_led));
     configureBindings();
 
     Autos.setShuffleboardOptions();
@@ -172,6 +178,10 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Autos.followPath(Autos.getSelectedOption());
+    // return Autos.followPath(Autos.getSelectedOption());
+
+    PathPlannerPath path = PathPlannerPath.fromPathFile("Test");
+    m_swerveDrive.setPose(path.getStartingDifferentialPose());
+    return AutoBuilder.followPath(path);
   }
 }

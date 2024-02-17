@@ -30,10 +30,11 @@ public final class Autos {
     }
   }
 
-  public static Command followPath(Mode automode) {
-    PathPlannerPath path = PathPlannerPath.fromPathFile(automode.toString());
-    return AutoBuilder.followPath(path);
-  }
+  // public static Command followPath(Mode automode) {
+  //   PathPlannerPath path = PathPlannerPath.fromPathFile("Test");
+
+  //   return AutoBuilder.followPath(path);
+  // }
 
   private static SendableChooser<Mode> autoChooser = new SendableChooser<>();
 
