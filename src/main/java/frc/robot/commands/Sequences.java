@@ -33,12 +33,12 @@ public class Sequences {
   public static Command elevatorHigh(Elevator m_elevator, Shooter m_shooter, LEDs m_LED) {
     return Commands.sequence(
         Commands.runOnce(() -> m_LED.setState(State.PREPARE_SHOT_SPEAKER)),
+        m_shooter.setTargetLevel(levelSpeed.HIGH),
         m_elevator
             .extendTheElevator(elevatorHeight.HIGH)
-            .andThen(new WaitCommand(1.5))
+            .andThen(new WaitCommand(2.5))
             // .andThen(new WaitUntilCommand(() -> m_elevator.onTarget()))
-            .andThen(() -> m_LED.setState(State.SHOOT_READY_SPEAKER)),
-        m_shooter.setTargetLevel(levelSpeed.HIGH));
+            .andThen(() -> m_LED.setState(State.SHOOT_READY_SPEAKER)));
   }
 
   public static Command trapElevator(Elevator m_elevator, Trap m_trap) {
@@ -52,11 +52,21 @@ public class Sequences {
   public static Command elevatorLow(Elevator m_elevator, Shooter m_shooter, LEDs m_LED) {
     return Commands.sequence(
         Commands.runOnce(() -> m_LED.setState(State.PREPARE_SHOT_AMP)),
+        m_shooter.setTargetLevel(levelSpeed.LOW),
         m_elevator
             .extendTheElevator(elevatorHeight.LOW)
-            .andThen(new WaitCommand(1.5))
-            .andThen(() -> m_LED.setState(State.SHOOT_READY_AMP)),
-        m_shooter.setTargetLevel(levelSpeed.LOW));
+            .andThen(new WaitCommand(2.5))
+            .andThen(() -> m_LED.setState(State.SHOOT_READY_AMP)));
+  }
+
+  public static Command elevatorFarHigh(Elevator m_elevator, Shooter m_shooter, LEDs m_LED) {
+    return Commands.sequence(
+        Commands.runOnce(() -> m_LED.setState(State.PREPARE_SHOT_AMP)),
+        m_shooter.setTargetLevel(levelSpeed.FAR_HIGH),
+        m_elevator
+            .extendTheElevator(elevatorHeight.FAR_HIGH)
+            .andThen(new WaitCommand(2.0))
+            .andThen(() -> m_LED.setState(State.SHOOT_READY_AMP)));
   }
 
   // the sequence to make the shooter shoot to the desired level and change leds

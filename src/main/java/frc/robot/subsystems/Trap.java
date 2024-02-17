@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,6 +24,8 @@ public class Trap extends SubsystemBase {
       new TimedServo(
           Constants.TrapConstants.kservoFingerId, 260, Constants.TrapConstants.kfingerOpened);
   DigitalInput m_limitSwitch = new DigitalInput(Constants.TrapConstants.kfingerlimitswitchId);
+
+  public boolean setZero = false;
 
   public enum Joint {
     SHOULDER, // Idle orange, default
@@ -53,6 +56,10 @@ public class Trap extends SubsystemBase {
             String.format("@ :%f deg", s.getAngle()));
       }
     }
+
+    if (DriverStation.isDisabled()) {
+      setZero = false;
+    }
   }
 
   public Command setZero() {
@@ -66,7 +73,7 @@ public class Trap extends SubsystemBase {
         .andThen(() -> m_servoShoulder.setZero())
         .andThen(new WaitCommand(m_servoShoulder.travelTime()))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened))
-        .andThen(new WaitCommand(m_servoFinger.travelTime()));
+        .andThen(new WaitCommand(m_servoFinger.travelTime()).andThen(() -> setZero = true));
   }
 
   public Command grabPosition() {

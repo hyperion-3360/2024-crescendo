@@ -18,15 +18,18 @@ public class Shooter extends SubsystemBase {
   // different speed possibilities
   public enum levelSpeed {
     HIGH,
+    FAR_HIGH,
     LOW,
     INTAKE,
     TRAP,
     STOP,
-    VOMIT
+    VOMIT,
+    EJECT
   }
 
   private static double highSpeed = 0.8; // need to add perk to adjust speed according to distance
-  private static double lowSpeed = 0.3; // requires testing
+  private static double farHighSpeed = 1.0;
+  private static double lowSpeed = 0.5; // requires testing
   private static double intakeSpeed = 0.4;
   private static double trapSpeed = 0.15; // requires testing
   private static double stopSpeed = 0;
@@ -110,7 +113,9 @@ public class Shooter extends SubsystemBase {
       case HIGH:
         m_speed = highSpeed;
         break;
-
+      case FAR_HIGH:
+        m_speed = farHighSpeed;
+        break;
       case STOP:
         m_speed = stopSpeed;
         break;
@@ -125,6 +130,10 @@ public class Shooter extends SubsystemBase {
 
       case VOMIT:
         m_speed = vomitSpeed;
+        break;
+
+      case EJECT:
+        m_speed = -vomitSpeed;
         break;
     }
     if (m_speed != m_prev_speed) {
@@ -196,5 +205,16 @@ public class Shooter extends SubsystemBase {
         new WaitCommand(4),
         setTargetLevel(levelSpeed.STOP),
         setSpeedWithTarget());
+  }
+
+  public Command eject() {
+    return Commands.sequence(
+        hookRelease(),
+        setTargetLevel(levelSpeed.EJECT),
+        setSpeedWithTarget(),
+        new WaitCommand(4),
+        setTargetLevel(levelSpeed.STOP),
+        setSpeedWithTarget(),
+        hookIntake());
   }
 }

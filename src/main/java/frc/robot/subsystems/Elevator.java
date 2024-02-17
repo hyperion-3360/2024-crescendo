@@ -17,6 +17,7 @@ public class Elevator extends SubsystemBase {
 
   public enum elevatorHeight {
     HIGH,
+    FAR_HIGH,
     LOW,
     INTAKE
   };
@@ -82,6 +83,7 @@ public class Elevator extends SubsystemBase {
       m_pid.reset();
       m_elevatorTarget = 0.0;
     }
+    System.out.println(m_encoder.getPosition());
     SmartDashboard.putString("Elevator Target", height);
   }
 
@@ -91,6 +93,10 @@ public class Elevator extends SubsystemBase {
       case HIGH:
         this.m_elevatorTarget = ElevatorConstants.kHighTarget;
         height = "Speaker";
+        break;
+      case FAR_HIGH:
+        this.m_elevatorTarget = ElevatorConstants.kFarHighTarget;
+        height = "Far Speaker";
         break;
       case LOW:
         this.m_elevatorTarget = ElevatorConstants.kLowTarget;
