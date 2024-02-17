@@ -8,11 +8,13 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.Autos.Mode;
 import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
@@ -94,6 +96,15 @@ public class RobotContainer {
     m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
     configureBindings();
+
+    Autos.m_chooseAuto.setDefaultOption("Test auto", Autos.followPath(Mode.BLUE_AUTO1));
+    Autos.m_chooseAuto.addOption("Blue auto 2", Autos.followPath(Mode.BLUE_AUTO2));
+    Autos.m_chooseAuto.addOption("Blue auto 3", Autos.followPath(Mode.BLUE_AUTO3));
+    Autos.m_chooseAuto.addOption("Blue auto 4", Autos.followPath(Mode.BLUE_AUTO4));
+    Autos.m_chooseAuto.addOption("Blue auto 5", Autos.followPath(Mode.BLUE_AUTO5));
+    Autos.m_chooseAuto.addOption("Blue auto 6", Autos.followPath(Mode.BLUE_AUTO6));
+
+    Shuffleboard.getTab("select autos").add(Autos.m_chooseAuto);
   }
 
   /** Configure Joystick bindings for manually controlling and debugging the Trap arm */

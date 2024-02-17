@@ -6,10 +6,11 @@ package frc.robot.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public final class Autos {
-  public enum Mode { // TODO Ajouter au shuffleboard
+  public enum Mode {
     BLUE_AUTO1("Test"),
     BLUE_AUTO2("BlueRight1"),
     BLUE_AUTO3("BlueLeft1"),
@@ -32,4 +33,7 @@ public final class Autos {
     PathPlannerPath path = PathPlannerPath.fromPathFile(automode.toString());
     return AutoBuilder.followPath(path);
   }
+
+  // chooser for mode auto
+  public static SendableChooser<Command> m_chooseAuto = new SendableChooser<>();
 }
