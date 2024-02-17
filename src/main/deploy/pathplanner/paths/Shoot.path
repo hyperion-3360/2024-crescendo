@@ -1,0 +1,96 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.7867359596306823,
+        "y": 7.043306892339309
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.4002994372356747,
+        "y": 7.392700207671504
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.4304444816002828,
+        "y": 5.510971374597907
+      },
+      "prevControl": {
+        "x": 1.5811606436560346,
+        "y": 6.504940050965489
+      },
+      "nextControl": {
+        "x": 1.3994762616792498,
+        "y": 5.3067368708491784
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.6033356119924655,
+        "y": 5.510971374597907
+      },
+      "prevControl": {
+        "x": 2.4913906608298357,
+        "y": 5.478347042986699
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "ShootHight",
+      "waypointRelativePos": 0.95,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "TakeNote",
+      "waypointRelativePos": 1.8,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "take"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -2.1669830478999055,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": -4.02143626752264,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

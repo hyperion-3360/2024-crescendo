@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public final class Autos {
   public enum Mode {
-    BLUE_AUTO1("Test"),
+    BLUE_AUTO1("BlueCenter1"),
     BLUE_AUTO2("BlueRight1"),
     BLUE_AUTO3("BlueLeft1"),
     BLUE_AUTO4("BlueCenter2"),

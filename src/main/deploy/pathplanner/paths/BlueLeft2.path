@@ -149,22 +149,16 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Shoot amp 1",
+      "name": "ShootHight",
       "waypointRelativePos": 0.95,
       "command": {
         "type": "parallel",
         "data": {
           "commands": [
             {
-              "type": "wait",
-              "data": {
-                "waitTime": 3.0
-              }
-            },
-            {
               "type": "named",
               "data": {
-                "name": "shoot low"
+                "name": "shoot"
               }
             }
           ]
@@ -172,7 +166,7 @@
       }
     },
     {
-      "name": "Take Note",
+      "name": "TakeNote",
       "waypointRelativePos": 1.9500000000000002,
       "command": {
         "type": "parallel",
@@ -189,7 +183,7 @@
       }
     },
     {
-      "name": "Shoot amp 2",
+      "name": "ShootHight2",
       "waypointRelativePos": 6.0,
       "command": {
         "type": "parallel",
@@ -198,7 +192,7 @@
             {
               "type": "named",
               "data": {
-                "name": "shoot low"
+                "name": "shoot"
               }
             }
           ]
@@ -206,22 +200,36 @@
       }
     },
     {
-      "name": "Take Note",
+      "name": "TakeNote",
       "waypointRelativePos": 3.9000000000000004,
       "command": {
         "type": "parallel",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "take"
+              }
+            }
+          ]
         }
       }
     },
     {
-      "name": "Shoot hight ",
+      "name": "ShootHight3",
       "waypointRelativePos": 3.0,
       "command": {
         "type": "parallel",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "shoot"
+              }
+            }
+          ]
         }
       }
     }
@@ -234,7 +242,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 1.9203697696491984,
+    "rotation": 0.9362565222105653,
     "rotateFast": false
   },
   "reversed": false,

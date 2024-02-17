@@ -68,12 +68,12 @@
         "y": 5.833719214094897
       },
       "prevControl": {
-        "x": 8.251594843989514,
-        "y": 5.998261697900143
+        "x": 5.767841468047447,
+        "y": 6.910115427994186
       },
       "nextControl": {
-        "x": 8.051631414374704,
-        "y": 5.770033110281766
+        "x": 8.184352097060396,
+        "y": 5.798329074418813
       },
       "isLocked": false,
       "linkedName": null
@@ -154,18 +154,12 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Shoot amp 1",
+      "name": "ShootHight",
       "waypointRelativePos": 0.95,
       "command": {
         "type": "parallel",
         "data": {
           "commands": [
-            {
-              "type": "wait",
-              "data": {
-                "waitTime": 3.0
-              }
-            },
             {
               "type": "named",
               "data": {
@@ -177,7 +171,7 @@
       }
     },
     {
-      "name": "Take Note",
+      "name": "TakeNote",
       "waypointRelativePos": 1.9500000000000002,
       "command": {
         "type": "parallel",
@@ -194,7 +188,7 @@
       }
     },
     {
-      "name": "Shoot amp 2",
+      "name": "ShootHight2",
       "waypointRelativePos": 6.0,
       "command": {
         "type": "parallel",
@@ -211,8 +205,8 @@
       }
     },
     {
-      "name": "Take Note",
-      "waypointRelativePos": 3.9000000000000004,
+      "name": "TakeNote",
+      "waypointRelativePos": 4.050000000000001,
       "command": {
         "type": "parallel",
         "data": {
@@ -221,7 +215,7 @@
       }
     },
     {
-      "name": "Shoot hight ",
+      "name": "ShootHight3",
       "waypointRelativePos": 3.0,
       "command": {
         "type": "parallel",

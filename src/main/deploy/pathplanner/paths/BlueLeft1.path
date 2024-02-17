@@ -168,14 +168,14 @@
     },
     {
       "waypointRelativePos": 6,
-      "rotationDegrees": 2.3371581009855533,
+      "rotationDegrees": -18.48157763326499,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "shot 1",
+      "name": "ShootHight",
       "waypointRelativePos": 1.0,
       "command": {
         "type": "parallel",
@@ -192,7 +192,7 @@
       }
     },
     {
-      "name": "take 1",
+      "name": "TakeNote",
       "waypointRelativePos": 2.0,
       "command": {
         "type": "parallel",
@@ -209,7 +209,7 @@
       }
     },
     {
-      "name": "shot 2",
+      "name": "ShootHight2",
       "waypointRelativePos": 2.9499999999999997,
       "command": {
         "type": "parallel",
@@ -226,7 +226,7 @@
       }
     },
     {
-      "name": "take 2",
+      "name": "TakeNote",
       "waypointRelativePos": 4.0,
       "command": {
         "type": "parallel",
@@ -243,7 +243,7 @@
       }
     },
     {
-      "name": "shot 3",
+      "name": "ShootHight3",
       "waypointRelativePos": 5.0,
       "command": {
         "type": "parallel",
@@ -260,7 +260,7 @@
       }
     },
     {
-      "name": "take 3",
+      "name": "TakeNote",
       "waypointRelativePos": 6.0,
       "command": {
         "type": "parallel",
@@ -277,7 +277,7 @@
       }
     },
     {
-      "name": "shot 4",
+      "name": "ShootHight4",
       "waypointRelativePos": 7.0,
       "command": {
         "type": "parallel",
