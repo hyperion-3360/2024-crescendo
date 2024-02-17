@@ -58,8 +58,8 @@ public class Climber extends SubsystemBase {
     m_climberRightMaster.setOpenLoopRampRate(m_climberRampRate);
     m_climberLeft.setOpenLoopRampRate(m_climberRampRate);
 
-    m_climberRightMaster.setIdleMode(IdleMode.kCoast);
-    m_climberLeft.setIdleMode(IdleMode.kCoast);
+    m_climberRightMaster.setIdleMode(IdleMode.kBrake);
+    m_climberLeft.setIdleMode(IdleMode.kBrake);
 
     m_climberRightMaster.burnFlash();
     m_climberLeft.burnFlash();
