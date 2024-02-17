@@ -217,4 +217,8 @@ public class Shooter extends SubsystemBase {
         setSpeedWithTarget(),
         hookIntake());
   }
+
+  public Command holdSpeed(levelSpeed level) {
+    return this.run(() -> this.setSpeedFor(level));
+  }
 }
