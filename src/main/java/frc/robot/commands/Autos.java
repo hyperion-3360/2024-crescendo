@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -34,6 +35,23 @@ public final class Autos {
     return AutoBuilder.followPath(path);
   }
 
-  // chooser for mode auto
-  public static SendableChooser<Command> m_chooseAuto = new SendableChooser<>();
+  private static SendableChooser<Mode> autoChooser = new SendableChooser<>();
+
+  public static void setShuffleboardOptions() {
+    autoChooser.setDefaultOption(Mode.BLUE_AUTO1.toString(), Mode.BLUE_AUTO1);
+
+    autoChooser.addOption(Mode.BLUE_AUTO2.toString(), Mode.BLUE_AUTO2);
+    autoChooser.addOption(Mode.BLUE_AUTO3.toString(), Mode.BLUE_AUTO3);
+    autoChooser.addOption(Mode.BLUE_AUTO4.toString(), Mode.BLUE_AUTO4);
+    autoChooser.addOption(Mode.BLUE_AUTO5.toString(), Mode.BLUE_AUTO5);
+    autoChooser.addOption(Mode.BLUE_AUTO6.toString(), Mode.BLUE_AUTO6);
+
+    Shuffleboard.getTab("Autos").add("Auto Mode", autoChooser);
+
+    // Récupérer le mode autonome sélectionné
+  }
+
+  public static Mode getSelectedOption() {
+    return autoChooser.getSelected();
+  }
 }
