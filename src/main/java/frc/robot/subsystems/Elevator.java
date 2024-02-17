@@ -83,6 +83,7 @@ public class Elevator extends SubsystemBase {
       m_pid.reset();
       m_elevatorTarget = 0.0;
     }
+    System.out.println(m_encoder.getPosition());
     SmartDashboard.putString("Elevator Target", height);
   }
 
