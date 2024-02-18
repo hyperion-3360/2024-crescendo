@@ -4,9 +4,8 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
@@ -57,7 +56,7 @@ public class RobotContainer {
 
   // Slew Rate Limiters to limit acceleration of joystick inputs
   private final SlewRateLimiter translationLimiter = new SlewRateLimiter(2);
-  private final SlewRateLimiter strafeLimiter = new SlewRateLimiter(0.5);
+  private final SlewRateLimiter strafeLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(2);
 
   private final double kJoystickDeadband = 0.1;
@@ -94,9 +93,13 @@ public class RobotContainer {
     m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
     // eventMap.put("Shoot", new PrintCommand("i am shooting :)"));
-    NamedCommands.registerCommand("shoot", Sequences.autoShoot(m_elevator, m_shooter));
-    NamedCommands.registerCommand("take", Sequences.intakeSequence(m_shooter, m_led));
+    NamedCommands.registerCommand(
+        "shoot",
+        Sequences.autoShoot(m_elevator, m_shooter)
+            .andThen(m_elevator.extendTheElevator(elevatorHeight.INTAKE)));
+    NamedCommands.registerCommand("intake", Sequences.intakeSequence(m_shooter, m_led));
     configureBindings();
+    NamedCommands.registerCommand("farShoot", Sequences.autoFarShoot(m_elevator, m_shooter));
 
     Autos.setShuffleboardOptions();
   }
@@ -174,10 +177,16 @@ public class RobotContainer {
     m_driverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
   }
 
+  // this works
   public Command getAutonomousCommand() {
-    // return Autos.followPath(Autos.getSelectedOption());
-    PathPlannerPath path = PathPlannerPath.fromPathFile("Test");
-    m_swerveDrive.setPose(path.getStartingDifferentialPose());
-    return AutoBuilder.followPath(path);
+    m_swerveDrive.setPose(PathPlannerAuto.getStaringPoseFromAutoFile("2NotesMidField"));
+    return new PathPlannerAuto("2NotesMidField");
   }
+
+  // // TODO this might or might not work
+  // public Command getAutonomousCommand() {
+  //   m_swerveDrive.setPose(
+  //       PathPlannerAuto.getStaringPoseFromAutoFile(Autos.getSelectedOption().toString()));
+  //   return new PathPlannerAuto(Autos.getSelectedOption().toString());
+  // }
 }
