@@ -177,16 +177,9 @@ public class RobotContainer {
     m_driverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
   }
 
-  // this works
   public Command getAutonomousCommand() {
-    m_swerveDrive.setPose(PathPlannerAuto.getStaringPoseFromAutoFile("2NotesMidField"));
-    return new PathPlannerAuto("2NotesMidField");
+    m_swerveDrive.setPose(
+        PathPlannerAuto.getStaringPoseFromAutoFile(Autos.getSelectedOption().toString()));
+    return new PathPlannerAuto(Autos.getSelectedOption().toString());
   }
-
-  // // TODO this might or might not work
-  // public Command getAutonomousCommand() {
-  //   m_swerveDrive.setPose(
-  //       PathPlannerAuto.getStaringPoseFromAutoFile(Autos.getSelectedOption().toString()));
-  //   return new PathPlannerAuto(Autos.getSelectedOption().toString());
-  // }
 }
