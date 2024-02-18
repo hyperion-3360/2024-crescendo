@@ -149,8 +149,9 @@ public class RobotContainer {
 
     configureTrapDebugBindings();
 
-    m_coDriverController.leftBumper().onTrue(Sequences.trapElevator(m_elevator, m_trap));
-    m_coDriverController.rightBumper().onTrue(Sequences.trapShoot(m_shooter, m_trap));
+    m_coDriverController.povRight().onTrue(Sequences.trapElevator(m_elevator, m_trap));
+    m_coDriverController.povDown().onTrue(Sequences.trapShoot(m_shooter, m_trap));
+    m_coDriverController.povUp().onTrue(Sequences.trapScore(m_trap));
     m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
     m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
     m_coDriverController.x().onTrue(Sequences.elevatorFarHigh(m_elevator, m_shooter, m_led));
