@@ -29,17 +29,6 @@ public class Sequences {
   //                     .andThen(m_trap.scoreNote())));
   //   }
 
-  public static Command trapElevator(Elevator m_elevator, Trap m_trap) {
-    return Commands.sequence(
-        m_trap.prepareToClimb(),
-        new WaitCommand(0.5),
-        m_elevator.extendTheElevator(elevatorHeight.HIGH),
-        new WaitCommand(1),
-        m_trap.scoreNote(),
-        new WaitCommand(3),
-        m_trap.dunkNote());
-  }
-
   public static Command elevatorHigh(Elevator elevator, Shooter shooter, LEDs leds) {
     return Commands.sequence(
             leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
@@ -109,6 +98,19 @@ public class Sequences {
         m_trap.storeNote(),
         new WaitCommand(2),
         m_shooter.stop());
+  }
+
+  // sequence to score note in trap
+  public static Command trapScore(Trap m_trap) {
+    return Commands.sequence(m_trap.scoreNote(), new WaitCommand(3), m_trap.dunkNote());
+  }
+
+  // sequence to move arm out of the way and extend the elevator
+  public static Command trapElevator(Elevator m_elevator, Trap m_trap) {
+    return Commands.sequence(
+        m_trap.prepareToClimb(),
+        new WaitCommand(0.5),
+        m_elevator.extendTheElevator(elevatorHeight.HIGH));
   }
 
   public static Command autoShoot(Elevator elevator, Shooter shooter) {
