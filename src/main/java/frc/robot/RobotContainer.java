@@ -45,8 +45,6 @@ public class RobotContainer {
   private static final Shooter m_shooter = new Shooter();
   private static final LEDs m_led = LEDs.getInstance();
 
-  private HashMap<String, Command> eventMap = new HashMap<>();
-
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
