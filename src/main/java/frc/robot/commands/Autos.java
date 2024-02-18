@@ -13,10 +13,11 @@ public final class Autos {
     TwoNotesMidField("2NotesMidField"),
     ThreeNotesMidField("3NotesMidField"),
     FourNotesMidField("4NotesMidField"),
-    BLUE_AUTO3("BlueLeft1"),
-    BLUE_AUTO4("BlueCenter2"),
-    BLUE_AUTO5("BlueRight2"),
-    BLUE_AUTO6("BlueLeft2");
+    TwoNotesCenterField("2NotesCenterField"),
+    ThreeNotesCenterField("3NotesCenterField"),
+    FourNotesCenterField("4NotesCenterField"),
+    crossRobotZone("crossRobotZone"),
+    TestAlliance("testAlliance");
 
     private String m_path;
 
@@ -43,9 +44,11 @@ public final class Autos {
     autoChooser.addOption("score 2 notes mid field", Mode.TwoNotesMidField);
     autoChooser.addOption("score 3 notes mid field", Mode.ThreeNotesMidField);
     autoChooser.addOption("score 4 notes mid field", Mode.FourNotesMidField);
-    autoChooser.addOption(Mode.BLUE_AUTO4.toString(), Mode.BLUE_AUTO4);
-    autoChooser.addOption(Mode.BLUE_AUTO5.toString(), Mode.BLUE_AUTO5);
-    autoChooser.addOption(Mode.BLUE_AUTO6.toString(), Mode.BLUE_AUTO6);
+    autoChooser.addOption("score 2 notes center field", Mode.TwoNotesCenterField);
+    autoChooser.addOption("score 3 notes center field", Mode.ThreeNotesCenterField);
+    autoChooser.addOption("score 4 notes center field", Mode.FourNotesCenterField);
+    autoChooser.addOption("cross the robot zone", Mode.crossRobotZone);
+    autoChooser.addOption("test alliance colour", Mode.TestAlliance);
 
     Shuffleboard.getTab("Autos").add("Auto Mode", autoChooser);
 
