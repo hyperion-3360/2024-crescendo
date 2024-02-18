@@ -26,6 +26,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
+import java.util.HashMap;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -104,11 +105,8 @@ public class RobotContainer {
   /** Configure Joystick bindings for manually controlling and debugging the Trap arm */
   public void configureTrapDebugBindings() {
 
-    // m_driverController.a().onTrue(m_trap.setZero());
-    // m_driverController.b().onTrue(m_trap.storeNote());
-    m_driverController.y().onTrue(Sequences.trapElevator(m_elevator, m_trap));
-    m_driverController.x().onTrue(Sequences.trapShoot(m_shooter, m_trap));
-    // m_driverController.x().onTrue(m_trap.storeNote());
+    m_coDriverController.leftBumper().onTrue(Sequences.trapElevator(m_elevator, m_trap));
+    m_coDriverController.rightBumper().onTrue(Sequences.trapShoot(m_shooter, m_trap));
 
     // map joystick POV primary direction to each joint of the arm
     // List<Pair<Trap.Joint, Trigger>> jointMap = new ArrayList<Pair<Trap.Joint, Trigger>>();

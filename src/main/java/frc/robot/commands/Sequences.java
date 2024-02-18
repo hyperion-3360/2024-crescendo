@@ -33,7 +33,11 @@ public class Sequences {
     return Commands.sequence(
         m_trap.prepareToClimb(),
         new WaitCommand(0.5),
-        m_elevator.extendTheElevator(elevatorHeight.HIGH));
+        m_elevator.extendTheElevator(elevatorHeight.HIGH),
+        new WaitCommand(1),
+        m_trap.scoreNote(),
+        new WaitCommand(3),
+        m_trap.dunkNote());
   }
 
   public static Command elevatorHigh(Elevator elevator, Shooter shooter, LEDs leds) {
@@ -97,10 +101,10 @@ public class Sequences {
   // sequence to feed the note to the trap and store it
   public static Command trapShoot(Shooter m_shooter, Trap m_trap) {
     return Commands.sequence(
-        m_trap.grabPosition(),
         m_shooter.hookRelease(),
         m_shooter.setTargetLevel(levelSpeed.TRAP),
         m_shooter.setSpeedWithTarget(),
+        m_trap.grabPosition(),
         new WaitUntilCommand(m_trap::trapHasNote),
         m_trap.storeNote(),
         new WaitCommand(2),
