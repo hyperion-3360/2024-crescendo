@@ -33,7 +33,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 1.5
           }
         },
         {
@@ -43,7 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "1m"
+                  "pathName": "1f"
                 }
               },
               {
@@ -51,20 +51,8 @@
                 "data": {
                   "name": "intake"
                 }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "2m"
           }
         },
         {
@@ -89,7 +77,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 1.0
           }
         },
         {
@@ -99,7 +87,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "3m"
+                  "pathName": "2f"
                 }
               },
               {
@@ -139,7 +127,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 1.5
           }
         },
         {
