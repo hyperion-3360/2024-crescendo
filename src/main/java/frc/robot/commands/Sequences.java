@@ -32,7 +32,7 @@ public class Sequences {
   public static Command trapElevator(Elevator m_elevator, Trap m_trap) {
     return Commands.sequence(
         m_trap.prepareToClimb(),
-        // new WaitCommand(0.5),
+        new WaitCommand(0.5),
         m_elevator.extendTheElevator(elevatorHeight.HIGH));
   }
 
@@ -97,6 +97,7 @@ public class Sequences {
   // sequence to feed the note to the trap and store it
   public static Command trapShoot(Shooter m_shooter, Trap m_trap) {
     return Commands.sequence(
+        m_trap.grabPosition(),
         m_shooter.hookRelease(),
         m_shooter.setTargetLevel(levelSpeed.TRAP),
         m_shooter.setSpeedWithTarget(),

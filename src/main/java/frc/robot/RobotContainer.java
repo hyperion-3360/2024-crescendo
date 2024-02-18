@@ -8,7 +8,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,9 +26,6 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -110,15 +106,18 @@ public class RobotContainer {
   /** Configure Joystick bindings for manually controlling and debugging the Trap arm */
   public void configureTrapDebugBindings() {
 
-    // m_driverController.b().onTrue(m_trap.setZero());
-    // m_driverController.a().onTrue(Sequences.trapElevator(m_elevator, m_trap));
+    // m_driverController.a().onTrue(m_trap.setZero());
+    // m_driverController.b().onTrue(m_trap.storeNote());
+    m_driverController.y().onTrue(Sequences.trapElevator(m_elevator, m_trap));
+    m_driverController.x().onTrue(Sequences.trapShoot(m_shooter, m_trap));
+    // m_driverController.x().onTrue(m_trap.storeNote());
 
     // map joystick POV primary direction to each joint of the arm
-    List<Pair<Trap.Joint, Trigger>> jointMap = new ArrayList<Pair<Trap.Joint, Trigger>>();
-    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.SHOULDER, m_driverController.povUp()));
-    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.ELBOW, m_driverController.povRight()));
-    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.WRIST, m_driverController.povDown()));
-    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.FINGER, m_driverController.povLeft()));
+    // List<Pair<Trap.Joint, Trigger>> jointMap = new ArrayList<Pair<Trap.Joint, Trigger>>();
+    // jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.SHOULDER, m_driverController.povUp()));
+    // jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.ELBOW, m_driverController.povRight()));
+    // jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.WRIST, m_driverController.povDown()));
+    // jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.FINGER, m_driverController.povLeft()));
 
     // spotless:off
     /**
