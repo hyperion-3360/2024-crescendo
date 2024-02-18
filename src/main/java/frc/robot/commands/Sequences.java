@@ -29,15 +29,15 @@ public class Sequences {
   //                     .andThen(m_trap.scoreNote())));
   //   }
 
+  public static Command trapScore(Trap m_trap) {
+    return Commands.sequence(m_trap.scoreNote(), new WaitCommand(3), m_trap.dunkNote());
+  }
+
   public static Command trapElevator(Elevator m_elevator, Trap m_trap) {
     return Commands.sequence(
         m_trap.prepareToClimb(),
         new WaitCommand(0.5),
-        m_elevator.extendTheElevator(elevatorHeight.HIGH),
-        new WaitCommand(1),
-        m_trap.scoreNote(),
-        new WaitCommand(3),
-        m_trap.dunkNote());
+        m_elevator.extendTheElevator(elevatorHeight.HIGH));
   }
 
   public static Command elevatorHigh(Elevator elevator, Shooter shooter, LEDs leds) {
