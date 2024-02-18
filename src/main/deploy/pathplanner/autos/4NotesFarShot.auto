@@ -16,16 +16,16 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "shoot"
+                }
+              },
+              {
                 "type": "wait",
                 "data": {
                   "waitTime": 2.1
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "shoot"
-                }
               }
             ]
           }
@@ -37,7 +37,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "1m"
+                  "pathName": "1f"
                 }
               },
               {
@@ -60,18 +60,12 @@
                 }
               },
               {
-                "type": "path",
+                "type": "wait",
                 "data": {
-                  "pathName": "2m"
+                  "waitTime": 2.1
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.7
           }
         },
         {
@@ -81,7 +75,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "3m"
+                  "pathName": "2f"
                 }
               },
               {
@@ -104,18 +98,12 @@
                 }
               },
               {
-                "type": "path",
+                "type": "wait",
                 "data": {
-                  "pathName": "4m"
+                  "waitTime": 2.1
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.4
           }
         },
         {
@@ -125,7 +113,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "5m"
+                  "pathName": "3f"
                 }
               },
               {
@@ -138,22 +126,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "shoot"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "6m"
-                }
-              }
-            ]
+            "name": "farShoot"
           }
         }
       ]

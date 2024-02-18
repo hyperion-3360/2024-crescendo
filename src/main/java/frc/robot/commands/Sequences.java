@@ -114,12 +114,11 @@ public class Sequences {
   public static Command autoShoot(Elevator elevator, Shooter shooter) {
     return Commands.sequence(
         elevator.extendTheElevator(elevatorHeight.LOW),
-        new WaitCommand(1.5),
         shooter.setTargetLevel(levelSpeed.LOW),
         shooter.setSpeedWithTarget(),
-        new WaitCommand(1),
+        new WaitCommand(1.5),
         shooter.hookRelease(),
-        new WaitCommand(0.7),
+        new WaitCommand(0.5),
         shooter.stop());
   }
 }

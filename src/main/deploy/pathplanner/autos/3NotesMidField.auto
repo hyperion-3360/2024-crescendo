@@ -26,14 +26,14 @@
                 "data": {
                   "name": "shoot"
                 }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 2.0
-                }
               }
             ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
           }
         },
         {
@@ -43,19 +43,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "1"
+                  "pathName": "1m"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "intake"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
                 }
               }
             ]
@@ -64,7 +58,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2"
+            "pathName": "2m"
           }
         },
         {
@@ -82,14 +76,14 @@
                 "data": {
                   "name": "shoot"
                 }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 2.0
-                }
               }
             ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
           }
         },
         {
@@ -99,19 +93,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "3"
+                  "pathName": "3m"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "intake"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
                 }
               }
             ]
@@ -120,7 +108,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4"
+            "pathName": "4m"
           }
         },
         {
@@ -137,12 +125,6 @@
                 "type": "named",
                 "data": {
                   "name": "shoot"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
                 }
               }
             ]

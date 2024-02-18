@@ -26,14 +26,14 @@
                 "data": {
                   "name": "shoot"
                 }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.0
+                }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.5
           }
         },
         {
@@ -43,13 +43,19 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "1m"
+                  "pathName": "1c"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "intake"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.0
                 }
               }
             ]
@@ -58,7 +64,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2m"
+            "pathName": "2c"
           }
         },
         {
