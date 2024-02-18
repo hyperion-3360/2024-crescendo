@@ -33,7 +33,7 @@ public class Climber extends SubsystemBase {
 
   // class variables to help control and set the climber
   private double m_speed;
-  private double m_climberRampRate = 2; // was .2
+  private double m_climberRampRate = 1; // was .2
   private double m_climberTarget = ClimberConstants.kTopTarget;
   private boolean isrunning = false;
   private double m_climberStallSpeed = 0.01;
@@ -43,7 +43,7 @@ public class Climber extends SubsystemBase {
   private double kD = 0.0001;
 
   private double ks = 0.001;
-  private double kg = 1.2; // 1.2 = Volt
+  private double kg = 1.35; // 1.2 = Volt
   private double kv = 1.5; // 1.5 = Volt * second / meters
   private double ka = 2; // 2 = Volt *second^2 / meters
 
@@ -78,7 +78,7 @@ public class Climber extends SubsystemBase {
     if (isrunning == true) {
       m_climberRightMaster.set(
           m_PID.calculate(m_encoder.getPosition(), m_climberTarget)
-              + m_feedforward.calculate(-0.8));
+              + m_feedforward.calculate(-0.9));
     }
     // safety measures to prevent the motors from burning on reenable
     if (DriverStation.isDisabled()) {
