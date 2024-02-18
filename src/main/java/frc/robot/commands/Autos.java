@@ -10,9 +10,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 public final class Autos {
 
   public enum Mode {
-    NotesMidField("2NotesMidField"),
-    BLUE_AUTO1("BlueCenter1"),
-    BLUE_AUTO2("BlueRight1"),
+    TwoNotesMidField("2NotesMidField"),
+    ThreeNotesMidField("3NotesMidField"),
+    FourNotesMidField("4NotesMidField"),
     BLUE_AUTO3("BlueLeft1"),
     BLUE_AUTO4("BlueCenter2"),
     BLUE_AUTO5("BlueRight2"),
@@ -38,11 +38,11 @@ public final class Autos {
   private static SendableChooser<Mode> autoChooser = new SendableChooser<>();
 
   public static void setShuffleboardOptions() {
-    autoChooser.setDefaultOption(Mode.BLUE_AUTO1.toString(), Mode.BLUE_AUTO1);
+    autoChooser.setDefaultOption("score 2 notes mid field", Mode.TwoNotesMidField);
 
-    autoChooser.addOption("score 2 notes mid field", Mode.NotesMidField);
-    autoChooser.addOption(Mode.BLUE_AUTO2.toString(), Mode.BLUE_AUTO2);
-    autoChooser.addOption(Mode.BLUE_AUTO3.toString(), Mode.BLUE_AUTO3);
+    autoChooser.addOption("score 2 notes mid field", Mode.TwoNotesMidField);
+    autoChooser.addOption("score 3 notes mid field", Mode.ThreeNotesMidField);
+    autoChooser.addOption("score 4 notes mid field", Mode.FourNotesMidField);
     autoChooser.addOption(Mode.BLUE_AUTO4.toString(), Mode.BLUE_AUTO4);
     autoChooser.addOption(Mode.BLUE_AUTO5.toString(), Mode.BLUE_AUTO5);
     autoChooser.addOption(Mode.BLUE_AUTO6.toString(), Mode.BLUE_AUTO6);

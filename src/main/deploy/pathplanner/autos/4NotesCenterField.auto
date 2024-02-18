@@ -43,7 +43,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "1m"
+                  "pathName": "1c"
                 }
               },
               {
@@ -64,7 +64,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2m"
+            "pathName": "2c"
           }
         },
         {
@@ -99,7 +99,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "3m"
+                  "pathName": "3c"
                 }
               },
               {
@@ -120,7 +120,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4m"
+            "pathName": "4c"
           }
         },
         {
@@ -155,44 +155,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "5m"
+                  "pathName": "5c"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "intake"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "6m"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 3.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "shoot"
                 }
               },
               {
