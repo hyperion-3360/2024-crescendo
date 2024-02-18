@@ -102,6 +102,7 @@ public class RobotContainer {
             .andThen(m_elevator.extendTheElevator(elevatorHeight.INTAKE)));
     NamedCommands.registerCommand("intake", Sequences.intakeSequence(m_shooter, m_led));
     configureBindings();
+    NamedCommands.registerCommand("farShoot", Sequences.autoFarShoot(m_elevator, m_shooter));
 
     Autos.setShuffleboardOptions();
   }
