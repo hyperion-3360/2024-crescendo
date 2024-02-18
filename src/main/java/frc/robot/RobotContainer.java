@@ -10,7 +10,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -27,7 +26,6 @@ import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -48,8 +46,6 @@ public class RobotContainer {
   private static final Shooter m_shooter = new Shooter();
   private static final LEDs m_led = LEDs.getInstance();
 
-  private HashMap<String, Command> eventMap = new HashMap<>();
-
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -62,7 +58,7 @@ public class RobotContainer {
 
   // Slew Rate Limiters to limit acceleration of joystick inputs
   private final SlewRateLimiter translationLimiter = new SlewRateLimiter(2);
-  private final SlewRateLimiter strafeLimiter = new SlewRateLimiter(0.5);
+  private final SlewRateLimiter strafeLimiter = new SlewRateLimiter(2);
   private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(2);
 
   private final double kJoystickDeadband = 0.1;
@@ -99,8 +95,11 @@ public class RobotContainer {
     m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
     // eventMap.put("Shoot", new PrintCommand("i am shooting :)"));
-    NamedCommands.registerCommand("shoot", Sequences.autoShoot(m_elevator, m_shooter));
-    NamedCommands.registerCommand("take", Sequences.intakeSequence(m_shooter, m_led));
+    NamedCommands.registerCommand(
+        "shoot",
+        Sequences.autoShoot(m_elevator, m_shooter)
+            .andThen(m_elevator.extendTheElevator(elevatorHeight.INTAKE)));
+    NamedCommands.registerCommand("intake", Sequences.intakeSequence(m_shooter, m_led));
     configureBindings();
 
     Autos.setShuffleboardOptions();
@@ -180,11 +179,12 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    // return Autos.followPath(Autos.getSelectedOption());
-    return new PathPlannerAuto("Test");
+    m_swerveDrive.setPose(PathPlannerAuto.getStaringPoseFromAutoFile("2NotesMidField"));
+    return new PathPlannerAuto("2NotesMidField");
   }
 
-  // public Command getAutonomousCommand() {
+  // public Mode getAutonomousCommand() {
+  //   m_swerveDrive.setPose(PathPlannerAuto.getStaringPoseFromAutoFile("2NotesMidField"));
   //   return Autos.getSelectedOption();
   // }
 }
