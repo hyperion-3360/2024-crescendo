@@ -113,9 +113,9 @@ public class Sequences {
         new WaitCommand(1.5),
         shooter.setTargetLevel(levelSpeed.HIGH),
         shooter.setSpeedWithTarget(),
-        new WaitCommand(1),
+        new WaitCommand(1.5),
         shooter.hookRelease(),
-        new WaitCommand(0.7),
+        new WaitCommand(0.5),
         shooter.stop());
   }
 }
