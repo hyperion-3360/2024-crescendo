@@ -60,7 +60,6 @@ public class Sequences {
                     new WaitCommand(1.2).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
-  // TODO this is first test
   public static Command elevatorLow(Elevator elevator, Shooter shooter, LEDs leds) {
     return Commands.sequence(
             leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
@@ -108,6 +107,14 @@ public class Sequences {
   }
 
   public static Command autoShoot(Elevator elevator, Shooter shooter) {
-    return Commands.sequence(elevator.extendTheElevator(elevatorHeight.LOW),new WaitCommand(1.5), shooter.setTargetLevel(levelSpeed.LOW), shooter.setSpeedWithTarget(), new WaitCommand(1), shooter.hookRelease(), new WaitCommand(0.7), shooter.stop());
+    return Commands.sequence(
+        elevator.extendTheElevator(elevatorHeight.LOW),
+        new WaitCommand(1.5),
+        shooter.setTargetLevel(levelSpeed.LOW),
+        shooter.setSpeedWithTarget(),
+        new WaitCommand(1),
+        shooter.hookRelease(),
+        new WaitCommand(0.7),
+        shooter.stop());
   }
 }

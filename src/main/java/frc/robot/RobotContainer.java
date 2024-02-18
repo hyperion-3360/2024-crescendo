@@ -174,7 +174,7 @@ public class RobotContainer {
         .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.TOP))
         .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
 
-    m_driverController.a().toggleOnTrue(m_shooter.intake());
+    m_driverController.a().toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led));
     m_driverController.b().toggleOnTrue(m_shooter.vomit());
     m_driverController.y().toggleOnTrue(m_shooter.eject());
     m_driverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
