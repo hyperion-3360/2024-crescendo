@@ -118,20 +118,4 @@ public class Sequences {
         new WaitCommand(0.7),
         shooter.stop());
   }
-
-  public static Command autoFarShoot(Elevator elevator, Shooter shooter) {
-    return Commands.sequence(
-        elevator.extendTheElevator(elevatorHeight.FAR_HIGH),
-        new WaitCommand(1.5),
-        shooter.setTargetLevel(levelSpeed.FAR_HIGH),
-        shooter.setSpeedWithTarget(),
-        new WaitCommand(1),
-        shooter.hookRelease(),
-        new WaitCommand(0.7),
-        shooter.stop());
-  }
-
-  public static Command PLGoofyAahShoot(Shooter m_shooter) {
-    return Commands.sequence(m_shooter.hookRelease(), m_shooter.holdSpeed(levelSpeed.PL));
-  }
 }

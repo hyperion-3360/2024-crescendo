@@ -100,7 +100,7 @@ public class RobotContainer {
         "shoot",
         Sequences.autoShoot(m_elevator, m_shooter)
             .andThen(m_elevator.extendTheElevator(elevatorHeight.INTAKE)));
-    NamedCommands.registerCommand("intake", m_shooter.intake());
+    NamedCommands.registerCommand("intake", Sequences.intakeSequence(m_shooter, m_led));
     configureBindings();
 
     Autos.setShuffleboardOptions();
@@ -157,6 +157,8 @@ public class RobotContainer {
 
     configureTrapDebugBindings();
 
+    m_driverController.leftBumper().onTrue(m_trap.setZero());
+
     m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
     m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
     m_coDriverController.x().onTrue(Sequences.elevatorFarHigh(m_elevator, m_shooter, m_led));
@@ -187,10 +189,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     m_swerveDrive.setPose(
         PathPlannerAuto.getStaringPoseFromAutoFile(Autos.getSelectedOption().toString()));
-    // m_swerveDrive.m_odometry.resetPosition(
-    //     m_swerveDrive.getRotation2d(),
-    //     m_swerveDrive.getModulePositions(),
-    //     PathPlannerAuto.getStaringPoseFromAutoFile(Autos.getSelectedOption().toString()));
     return new PathPlannerAuto(Autos.getSelectedOption().toString());
   }
 }
