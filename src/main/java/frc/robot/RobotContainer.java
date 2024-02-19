@@ -21,6 +21,7 @@ import frc.robot.subsystems.Climber.climberPos;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.elevatorHeight;
 import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.LEDs.State;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
@@ -172,9 +173,18 @@ public class RobotContainer {
         .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
 
     m_driverController.a().toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led));
-    m_driverController.b().toggleOnTrue(m_shooter.vomit());
-    m_driverController.y().toggleOnTrue(m_shooter.eject());
-    m_driverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
+    m_driverController
+        .b()
+        .toggleOnTrue(m_shooter.vomit().andThen(() -> m_led.setState(State.IDLE)));
+    m_driverController
+        .y()
+        .toggleOnTrue(m_shooter.eject().andThen(() -> m_led.setState(State.IDLE)));
+    m_driverController
+        .x()
+        .onTrue(
+            m_elevator
+                .extendTheElevator(elevatorHeight.INTAKE)
+                .andThen(() -> m_led.setState(State.IDLE)));
   }
 
   public Command getAutonomousCommand() {
