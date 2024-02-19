@@ -19,8 +19,11 @@ public class Elevator extends SubsystemBase {
     HIGH,
     FAR_HIGH,
     LOW,
-    INTAKE
-  };
+    INTAKE,
+    AUTOFAR1,
+    AUTOFAR2,
+    AUTOFAR3
+  }
 
   // instanciate a limit switch
   DigitalInput bottomlimitSwitch = new DigitalInput(7);
@@ -104,6 +107,15 @@ public class Elevator extends SubsystemBase {
       case INTAKE:
         this.m_elevatorTarget = ElevatorConstants.kIntakeTarget;
         height = "Intake";
+        break;
+      case AUTOFAR1:
+        this.m_elevatorTarget = -47.0;
+        break;
+      case AUTOFAR2:
+        this.m_elevatorTarget = -47.0;
+        break;
+      case AUTOFAR3:
+        this.m_elevatorTarget = -47.0;
         break;
     }
   }

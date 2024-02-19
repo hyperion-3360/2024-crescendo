@@ -109,29 +109,4 @@ public class Sequences {
   public static Command trapElevator(Elevator m_elevator, Trap m_trap) {
     return Commands.sequence(m_elevator.extendTheElevator(elevatorHeight.HIGH));
   }
-
-  public static Command autoShoot(Elevator elevator, Shooter shooter) {
-    return Commands.sequence(
-        elevator.extendTheElevator(elevatorHeight.HIGH),
-        new WaitCommand(0.7),
-        shooter.setTargetLevel(levelSpeed.HIGH),
-        shooter.setSpeedWithTarget(),
-        new WaitCommand(1.15),
-        shooter.hookRelease(),
-        new WaitCommand(0.5),
-        shooter.stop(),
-        elevator.extendTheElevator(elevatorHeight.INTAKE));
-  }
-
-  public static Command autoFarShoot(Elevator elevator, Shooter shooter) {
-    return Commands.sequence(
-        elevator.extendTheElevator(elevatorHeight.FAR_HIGH),
-        shooter.setTargetLevel(levelSpeed.FAR_HIGH),
-        shooter.setSpeedWithTarget(),
-        new WaitCommand(1.15),
-        shooter.hookRelease(),
-        new WaitCommand(0.5),
-        shooter.stop(),
-        elevator.extendTheElevator(elevatorHeight.INTAKE));
-  }
 }

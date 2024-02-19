@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AutoCommands;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
@@ -94,9 +95,11 @@ public class RobotContainer {
     m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
     // eventMap.put("Shoot", new PrintCommand("i am shooting :)"));
-    NamedCommands.registerCommand("shoot", Sequences.autoShoot(m_elevator, m_shooter));
+    NamedCommands.registerCommand("shootHigh", AutoCommands.autoShoot(m_elevator, m_shooter));
     NamedCommands.registerCommand("intake", m_shooter.intake());
-    NamedCommands.registerCommand("farShoot", Sequences.autoFarShoot(m_elevator, m_shooter));
+    NamedCommands.registerCommand("farShootA", AutoCommands.autoFarShoot1(m_elevator, m_shooter));
+    NamedCommands.registerCommand("farShootB", AutoCommands.autoFarShoot2(m_elevator, m_shooter));
+    NamedCommands.registerCommand("farShootC", AutoCommands.autoFarShoot3(m_elevator, m_shooter));
 
     configureBindings();
 
