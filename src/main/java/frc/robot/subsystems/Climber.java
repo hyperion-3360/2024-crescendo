@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,7 +33,7 @@ public class Climber extends SubsystemBase {
 
   // class variables to help control and set the climber
   private double m_speed;
-  private double m_climberRampRate = 2; // was .2
+  private double m_climberRampRate = 1; // was .2
   private double m_climberTarget = ClimberConstants.kTopTarget;
   private boolean isrunning = false;
   private double m_climberStallSpeed = 0.01;
@@ -40,6 +41,13 @@ public class Climber extends SubsystemBase {
   private double kP = 0.025;
   private double kI = 0.0001;
   private double kD = 0.0001;
+
+  private double ks = 0.001;
+  private double kg = 1.35; // 1.2 = Volt
+  private double kv = 1.5; // 1.5 = Volt * second / meters
+  private double ka = 2; // 2 = Volt *second^2 / meters
+
+  private ElevatorFeedforward m_feedforward = new ElevatorFeedforward(ks, kg, kv, ka);
 
   private PIDController m_PID = new PIDController(kP, kI, kD);
 
@@ -68,7 +76,9 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     if (isrunning == true) {
-      m_climberRightMaster.set(m_PID.calculate(m_encoder.getPosition(), m_climberTarget));
+      m_climberRightMaster.set(
+          m_PID.calculate(m_encoder.getPosition(), m_climberTarget)
+              + m_feedforward.calculate(-0.9));
     }
     // safety measures to prevent the motors from burning on reenable
     if (DriverStation.isDisabled()) {
@@ -77,6 +87,8 @@ public class Climber extends SubsystemBase {
       climberGoToSelectedLevel(climberPos.STALL).cancel();
       m_PID.reset();
     }
+
+    System.out.println(m_encoder.getPosition());
   }
 
   // private method to set the behavior for each state

@@ -96,8 +96,7 @@ public class Trap extends SubsystemBase {
         .andThen(new WaitCommand(m_servoElbow.travelTime()))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristscoreNote))
         .andThen(new WaitCommand(m_servoWrist.travelTime()))
-        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed))
-        .andThen(new WaitCommand(m_servoFinger.travelTime()));
+        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));
   }
 
   public Command storeNote() {
@@ -108,19 +107,16 @@ public class Trap extends SubsystemBase {
         .andThen(new WaitCommand(m_servoElbow.travelTime()))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWriststoreNote))
         .andThen(new WaitCommand(m_servoWrist.travelTime()))
-        .andThen(new WaitUntilCommand(() -> !m_limitSwitch.get()))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));
   }
 
   public Command prepareToClimb() {
     return this.runOnce(
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderprepareToClimb))
-        .andThen(new WaitCommand(m_servoShoulder.travelTime()))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowprepareToClimb))
         .andThen(new WaitCommand(m_servoElbow.travelTime()))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristprepareToClimb))
         .andThen(new WaitCommand(m_servoWrist.travelTime()))
-        .andThen(new WaitUntilCommand(() -> !m_limitSwitch.get()))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));
   }
 
@@ -131,7 +127,7 @@ public class Trap extends SubsystemBase {
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowdunkNote))
         .andThen(new WaitCommand(m_servoElbow.travelTime()))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristdunkNote))
-        .andThen(new WaitCommand(1.5))
+        .andThen(new WaitCommand(0.6))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened));
   }
 
