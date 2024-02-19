@@ -27,23 +27,20 @@ public class Climber extends SubsystemBase {
   private CANSparkMax m_climberRightMaster =
       new CANSparkMax(Constants.SubsystemConstants.kclimberRightId, MotorType.kBrushless);
 
-  // private WPI_PigeonIMU m_gyro = new WPI_PigeonIMU(0);
   // instantiating a relative encoder to detect the motors postion
   private RelativeEncoder m_encoder = m_climberRightMaster.getEncoder();
 
   // class variables to help control and set the climber
-  private double m_speed;
   private double m_climberRampRate = 1; // was .2
   private double m_climberTarget = ClimberConstants.kTopTarget;
   private boolean isrunning = false;
-  private double m_climberStallSpeed = 0.01;
 
   private double kP = 0.025;
   private double kI = 0.0017; // was 0.0001
   private double kD = 0.0004; // was 0.0001
 
   private double ks = 0.001;
-  private double kg = 1.35; // 1.2 = Volt
+  private double kg = 1.35; // 1.35 = Volt
   private double kv = 1.5; // 1.5 = Volt * second / meters
   private double ka = 2; // 2 = Volt *second^2 / meters
 
@@ -60,8 +57,6 @@ public class Climber extends SubsystemBase {
     m_climberLeft.follow(m_climberRightMaster, true);
 
     m_encoder.setPosition(0.0);
-
-    // m_gyro.reset();
 
     m_climberRightMaster.setOpenLoopRampRate(m_climberRampRate);
     m_climberLeft.setOpenLoopRampRate(m_climberRampRate);
@@ -85,6 +80,7 @@ public class Climber extends SubsystemBase {
       climberGoToSelectedLevel(climberPos.TOP).cancel();
       climberGoToSelectedLevel(climberPos.INITAL).cancel();
       climberGoToSelectedLevel(climberPos.STALL).cancel();
+      climberGoToSelectedLevel(climberPos.STOP);
       m_PID.reset();
     }
 
@@ -102,8 +98,6 @@ public class Climber extends SubsystemBase {
       case TOP:
         isrunning = true;
         m_climberTarget = Constants.ClimberConstants.kTopTarget;
-        m_climberRightMaster.set(-m_speed);
-        m_climberStallSpeed = 0;
         break;
 
       case STALL:
@@ -120,24 +114,9 @@ public class Climber extends SubsystemBase {
       case INITAL:
         isrunning = true;
         m_climberTarget = ClimberConstants.kstartPos;
-        m_climberRightMaster.set(m_speed);
-        m_climberStallSpeed = 0.0;
         break;
     }
   }
-
-  // private void repositionement() {
-
-  //     if (Math.abs(m_gyro.getRoll()) > 15){
-  //              m_climberRightMaster.set(+ 0.1);
-  //     }
-
-  //     if (Math.abs(m_gyro.getRoll()) < -15){
-  //              m_climberLeft.set(+ 0.1);
-  //      }
-  //          goToTarget();
-
-  //     }
 
   // command to set the desired climber state
   public Command climberGoToSelectedLevel(climberPos m_climberCheck) {
