@@ -112,12 +112,37 @@ public class Trap extends SubsystemBase {
 
   public Command prepareToClimb() {
     return this.runOnce(
-            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderprepareToClimb))
+            () -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowprepareToClimbdelayed1))
+        .andThen(new WaitCommand(0.3))
+        .andThen(
+            () ->
+                m_servoShoulder.setAngle(
+                    Constants.TrapConstants.kangleShoulderprepareToClimbdelayed1))
+        .andThen(new WaitCommand(0.3))
+        .andThen(
+            () -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowprepareToClimbdelayed2))
+        .andThen(new WaitCommand(0.3))
+        .andThen(
+            () ->
+                m_servoShoulder.setAngle(
+                    Constants.TrapConstants.kangleShoulderprepareToClimbdelayed2))
+        .andThen(new WaitCommand(0.3))
+        .andThen(
+            () -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowprepareToClimbdelayed3))
+        .andThen(new WaitCommand(0.3))
+        .andThen(
+            () ->
+                m_servoShoulder.setAngle(
+                    Constants.TrapConstants.kangleShoulderprepareToClimbdelayed3))
+        .andThen(new WaitCommand(0.3))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowprepareToClimb))
-        .andThen(new WaitCommand(m_servoElbow.travelTime()))
+        .andThen(new WaitCommand(0.3))
+        .andThen(
+            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderprepareToClimb))
+        .andThen(new WaitCommand(0.3))
+        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristprepareToClimb))
-        .andThen(new WaitCommand(m_servoWrist.travelTime()))
-        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));
+        .andThen(new WaitCommand(m_servoWrist.travelTime()));
   }
 
   public Command dunkNote() {
