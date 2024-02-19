@@ -41,7 +41,7 @@ public class Elevator extends SubsystemBase {
 
   // creating the pid constants + pid member
   private double kP = 0.0075;
-  private double kI = 0.0005;
+  private double kI = 0.00083;
   private double kD = 0;
 
   private String height = "no data";
