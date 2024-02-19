@@ -159,7 +159,7 @@ public class RobotContainer {
     m_coDriverController.x().onTrue(Sequences.elevatorFarHigh(m_elevator, m_shooter, m_led));
     m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
 
-    // m_coDriverController.a().onTrue(m_elevator.extendTheElevator(elevatorHeight.HIGH));
+    m_coDriverController.a().onTrue(m_elevator.extendTheElevator(elevatorHeight.HIGH));
 
     m_coDriverController
         .leftTrigger()
