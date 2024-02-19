@@ -98,13 +98,13 @@ public class Swerve extends SubsystemBase {
   }
 
   public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
-    if (m_debug)
-      System.out.println(
-          String.format(
-              "driveRobotRelative: omega: %f, vx: %f, vy : %f",
-              robotRelativeSpeeds.omegaRadiansPerSecond,
-              robotRelativeSpeeds.vxMetersPerSecond,
-              robotRelativeSpeeds.vyMetersPerSecond));
+    // if (m_debug)
+    //   System.out.println(
+    //       String.format(
+    //           "driveRobotRelative: omega: %f, vx: %f, vy : %f",
+    //           robotRelativeSpeeds.omegaRadiansPerSecond,
+    //           robotRelativeSpeeds.vxMetersPerSecond,
+    //           robotRelativeSpeeds.vyMetersPerSecond));
     ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
 
     SwerveModuleState[] targetStates =

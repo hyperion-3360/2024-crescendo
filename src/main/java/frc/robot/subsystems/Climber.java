@@ -39,8 +39,8 @@ public class Climber extends SubsystemBase {
   private double m_climberStallSpeed = 0.01;
 
   private double kP = 0.025;
-  private double kI = 0.0001;
-  private double kD = 0.0001;
+  private double kI = 0.0017; // was 0.0001
+  private double kD = 0.0004; // was 0.0001
 
   private double ks = 0.001;
   private double kg = 1.35; // 1.2 = Volt
@@ -88,7 +88,12 @@ public class Climber extends SubsystemBase {
       m_PID.reset();
     }
 
-    System.out.println(m_encoder.getPosition());
+    System.out.println(
+        "pos "
+            + m_encoder.getPosition()
+            + " pid "
+            + (m_PID.calculate(m_encoder.getPosition(), m_climberTarget))
+            + m_feedforward.calculate(-0.9));
   }
 
   // private method to set the behavior for each state
