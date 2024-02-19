@@ -93,13 +93,11 @@ public class RobotContainer {
     m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
     // eventMap.put("Shoot", new PrintCommand("i am shooting :)"));
-    NamedCommands.registerCommand(
-        "shoot",
-        Sequences.autoShoot(m_elevator, m_shooter)
-            .andThen(m_elevator.extendTheElevator(elevatorHeight.INTAKE)));
-    NamedCommands.registerCommand("intake", Sequences.intakeSequence(m_shooter, m_led));
-    configureBindings();
+    NamedCommands.registerCommand("shoot", Sequences.autoShoot(m_elevator, m_shooter));
+    NamedCommands.registerCommand("intake", m_shooter.intake());
     NamedCommands.registerCommand("farShoot", Sequences.autoFarShoot(m_elevator, m_shooter));
+
+    configureBindings();
 
     Autos.setShuffleboardOptions();
   }
@@ -160,7 +158,7 @@ public class RobotContainer {
     m_coDriverController.x().onTrue(Sequences.elevatorFarHigh(m_elevator, m_shooter, m_led));
     m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
 
-    m_coDriverController.a().onTrue(m_elevator.extendTheElevator(elevatorHeight.HIGH));
+    // m_coDriverController.a().onTrue(m_elevator.extendTheElevator(elevatorHeight.HIGH));
 
     m_coDriverController
         .leftTrigger()

@@ -116,12 +116,14 @@ public class Sequences {
   public static Command autoShoot(Elevator elevator, Shooter shooter) {
     return Commands.sequence(
         elevator.extendTheElevator(elevatorHeight.HIGH),
+        new WaitCommand(0.7),
         shooter.setTargetLevel(levelSpeed.HIGH),
         shooter.setSpeedWithTarget(),
-        new WaitCommand(1.5),
+        new WaitCommand(1.15),
         shooter.hookRelease(),
         new WaitCommand(0.5),
-        shooter.stop());
+        shooter.stop(),
+        elevator.extendTheElevator(elevatorHeight.INTAKE));
   }
 
   public static Command autoFarShoot(Elevator elevator, Shooter shooter) {
@@ -129,9 +131,10 @@ public class Sequences {
         elevator.extendTheElevator(elevatorHeight.FAR_HIGH),
         shooter.setTargetLevel(levelSpeed.FAR_HIGH),
         shooter.setSpeedWithTarget(),
-        new WaitCommand(1),
+        new WaitCommand(1.15),
         shooter.hookRelease(),
         new WaitCommand(0.5),
-        shooter.stop());
+        shooter.stop(),
+        elevator.extendTheElevator(elevatorHeight.INTAKE));
   }
 }

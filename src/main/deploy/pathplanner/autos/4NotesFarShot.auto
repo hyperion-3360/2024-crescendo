@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.5,
-      "y": 5.55
+      "x": 1.2909887440145251,
+      "y": 5.555586717654917
     },
     "rotation": 0
   },
@@ -16,18 +16,24 @@
           "data": {
             "commands": [
               {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.2
+                }
+              },
+              {
                 "type": "named",
                 "data": {
                   "name": "shoot"
                 }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.7
-                }
               }
             ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.6
           }
         },
         {
@@ -56,13 +62,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shoot"
+                  "name": "farShoot"
                 }
               },
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.7
+                  "waitTime": 1.8
                 }
               }
             ]
@@ -94,13 +100,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shoot"
+                  "name": "farShoot"
                 }
               },
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.7
+                  "waitTime": 1.8
                 }
               }
             ]

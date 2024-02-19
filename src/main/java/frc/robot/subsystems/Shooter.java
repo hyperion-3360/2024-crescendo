@@ -101,6 +101,7 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     // setting speed to motors
     SmartDashboard.putBoolean("Has Note?", hasNote());
+    System.out.println(m_speed);
   }
 
   // switch case for different speeds according to the level

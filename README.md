@@ -39,3 +39,11 @@ ID: 15 X: 182.73, Y: 177.10, Z: 52.00, ROTATION:120°
 
 ID: 16 X: 182.73, Y: 146.19, Z: 52.00, ROTATION:240°
 >>>>>>> odometry
+
+>> AUTO INFO <<
+
+4NotesMidField works, does it fit time?
+4NotesFarShot could replace previous, to test
+
+center field autos need modifs so that far shot is possible
+

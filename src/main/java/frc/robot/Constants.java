@@ -179,9 +179,9 @@ public final class Constants {
 
   public static class ElevatorConstants {
     public static final double kDeadzone = 0.0035;
-    public static final double kHighTarget = -69;
-    public static final double kFarHighTarget = -40; // needs more fine tuning maybe
-    public static final double kLowTarget = -63;
+    public static final double kHighTarget = -72; // might be too high
+    public static final double kFarHighTarget = -47; // needs more fine tuning maybe
+    public static final double kLowTarget = -61; // only works on full battery
     public static final double kIntakeTarget = 0.0;
   }
 
