@@ -215,7 +215,7 @@ public final class Constants {
     public static final double kangleElbowscoreNote = 5.0;
     public static final double kangleWristscoreNote = 155.0;
 
-    public static final double kangleShoulderdunkNote = 130.0; // DUNKNOTE
+    public static final double kangleShoulderdunkNote = 140.0; // DUNKNOTE
     public static final double kangleElbowdunkNote = 20.0;
     public static final double kangleWristdunkNote = 155.0;
     // good sequenced
@@ -223,8 +223,14 @@ public final class Constants {
     public static final double kangleElbowstoreNote = 142.0;
     public static final double kangleWriststoreNote = 155.0;
     // good not in sequence yet
-    public static final double kangleShoulderprepareToClimb = 110.0; // PREPARETOCLIMB
-    public static final double kangleElbowprepareToClimb = 5.0;
+    public static final double kangleShoulderprepareToClimb = 110.0;
+    public static final double kangleShoulderprepareToClimbdelayed1 = 88.0;
+    public static final double kangleShoulderprepareToClimbdelayed2 = 66.0;
+    public static final double kangleShoulderprepareToClimbdelayed3 = 44.0; // PREPARETOCLIMB
+    public static final double kangleElbowprepareToClimbdelayed1 = 113.0;
+    public static final double kangleElbowprepareToClimbdelayed2 = 71.0;
+    public static final double kangleElbowprepareToClimbdelayed3 = 35.0;
+    public static final double kangleElbowprepareToClimb = 0.0;
     public static final double kangleWristprepareToClimb = 155.0;
   }
 
