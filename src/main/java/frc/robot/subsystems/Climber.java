@@ -7,6 +7,7 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -35,12 +36,14 @@ public class Climber extends SubsystemBase {
   private double m_climberTarget = ClimberConstants.kTopTarget;
   private boolean isrunning = false;
 
+  public double triggerSpeed = 0.0;
+
   private double kP = 0.025;
-  private double kI = 0.0017; // was 0.0001
+  private double kI = 0.0007; // was 0.0001
   private double kD = 0.0004; // was 0.0001
 
   private double ks = 0.001;
-  private double kg = 1.35; // 1.35 = Volt
+  private double kg = 1.335; // 1.35 = Volt
   private double kv = 1.5; // 1.5 = Volt * second / meters
   private double ka = 2; // 2 = Volt *second^2 / meters
 
@@ -70,11 +73,14 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (isrunning == true) {
-      m_climberRightMaster.set(
-          m_PID.calculate(m_encoder.getPosition(), m_climberTarget)
-              + m_feedforward.calculate(-0.9));
-    }
+    // if (isrunning == true) {
+    //   m_climberRightMaster.set(
+    //       m_PID.calculate(m_encoder.getPosition(), m_climberTarget)
+    //           + m_feedforward.calculate(-0.9));
+    // }
+
+    m_climberRightMaster.set(triggerSpeed);
+    m_climberLeft.set(triggerSpeed);
     // safety measures to prevent the motors from burning on reenable
     if (DriverStation.isDisabled()) {
       climberGoToSelectedLevel(climberPos.TOP).cancel();
@@ -84,12 +90,7 @@ public class Climber extends SubsystemBase {
       m_PID.reset();
     }
 
-    System.out.println(
-        "pos "
-            + m_encoder.getPosition()
-            + " pid "
-            + (m_PID.calculate(m_encoder.getPosition(), m_climberTarget))
-            + m_feedforward.calculate(-0.9));
+    System.out.println("pos " + m_encoder.getPosition() + " speed " + triggerSpeed);
   }
 
   // private method to set the behavior for each state
@@ -124,5 +125,17 @@ public class Climber extends SubsystemBase {
         () -> {
           setClimberLevel(m_climberCheck);
         });
+  }
+
+  public Command setSpeed1() {
+    return this.run(() -> triggerSpeed = Math.pow(new XboxController(1).getLeftTriggerAxis(), 3));
+  }
+
+  public Command setSpeed2() {
+    return this.run(() -> triggerSpeed = -Math.pow(new XboxController(1).getRightTriggerAxis(), 3));
+  }
+
+  public Command stop() {
+    return this.run(() -> triggerSpeed = 0.0);
   }
 }

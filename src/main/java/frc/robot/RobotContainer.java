@@ -18,7 +18,6 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Climber.climberPos;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.elevatorHeight;
 import frc.robot.subsystems.LEDs;
@@ -62,6 +61,8 @@ public class RobotContainer {
   private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(2);
 
   private final double kJoystickDeadband = 0.1;
+  private double speed1;
+  private double speed2;
 
   /***
    * conditionJoystick
@@ -164,14 +165,16 @@ public class RobotContainer {
 
     m_coDriverController.a().onTrue(m_elevator.extendTheElevator(elevatorHeight.HIGH));
 
-    m_coDriverController
-        .leftTrigger()
-        .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.INITAL))
-        .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
-    m_coDriverController
-        .rightTrigger()
-        .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.TOP))
-        .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
+    m_coDriverController.leftTrigger().whileTrue(m_climber.setSpeed1()).onFalse(m_climber.stop());
+    m_coDriverController.rightTrigger().whileTrue(m_climber.setSpeed2()).onFalse(m_climber.stop());
+    // m_coDriverController
+    //     .leftTrigger()
+    //     .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.INITAL))
+    //     .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
+    // m_coDriverController
+    //     .rightTrigger()
+    //     .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.TOP))
+    //     .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
 
     m_driverController.a().toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led));
     m_driverController
