@@ -223,8 +223,8 @@ public final class Constants {
     public static final double kangleElbowstoreNote = 142.0;
     public static final double kangleWriststoreNote = 155.0;
     // good not in sequence yet
-    public static final double kangleShoulderprepareToClimb = 120.0; // PREPARETOCLIMB
-    public static final double kangleElbowprepareToClimb = 60.0;
+    public static final double kangleShoulderprepareToClimb = 110.0; // PREPARETOCLIMB
+    public static final double kangleElbowprepareToClimb = 5.0;
     public static final double kangleWristprepareToClimb = 155.0;
   }
 

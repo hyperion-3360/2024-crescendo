@@ -102,15 +102,12 @@ public class Sequences {
 
   // sequence to score note in trap
   public static Command trapScore(Trap m_trap) {
-    return Commands.sequence(m_trap.scoreNote(), new WaitCommand(3), m_trap.dunkNote());
+    return Commands.sequence(m_trap.scoreNote(), new WaitCommand(2), m_trap.dunkNote());
   }
 
   // sequence to move arm out of the way and extend the elevator
   public static Command trapElevator(Elevator m_elevator, Trap m_trap) {
-    return Commands.sequence(
-        m_trap.prepareToClimb(),
-        new WaitCommand(0.5),
-        m_elevator.extendTheElevator(elevatorHeight.HIGH));
+    return Commands.sequence(m_elevator.extendTheElevator(elevatorHeight.HIGH));
   }
 
   public static Command autoShoot(Elevator elevator, Shooter shooter) {
