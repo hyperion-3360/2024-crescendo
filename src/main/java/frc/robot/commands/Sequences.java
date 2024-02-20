@@ -81,11 +81,12 @@ public class Sequences {
   // intake sequence to set leds to the right state
   public static Command intakeSequence(Shooter m_shooter, LEDs m_LED) {
     return Commands.sequence(
-        Commands.runOnce(() -> m_LED.setState(State.INTAKE_ROLLING)),
-        m_shooter
-            .intake()
-            .andThen(() -> m_LED.setState(State.NOTE_INSIDE))
-            .andThen(new WaitCommand(2).andThen(() -> m_LED.setState(State.IDLE))));
+            Commands.runOnce(() -> m_LED.setState(State.INTAKE_ROLLING)),
+            m_shooter
+                .intake()
+                .andThen(() -> m_LED.setState(State.NOTE_INSIDE))
+                .andThen(new WaitCommand(2).andThen(() -> m_LED.setState(State.IDLE))))
+        .handleInterrupt(() -> m_LED.setState(State.IDLE));
   }
 
   // sequence to feed the note to the trap and store it

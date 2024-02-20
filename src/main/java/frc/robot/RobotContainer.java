@@ -177,12 +177,15 @@ public class RobotContainer {
     //     .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
 
     m_driverController.a().toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led));
+
     m_driverController
         .b()
-        .toggleOnTrue(m_shooter.vomit().andThen(() -> m_led.setState(State.IDLE)));
+        .toggleOnTrue(m_shooter.vomit().finallyDo(() -> m_led.setState(State.IDLE)));
+
     m_driverController
         .y()
-        .toggleOnTrue(m_shooter.eject().andThen(() -> m_led.setState(State.IDLE)));
+        .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
+
     m_driverController
         .x()
         .onTrue(
