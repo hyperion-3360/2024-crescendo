@@ -1,10 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -47,21 +44,21 @@ public class Trap extends SubsystemBase {
   }
   */
 
-  @Override
-  public void periodic() {
-    if (m_debug) {
-      for (Joint j : Joint.values()) {
-        var s = m_jointArray[j.ordinal()];
-        SmartDashboard.putString(
-            String.format("%s : %d", j.name(), s.getChannel()),
-            String.format("@ :%f deg", s.getAngle()));
-      }
-    }
+  // @Override
+  // public void periodic() {
+  //   if (m_debug) {
+  //     for (Joint j : Joint.values()) {
+  //       var s = m_jointArray[j.ordinal()];
+  //       SmartDashboard.putString(
+  //           String.format("%s : %d", j.name(), s.getChannel()),
+  //           String.format("@ :%f deg", s.getAngle()));
+  //     }
+  //   }
 
-    if (DriverStation.isDisabled()) {
-      setZero = false;
-    }
-  }
+  //   if (DriverStation.isDisabled()) {
+  //     setZero = false;
+  //   }
+  // }
 
   public Command setZero() {
     return this.runOnce(() -> m_servoWrist.setZero())
@@ -87,29 +84,6 @@ public class Trap extends SubsystemBase {
         .andThen(new WaitCommand(m_servoWrist.travelTime()))
         .andThen(new WaitUntilCommand(() -> !m_limitSwitch.get()))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));
-  }
-
-  public Command scoreNote() {
-    return this.runOnce(
-            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderscoreNote))
-        .andThen(new WaitCommand(m_servoShoulder.travelTime()))
-        .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowscoreNote))
-        .andThen(new WaitCommand(m_servoElbow.travelTime()))
-        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristscoreNote))
-        .andThen(new WaitCommand(m_servoWrist.travelTime()))
-        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));
-  }
-
-  public Command storeNote() {
-    return this.runOnce(
-            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderstoreNote))
-        .andThen(new WaitCommand(m_servoShoulder.travelTime()))
-        .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowstoreNote))
-        .andThen(new WaitCommand(m_servoElbow.travelTime()))
-        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWriststoreNote))
-        .andThen(new WaitCommand(m_servoWrist.travelTime()))
-        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed))
-        .andThen(new PrintCommand("limit switch on"));
   }
 
   public Command prepareToClimb() {
@@ -165,16 +139,17 @@ public class Trap extends SubsystemBase {
         .andThen(new WaitCommand(0.6));
   }
 
-  public Command manualControl(Joint j, boolean increase) {
-    return this.runOnce(
-        () -> {
-          var new_angle = m_jointArray[j.ordinal()].getAngle();
-          if (increase) new_angle = new_angle < 180 ? new_angle + 1 : 180;
-          else new_angle = new_angle > 0 ? new_angle - 1 : 0;
-          var lambda_angle = new_angle; // making it effectively final so java lambda is happy.. :)
-          m_jointArray[j.ordinal()].setAngle(lambda_angle);
-        });
-  }
+  // public Command manualControl(Joint j, boolean increase) {
+  //   return this.runOnce(
+  //       () -> {
+  //         var new_angle = m_jointArray[j.ordinal()].getAngle();
+  //         if (increase) new_angle = new_angle < 180 ? new_angle + 1 : 180;
+  //         else new_angle = new_angle > 0 ? new_angle - 1 : 0;
+  //         var lambda_angle = new_angle; // making it effectively final so java lambda is happy..
+  // :)
+  //         m_jointArray[j.ordinal()].setAngle(lambda_angle);
+  //       });
+  // }
 
   public boolean trapHasNote() {
     return !m_limitSwitch.get();

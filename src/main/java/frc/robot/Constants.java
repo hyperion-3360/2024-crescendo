@@ -193,7 +193,7 @@ public final class Constants {
 
   public static class TrapConstants {
 
-    public static final int kservoShoulderId = 9; // servo ports + limit switch + blocker
+    public static final int kservoShoulderId = 9; // servo ports + limit switch
     public static final int kservoElbowId = 8;
     public static final int kservoWristId = 7;
     public static final int kservoFingerId = 6;
@@ -210,25 +210,15 @@ public final class Constants {
     public static final double kangleShouldergrabPosition = 83.0; // GRABPOSITION
     public static final double kangleElbowgrabPosition = 99.0;
     public static final double kangleWristgrabPosition = 68.0;
-    // not finished (aprox) mapped
-    public static final double kangleShoulderscoreNote = 110.0; // SCORENOTE
-    public static final double kangleElbowscoreNote = 5.0;
-    public static final double kangleWristscoreNote = 155.0;
-
+    // to be adjusted
     public static final double kangleShoulderdunkNote = 155.0; // DUNKNOTE
-    public static final double kangleElbowdunkNote = 20.0;
-    public static final double kangleWristdunkNote = 130.0;
     public static final double kangleElbowdunkNote = 10.0;
     public static final double kangleWristdunkNote = 100.0;
-
+    // good
     public static final double kangleShoulderdisable = 110.0; // CLEAR FOR ROBOT DISABLE
     public static final double kangleElbowdisable = 5.0;
     public static final double kangleWristdisable = 155.0;
-    // good sequenced
-    public static final double kangleShoulderstoreNote = 0.0; // STORENOTE
-    public static final double kangleElbowstoreNote = 142.0;
-    public static final double kangleWriststoreNote = 155.0;
-    // good not in sequence yet
+    // good
     public static final double kangleShoulderprepareToClimb = 110.0;
     public static final double kangleShoulderprepareToClimbdelayed1 = 88.0;
     public static final double kangleShoulderprepareToClimbdelayed2 = 66.0;
