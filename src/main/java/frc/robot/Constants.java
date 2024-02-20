@@ -208,7 +208,7 @@ public final class Constants {
     public static final double kangleShouldersetZeroDelayed = 5.0;
     // good mapped
     public static final double kangleShouldergrabPosition = 83.0; // GRABPOSITION
-    public static final double kangleElbowgrabPosition = 93.0;
+    public static final double kangleElbowgrabPosition = 99.0;
     public static final double kangleWristgrabPosition = 68.0;
     // not finished (aprox) mapped
     public static final double kangleShoulderscoreNote = 110.0; // SCORENOTE
@@ -216,8 +216,8 @@ public final class Constants {
     public static final double kangleWristscoreNote = 155.0;
 
     public static final double kangleShoulderdunkNote = 155.0; // DUNKNOTE
-    public static final double kangleElbowdunkNote = 10.0;
-    public static final double kangleWristdunkNote = 155.0;
+    public static final double kangleElbowdunkNote = 20.0;
+    public static final double kangleWristdunkNote = 130.0;
     // good sequenced
     public static final double kangleShoulderstoreNote = 0.0; // STORENOTE
     public static final double kangleElbowstoreNote = 142.0;

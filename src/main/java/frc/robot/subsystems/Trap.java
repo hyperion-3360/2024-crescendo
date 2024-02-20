@@ -152,9 +152,9 @@ public class Trap extends SubsystemBase {
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderdunkNote))
         .andThen(new WaitCommand(m_servoShoulder.travelTime()))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowdunkNote))
-        .andThen(new WaitCommand(m_servoElbow.travelTime()))
+        .andThen(new WaitCommand(1))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristdunkNote))
-        .andThen(new WaitCommand(0.6))
+        .andThen(new WaitCommand(m_servoWrist.travelTime()))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened));
   }
 
