@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -45,20 +46,20 @@ public class Trap extends SubsystemBase {
   */
 
   // @Override
-  // public void periodic() {
-  //   if (m_debug) {
-  //     for (Joint j : Joint.values()) {
-  //       var s = m_jointArray[j.ordinal()];
-  //       SmartDashboard.putString(
-  //           String.format("%s : %d", j.name(), s.getChannel()),
-  //           String.format("@ :%f deg", s.getAngle()));
-  //     }
-  //   }
+  public void periodic() {
+    //   if (m_debug) {
+    //     for (Joint j : Joint.values()) {
+    //       var s = m_jointArray[j.ordinal()];
+    //       SmartDashboard.putString(
+    //           String.format("%s : %d", j.name(), s.getChannel()),
+    //           String.format("@ :%f deg", s.getAngle()));
+    //     }
+    //   }
 
-  //   if (DriverStation.isDisabled()) {
-  //     setZero = false;
-  //   }
-  // }
+    if (DriverStation.isDisabled()) {
+      setZero = false;
+    }
+  }
 
   public Command setZero() {
     return this.runOnce(() -> m_servoWrist.setZero())
