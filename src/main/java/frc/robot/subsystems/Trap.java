@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -107,7 +108,8 @@ public class Trap extends SubsystemBase {
         .andThen(new WaitCommand(m_servoElbow.travelTime()))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWriststoreNote))
         .andThen(new WaitCommand(m_servoWrist.travelTime()))
-        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));
+        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed))
+        .andThen(new PrintCommand("limit switch on"));
   }
 
   public Command prepareToClimb() {

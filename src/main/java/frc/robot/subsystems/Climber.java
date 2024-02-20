@@ -58,7 +58,7 @@ public class Climber extends SubsystemBase {
     m_climberRightMaster.set(triggerSpeed);
     m_climberLeft.set(triggerSpeed);
 
-    System.out.println("pos " + m_encoder.getPosition() + " speed " + triggerSpeed);
+    // System.out.println("pos " + m_encoder.getPosition() + " speed " + triggerSpeed);
   }
 
   public Command setSpeed1() {

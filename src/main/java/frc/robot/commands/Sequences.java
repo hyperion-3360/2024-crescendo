@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.Elevator;
@@ -95,6 +96,7 @@ public class Sequences {
         m_shooter.setSpeedWithTarget(),
         m_trap.grabPosition(),
         new WaitUntilCommand(m_trap::trapHasNote),
+        new PrintCommand("limit switch on"),
         m_trap.storeNote(),
         new WaitCommand(2),
         m_shooter.stop());
