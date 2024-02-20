@@ -9,8 +9,8 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.lib.math.Conversions;
+import frc.lib.util.CTREMagEncoder;
 import frc.lib.util.SwerveModuleConstants;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -20,7 +20,8 @@ public class SwerveModule {
   private Rotation2d angleOffset;
   private TalonFX mAngleMotor;
   private TalonFX mDriveMotor;
-  private DutyCycleEncoder angleEncoder;
+  //  private DutyCycleEncoder angleEncoder;
+  private CTREMagEncoder angleEncoder;
   private final SimpleMotorFeedforward driveFeedForward =
       new SimpleMotorFeedforward(
           Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
@@ -28,7 +29,7 @@ public class SwerveModule {
   private final DutyCycleOut driveDutyCycle = new DutyCycleOut(0);
   private final VelocityVoltage driveVelocity = new VelocityVoltage(0);
   private final VoltageOut m_voltageOutControl = new VoltageOut(0.0);
-  private boolean m_debug = true;
+  private boolean m_debug = false;
 
   /* angle motor control requests */
   private final PositionVoltage anglePosition = new PositionVoltage(0);
@@ -37,9 +38,10 @@ public class SwerveModule {
     this.moduleNumber = moduleNumber;
     this.angleOffset = moduleConstants.angleOffset;
     /* Angle Encoder Config */
-    angleEncoder = new DutyCycleEncoder(moduleConstants.magEncoderID);
-    angleEncoder.setDutyCycleRange(
-        RobotContainer.ctreConfigs.dutyCycleRangeMin, RobotContainer.ctreConfigs.dutyCycleRangeMax);
+    angleEncoder = new CTREMagEncoder(moduleConstants.magEncoderID);
+    //    angleEncoder.setDutyCycleRange(
+    //       RobotContainer.ctreConfigs.dutyCycleRangeMin,
+    // RobotContainer.ctreConfigs.dutyCycleRangeMax);
     /* Angle Motor Config */
     mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
     mAngleMotor.getConfigurator().apply(RobotContainer.ctreConfigs.swerveAngleFXConfig);
@@ -52,11 +54,11 @@ public class SwerveModule {
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
     desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
     mAngleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations()));
-    // if (m_debug)
-    //   System.out.println(
-    //       String.format(
-    //           "Wheel: %d, speed: %f, angle : %f",
-    //           moduleNumber, desiredState.speedMetersPerSecond, desiredState.angle.getDegrees()));
+    if (m_debug)
+      System.out.println(
+          String.format(
+              "Wheel: %d, speed: %f, angle : %f",
+              moduleNumber, desiredState.speedMetersPerSecond, desiredState.angle.getDegrees()));
     setSpeed(desiredState, isOpenLoop);
   }
 
@@ -65,10 +67,10 @@ public class SwerveModule {
       driveDutyCycle.Output = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
       mDriveMotor.setControl(driveDutyCycle);
     } else {
-      // if (m_debug) System.out.println(String.format("setSpeed velocity : %s", driveVelocity));
-      // driveVelocity.Velocity =
-      //     Conversions.MPSToRPS(
-      //         desiredState.speedMetersPerSecond, Constants.Swerve.wheelCircumference);
+      if (m_debug) System.out.println(String.format("setSpeed velocity : %s", driveVelocity));
+      driveVelocity.Velocity =
+          Conversions.MPSToRPS(
+              desiredState.speedMetersPerSecond, Constants.Swerve.wheelCircumference);
       driveVelocity.FeedForward = driveFeedForward.calculate(desiredState.speedMetersPerSecond);
       mDriveMotor.setControl(driveVelocity);
     }
@@ -83,14 +85,19 @@ public class SwerveModule {
     return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition());
   }
 
+  public void calibrateMagEncoder() {
+    angleEncoder.calibrate();
+  }
+
   public void resetToAbsolute() {
+    angleEncoder.finishCalibration();
     double magRotations = getMagEncoderPos().getRotations();
-    // if (m_debug)
-    //   System.out.println(
-    //       String.format(
-    //           "Module : %d -> magRotations = %f, angle=%f",
-    //           this.moduleNumber, magRotations, angleOffset.getRotations()));
-    double absolutePosition = getMagEncoderPos().getRotations() - angleOffset.getRotations();
+    if (m_debug)
+      System.out.println(
+          String.format(
+              "Module : %d -> magRotations = %f, angle=%f",
+              this.moduleNumber, magRotations, angleOffset.getRotations()));
+    double absolutePosition = magRotations - angleOffset.getRotations();
     mAngleMotor.setPosition(absolutePosition);
   }
 

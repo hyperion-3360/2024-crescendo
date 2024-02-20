@@ -43,6 +43,8 @@ public final class Constants {
     public static final double dutyCycleMin = 1e-6 / kPwmPeriod;
     public static final double dutyCycleMax = 4096e-6 / kPwmPeriod;
 
+    public static final int calibrationFreqSamples = 30;
+
     /* Drivetrain Constants */
     public static final double trackWidth = Units.inchesToMeters(26);
     public static final double wheelBase = Units.inchesToMeters(24.25);

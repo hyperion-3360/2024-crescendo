@@ -98,13 +98,13 @@ public class Swerve extends SubsystemBase {
   }
 
   public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
-    // if (m_debug)
-    //   System.out.println(
-    //       String.format(
-    //           "driveRobotRelative: omega: %f, vx: %f, vy : %f",
-    //           robotRelativeSpeeds.omegaRadiansPerSecond,
-    //           robotRelativeSpeeds.vxMetersPerSecond,
-    //           robotRelativeSpeeds.vyMetersPerSecond));
+    if (m_debug)
+      System.out.println(
+          String.format(
+              "driveRobotRelative: omega: %f, vx: %f, vy : %f",
+              robotRelativeSpeeds.omegaRadiansPerSecond,
+              robotRelativeSpeeds.vxMetersPerSecond,
+              robotRelativeSpeeds.vyMetersPerSecond));
     ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
 
     SwerveModuleState[] targetStates =
@@ -174,23 +174,37 @@ public class Swerve extends SubsystemBase {
     return Rotation2d.fromDegrees(m_gyro.getRotation2d().getDegrees());
   }
 
+  /**
+   * WARNING: This method takes some time (based on the number of calibration samples to collect) to
+   * execute! It performs frequency calibration of all the absolute magnetic encoder to improve
+   * their accuracy and stability
+   */
   public void resetModulesToAbsolute() {
-    for (SwerveModule mod : mSwerveMods) {
-      mod.resetToAbsolute();
+    // perform absolute encoders frequency calibration
+    for (int i = 0; i < Constants.Swerve.calibrationFreqSamples; i++) {
+      for (SwerveModule mod : mSwerveMods) mod.calibrateMagEncoder();
+      try {
+        Thread.sleep(100);
+      } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
+    for (SwerveModule mod : mSwerveMods) mod.resetToAbsolute();
   }
 
   @Override
   public void periodic() {
-    //        swerveOdometry.update(getGyroYaw(), getModulePositions());
-    //    for (SwerveModule mod : mSwerveMods) {
-    //      SmartDashboard.putNumber(
-    //          "Mod " + mod.moduleNumber + " CANcoder", mod.getMagEncoderPos().getDegrees());
-    //      SmartDashboard.putNumber(
-    //          "Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
-    //      SmartDashboard.putNumber(
-    //          "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-    //    }
+    if (m_debug) {
+      for (SwerveModule mod : mSwerveMods) {
+        SmartDashboard.putNumber(
+            "Mod " + mod.moduleNumber + " CTRE Mag encoder", mod.getMagEncoderPos().getDegrees());
+        SmartDashboard.putNumber(
+            "Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
+        SmartDashboard.putNumber(
+            "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+      }
+    }
 
     m_gyro.getRotation2d();
     // updates the odometry positon
