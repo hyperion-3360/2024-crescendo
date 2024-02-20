@@ -46,4 +46,3 @@ ID: 16 X: 182.73, Y: 146.19, Z: 52.00, ROTATION:240°
 4NotesFarShot could replace previous, to test
 
 center field autos need modifs so that far shot is possible
-
