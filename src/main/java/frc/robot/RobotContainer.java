@@ -23,6 +23,7 @@ import frc.robot.subsystems.Elevator.elevatorHeight;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.LEDs.State;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter.levelSpeed;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
@@ -158,10 +159,11 @@ public class RobotContainer {
     m_coDriverController.povDown().onTrue(Sequences.trapShoot(m_shooter, m_trap));
     m_coDriverController.povLeft().onTrue(m_trap.prepareToClimb());
     m_coDriverController.povUp().onTrue(m_trap.dunkNote());
-    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
+    // m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
     // m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
-    m_coDriverController.x().onTrue(Sequences.elevatorFarHigh(m_elevator, m_shooter, m_led));
-    m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
+    // m_coDriverController.x().onTrue(Sequences.elevatorFarHigh(m_elevator, m_shooter, m_led));
+    // m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
+    m_coDriverController.x().toggleOnTrue(m_shooter.holdSpeed(levelSpeed.CLIMB));
 
     m_coDriverController.a().onTrue(m_elevator.extendTheElevator(elevatorHeight.HIGH));
 

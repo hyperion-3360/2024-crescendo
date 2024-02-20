@@ -24,7 +24,8 @@ public class Shooter extends SubsystemBase {
     TRAP,
     STOP,
     VOMIT,
-    EJECT
+    EJECT,
+    CLIMB
   }
 
   private static double highSpeed = 0.8; // need to add perk to adjust speed according to distance
@@ -33,6 +34,7 @@ public class Shooter extends SubsystemBase {
   private static double intakeSpeed = 0.4;
   private static double trapSpeed = 0.15; // requires testing
   private static double stopSpeed = 0;
+  private static double climbSpeed = 0.1;
   private static double vomitSpeed = -0.5;
   private static double rampRate = 1; // to be tuned according to battery and time consumption
 
@@ -134,6 +136,9 @@ public class Shooter extends SubsystemBase {
 
       case EJECT:
         m_speed = -vomitSpeed;
+        break;
+      case CLIMB:
+        m_speed = climbSpeed;
         break;
     }
     if (m_speed != m_prev_speed) {
