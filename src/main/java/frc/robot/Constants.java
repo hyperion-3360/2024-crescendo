@@ -224,7 +224,6 @@ public final class Constants {
     public static final double kangleShoulderdisable = 110.0; // CLEAR FOR ROBOT DISABLE
     public static final double kangleElbowdisable = 5.0;
     public static final double kangleWristdisable = 155.0;
-
     // good sequenced
     public static final double kangleShoulderstoreNote = 0.0; // STORENOTE
     public static final double kangleElbowstoreNote = 142.0;
