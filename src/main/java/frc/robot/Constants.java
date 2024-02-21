@@ -216,8 +216,8 @@ public final class Constants {
     public static final double kangleWristscoreNote = 155.0;
 
     public static final double kangleShoulderdunkNote = 155.0; // DUNKNOTE
-    public static final double kangleElbowdunkNote = 20.0;
-    public static final double kangleWristdunkNote = 130.0;
+    // public static final double kangleElbowdunkNote = 20.0;
+    // public static final double kangleWristdunkNote = 130.0;
     public static final double kangleElbowdunkNote = 10.0;
     public static final double kangleWristdunkNote = 100.0;
 

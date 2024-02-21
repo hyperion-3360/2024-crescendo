@@ -62,7 +62,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "farShoot"
+                  "name": "farShootA"
                 }
               },
               {
@@ -100,7 +100,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "farShoot"
+                  "name": "farShootB"
                 }
               },
               {
