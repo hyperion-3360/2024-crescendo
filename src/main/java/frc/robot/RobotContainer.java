@@ -56,9 +56,9 @@ public class RobotContainer {
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   // Slew Rate Limiters to limit acceleration of joystick inputs
-  private final SlewRateLimiter translationLimiter = new SlewRateLimiter(2);
-  private final SlewRateLimiter strafeLimiter = new SlewRateLimiter(2);
-  private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(2);
+  private final SlewRateLimiter translationLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter strafeLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(3);
 
   private final double kJoystickDeadband = 0.1;
   private double speed1;
