@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.5109143757404648,
-      "y": 5.519034867314709
+      "x": 1.3673918788916029,
+      "y": 5.528229764801968
     },
-    "rotation": 1.413772478975332
+    "rotation": 1.6911637998246642
   },
   "command": {
     "type": "sequential",
@@ -18,19 +18,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 2.2
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "shoot"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 2.0
+                  "name": "shootHigh"
                 }
               }
             ]
@@ -51,12 +45,6 @@
                 "data": {
                   "name": "intake"
                 }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 2.0
-                }
               }
             ]
           }
@@ -64,7 +52,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2c"
+            "pathName": "2"
           }
         },
         {
@@ -80,7 +68,51 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shoot"
+                  "name": "shootHigh"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "3c"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4c"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shootHigh"
                 }
               }
             ]

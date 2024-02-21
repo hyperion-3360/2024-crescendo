@@ -43,6 +43,8 @@ public final class Constants {
     public static final double dutyCycleMin = 1e-6 / kPwmPeriod;
     public static final double dutyCycleMax = 4096e-6 / kPwmPeriod;
 
+    public static final int calibrationFreqSamples = 30;
+
     /* Drivetrain Constants */
     public static final double trackWidth = Units.inchesToMeters(26);
     public static final double wheelBase = Units.inchesToMeters(24.25);
@@ -119,7 +121,7 @@ public final class Constants {
       public static final int driveMotorID = 5;
       public static final int angleMotorID = 6;
       public static final int magEncoderID = 2;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(154.7);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(155.2);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, magEncoderID, angleOffset);
     }
@@ -129,7 +131,7 @@ public final class Constants {
       public static final int driveMotorID = 7;
       public static final int angleMotorID = 8;
       public static final int magEncoderID = 1;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(96.2);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(95.5);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, magEncoderID, angleOffset);
     }
@@ -139,7 +141,7 @@ public final class Constants {
       public static final int driveMotorID = 1;
       public static final int angleMotorID = 2;
       public static final int magEncoderID = 3;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(14.0);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(14.3);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, magEncoderID, angleOffset);
     }
@@ -149,7 +151,7 @@ public final class Constants {
       public static final int driveMotorID = 3;
       public static final int angleMotorID = 4;
       public static final int magEncoderID = 0;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(314.7);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(312.3);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, magEncoderID, angleOffset);
     }
@@ -193,7 +195,7 @@ public final class Constants {
 
   public static class TrapConstants {
 
-    public static final int kservoShoulderId = 9; // servo ports + limit switch + blocker
+    public static final int kservoShoulderId = 9; // servo ports + limit switch
     public static final int kservoElbowId = 8;
     public static final int kservoWristId = 7;
     public static final int kservoFingerId = 6;
@@ -210,25 +212,21 @@ public final class Constants {
     public static final double kangleShouldergrabPosition = 83.0; // GRABPOSITION
     public static final double kangleElbowgrabPosition = 99.0;
     public static final double kangleWristgrabPosition = 68.0;
-    // not finished (aprox) mapped
-    public static final double kangleShoulderscoreNote = 110.0; // SCORENOTE
-    public static final double kangleElbowscoreNote = 5.0;
-    public static final double kangleWristscoreNote = 155.0;
-
+    // to be adjusted
     public static final double kangleShoulderdunkNote = 155.0; // DUNKNOTE
     // public static final double kangleElbowdunkNote = 20.0;
     // public static final double kangleWristdunkNote = 130.0;
     public static final double kangleElbowdunkNote = 10.0;
     public static final double kangleWristdunkNote = 100.0;
-
+    // good
     public static final double kangleShoulderdisable = 110.0; // CLEAR FOR ROBOT DISABLE
     public static final double kangleElbowdisable = 5.0;
     public static final double kangleWristdisable = 155.0;
-    // good sequenced
+    // good
     public static final double kangleShoulderstoreNote = 0.0; // STORENOTE
     public static final double kangleElbowstoreNote = 142.0;
     public static final double kangleWriststoreNote = 155.0;
-    // good not in sequence yet
+    // good
     public static final double kangleShoulderprepareToClimb = 110.0;
     public static final double kangleShoulderprepareToClimbdelayed1 = 88.0;
     public static final double kangleShoulderprepareToClimbdelayed2 = 66.0;
