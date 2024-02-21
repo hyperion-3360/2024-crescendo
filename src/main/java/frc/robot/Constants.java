@@ -121,7 +121,7 @@ public final class Constants {
       public static final int driveMotorID = 5;
       public static final int angleMotorID = 6;
       public static final int magEncoderID = 2;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(154.7);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(155.2);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, magEncoderID, angleOffset);
     }
@@ -131,7 +131,7 @@ public final class Constants {
       public static final int driveMotorID = 7;
       public static final int angleMotorID = 8;
       public static final int magEncoderID = 1;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(96.2);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(95.5);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, magEncoderID, angleOffset);
     }
@@ -141,7 +141,7 @@ public final class Constants {
       public static final int driveMotorID = 1;
       public static final int angleMotorID = 2;
       public static final int magEncoderID = 3;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(14.0);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(14.3);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, magEncoderID, angleOffset);
     }
@@ -151,7 +151,7 @@ public final class Constants {
       public static final int driveMotorID = 3;
       public static final int angleMotorID = 4;
       public static final int magEncoderID = 0;
-      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(314.7);
+      public static final Rotation2d angleOffset = Rotation2d.fromDegrees(312.3);
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, magEncoderID, angleOffset);
     }
