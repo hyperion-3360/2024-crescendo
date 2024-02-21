@@ -98,7 +98,7 @@ public class Sequences {
         m_trap.grabPosition(),
         new WaitUntilCommand(m_trap::trapHasNote),
         new PrintCommand("limit switch on"),
-        m_trap.setZero(),
+        m_trap.storeNote(),
         new WaitCommand(2),
         m_shooter.stop());
   }

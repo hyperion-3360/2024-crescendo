@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -73,6 +74,18 @@ public class Trap extends SubsystemBase {
         .andThen(new WaitCommand(m_servoShoulder.travelTime()))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened))
         .andThen(new WaitCommand(m_servoFinger.travelTime()).andThen(() -> setZero = true));
+  }
+
+  public Command storeNote() {
+    return this.runOnce(
+            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderstoreNote))
+        .andThen(new WaitCommand(m_servoShoulder.travelTime()))
+        .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowstoreNote))
+        .andThen(new WaitCommand(m_servoElbow.travelTime()))
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWriststoreNote))
+        .andThen(new WaitCommand(m_servoWrist.travelTime()))
+        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed))
+        .andThen(new PrintCommand("limit switch on"));
   }
 
   public Command grabPosition() {

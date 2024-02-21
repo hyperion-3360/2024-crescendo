@@ -219,6 +219,10 @@ public final class Constants {
     public static final double kangleElbowdisable = 5.0;
     public static final double kangleWristdisable = 155.0;
     // good
+    public static final double kangleShoulderstoreNote = 0.0; // STORENOTE
+    public static final double kangleElbowstoreNote = 142.0;
+    public static final double kangleWriststoreNote = 155.0;
+    // good
     public static final double kangleShoulderprepareToClimb = 110.0;
     public static final double kangleShoulderprepareToClimbdelayed1 = 88.0;
     public static final double kangleShoulderprepareToClimbdelayed2 = 66.0;
