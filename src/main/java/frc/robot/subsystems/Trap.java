@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -48,14 +49,14 @@ public class Trap extends SubsystemBase {
 
   // @Override
   public void periodic() {
-    //   if (m_debug) {
-    //     for (Joint j : Joint.values()) {
-    //       var s = m_jointArray[j.ordinal()];
-    //       SmartDashboard.putString(
-    //           String.format("%s : %d", j.name(), s.getChannel()),
-    //           String.format("@ :%f deg", s.getAngle()));
-    //     }
-    //   }
+    if (m_debug) {
+      for (Joint j : Joint.values()) {
+        var s = m_jointArray[j.ordinal()];
+        SmartDashboard.putString(
+            String.format("%s : %d", j.name(), s.getChannel()),
+            String.format("@ :%f deg", s.getAngle()));
+      }
+    }
 
     if (DriverStation.isDisabled()) {
       setZero = false;
@@ -153,17 +154,17 @@ public class Trap extends SubsystemBase {
         .andThen(new WaitCommand(0.6));
   }
 
-  // public Command manualControl(Joint j, boolean increase) {
-  //   return this.runOnce(
-  //       () -> {
-  //         var new_angle = m_jointArray[j.ordinal()].getAngle();
-  //         if (increase) new_angle = new_angle < 180 ? new_angle + 1 : 180;
-  //         else new_angle = new_angle > 0 ? new_angle - 1 : 0;
-  //         var lambda_angle = new_angle; // making it effectively final so java lambda is happy..
-  // :)
-  //         m_jointArray[j.ordinal()].setAngle(lambda_angle);
-  //       });
-  // }
+  public Command manualControl(Joint j, boolean increase) {
+    return this.runOnce(
+        () -> {
+          var new_angle = m_jointArray[j.ordinal()].getAngle();
+          if (increase) new_angle = new_angle < 180 ? new_angle + 1 : 180;
+          else new_angle = new_angle > 0 ? new_angle - 1 : 0;
+          var lambda_angle = new_angle; // making it effectively final so java lambda is happy..
+          // :)
+          m_jointArray[j.ordinal()].setAngle(lambda_angle);
+        });
+  }
 
   public boolean trapHasNote() {
     return !m_limitSwitch.get();
