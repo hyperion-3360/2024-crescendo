@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.NotePostionArrayConstants;
+
 import java.util.ArrayList;
 
 public final class Autos {
@@ -67,11 +69,11 @@ public final class Autos {
   }
 
   private void desirabilityCalculator() {
-    PathPlannerPath pathNotePostions[] = {};
+    PathPlannerPath pathNotePostions[] = {NotePostionArrayConstants.notePaths[]};
     ArrayList<PathPlannerPath> m_pointsOfInterest = new ArrayList<PathPlannerPath>();
     m_pointsOfInterest.add(PathPlannerPath.fromPathFile("speaker path")); // speaker path postion
     m_pointsOfInterest.add(PathPlannerPath.fromPathFile("amp path")); // amp path postion
-    // adds every note postions on the array list
+    // adds every note path postions on the array list
     for (int i = 0; i < pathNotePostions.length; i++) {
       m_pointsOfInterest.add(pathNotePostions[i]);
     }

@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -250,5 +251,13 @@ public final class Constants {
             new ReplanningConfig());
   }
 
-  public static class NotePostionArrayConstants {}
+  public static class NotePostionArrayConstants {
+    public static final PathPlannerPath notePaths[] = {
+      // TODO add note postions as paths
+      PathPlannerPath.fromPathFile("upper note back start"),
+      PathPlannerPath.fromPathFile("upper note front start"),
+      PathPlannerPath.fromPathFile("middle note back start"),
+      PathPlannerPath.fromPathFile("middle note front start")
+    };
+  }
 }
