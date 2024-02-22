@@ -104,9 +104,9 @@ public class Sequences {
   }
 
   // sequence to score note in trap
-  // public static Command trapScore(Trap m_trap) {
-  //   return Commands.sequence(m_trap.scoreNote(), new WaitCommand(2), m_trap.dunkNote());
-  // }
+  public static Command trapScore(Trap m_trap) {
+    return Commands.sequence(m_trap.dunkNote(), new WaitCommand(0.6), m_trap.prepareToDisable());
+  }
 
   // sequence to move arm out of the way and extend the elevator
   // public static Command trapElevator(Elevator m_elevator, Trap m_trap) {
