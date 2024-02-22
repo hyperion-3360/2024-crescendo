@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -48,6 +49,13 @@ public class Elevator extends SubsystemBase {
 
   private PIDController m_pid = new PIDController(kP, kI, kD);
 
+  private double ks = 0;
+  private double kg = 0;
+  private double kv = 0;
+  private double ka = 0;
+
+  private ElevatorFeedforward m_feedforward = new ElevatorFeedforward(ks, kg, kv, ka);
+
   // creating an elevator
   public Elevator() {
     // configures the CANSparkMax controllers
@@ -71,7 +79,8 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
 
     // calculate speed with pid
-    m_elevatorLeftMaster.set(m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
+    m_elevatorLeftMaster.set(
+        m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget) + m_feedforward.calculate(0.9));
 
     // if the elevator touches the limit switch at the bottom of the rail set position to 0.0
     if (bottomlimitSwitch.get()) {
