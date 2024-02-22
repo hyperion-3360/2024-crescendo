@@ -108,8 +108,15 @@ public class Sequences {
   //   return Commands.sequence(m_trap.scoreNote(), new WaitCommand(2), m_trap.dunkNote());
   // }
 
-  // sequence to move arm out of the way and extend the elevator
-  // public static Command trapElevator(Elevator m_elevator, Trap m_trap) {
-  //   return Commands.sequence(m_elevator.extendTheElevator(elevatorHeight.HIGH));
-  // }
+  // sequence lift elevator and start wheels to climb !! wait will have to be modified !!
+  public static Command climbElevator(Elevator elevator, Shooter shooter, Trap trap) {
+    return Commands.sequence(
+        trap.prepareToClimb(),
+        new WaitCommand(0.5),
+        elevator.extendTheElevator(elevatorHeight.HIGH),
+        new WaitCommand(1),
+        shooter.holdSpeed(levelSpeed.CLIMB),
+        new WaitCommand(5),
+        shooter.stop());
+  }
 }
