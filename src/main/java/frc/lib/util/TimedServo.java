@@ -12,7 +12,7 @@ public class TimedServo extends Servo {
   private double m_zero = 0.0;
   private boolean m_homed = false;
   private long m_travelTime = 0;
-  private final boolean mDebug = false;
+  private final boolean m_debug = false;
 
   /**
    * TimedServo constructur assuming zero angle is 0.0
@@ -49,12 +49,11 @@ public class TimedServo extends Servo {
     m_travelTime = (long) (delta / m_angularSpeed * Constants.kSecondsToMicroSeconds);
     m_completedTime = m_travelTime + current_time;
     super.setAngle(angle);
-    // if (mDebug)
-    //   System.out.println(
-    //       String.format(
-    //           "Servo mapped on PWM %d going to %f degree from %f degree.\nCurrent time: %d
-    // completion time: %d",
-    //           getChannel(), angle, m_currentAngle, current_time, m_completedTime));
+    if (m_debug)
+      System.out.println(
+          String.format(
+              "Servo mapped on PWM %d going to %f degree from %f degree.\nCurrent time: %d completion time: %d",
+              getChannel(), angle, m_currentAngle, current_time, m_completedTime));
     m_currentAngle = angle;
   }
 
@@ -64,10 +63,9 @@ public class TimedServo extends Servo {
   }
 
   private void reset() {
-    // if (mDebug)
-    //   System.out.println(
-    //       String.format("Rsetting Servo mapped on PWM %d at zero angle: %f", getChannel(),
-    // m_zero));
+    if (m_debug)
+      System.out.println(
+          String.format("Rsetting Servo mapped on PWM %d at zero angle: %f", getChannel(), m_zero));
     super.setAngle(m_zero);
     m_currentAngle = m_zero;
     m_travelTime = (long) (180.0 / m_angularSpeed * Constants.kSecondsToMicroSeconds);
@@ -82,7 +80,7 @@ public class TimedServo extends Servo {
    */
   public double travelTime() {
     var travTime = (double) m_travelTime / (double) Constants.kSecondsToMicroSeconds;
-    // if (mDebug) System.out.println(String.format("traveltime: %f", travTime));
+    if (m_debug) System.out.println(String.format("traveltime: %f", travTime));
     return travTime;
   }
 

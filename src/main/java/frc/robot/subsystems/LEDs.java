@@ -112,7 +112,7 @@ public class LEDs extends SubsystemBase {
   }
 
   public void setState(State state) {
-    // if (m_debug) System.out.println(String.format("New sate: %s", state));
+    if (m_debug) System.out.println(String.format("New sate: %s", state));
     m_ledState = state;
 
     switch (m_ledState) {
@@ -194,7 +194,7 @@ public class LEDs extends SubsystemBase {
    * @param val 8bit LED value
    */
   private void setRGB(ledValue val) {
-    // if (m_debug) System.out.println(val);
+    if (m_debug) System.out.println(val);
     m_redLED.setPulseTimeMicroseconds(ledValue.convertToPulse(val.r));
     m_greenLED.setPulseTimeMicroseconds(ledValue.convertToPulse(val.g));
     m_blueLED.setPulseTimeMicroseconds(ledValue.convertToPulse(val.b));

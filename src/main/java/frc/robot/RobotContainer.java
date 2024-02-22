@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,6 +27,8 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -61,8 +64,6 @@ public class RobotContainer {
   private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(3);
 
   private final double kJoystickDeadband = 0.1;
-  private double speed1;
-  private double speed2;
 
   /***
    * conditionJoystick
@@ -111,35 +112,35 @@ public class RobotContainer {
   public void configureTrapDebugBindings() {
 
     // map joystick POV primary direction to each joint of the arm
-    // List<Pair<Trap.Joint, Trigger>> jointMap = new ArrayList<Pair<Trap.Joint, Trigger>>();
-    // jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.SHOULDER, m_driverController.povUp()));
-    // jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.ELBOW, m_driverController.povRight()));
-    // jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.WRIST, m_driverController.povDown()));
-    // jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.FINGER, m_driverController.povLeft()));
+    List<Pair<Trap.Joint, Trigger>> jointMap = new ArrayList<Pair<Trap.Joint, Trigger>>();
+    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.SHOULDER, m_driverController.povUp()));
+    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.ELBOW, m_driverController.povRight()));
+    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.WRIST, m_driverController.povDown()));
+    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.FINGER, m_driverController.povLeft()));
 
     // spotless:off
     /**
      * using the POV of the controller
      * 
-     *       SHOULDER         Y -> DECREASE ANGLE by 1 degree
+     *       SHOULDER       Y -> DECREASE ANGLE by 1 degree
      *           x
      *           x
-     * FINGER xxx xxx ELBOW   X -> INCREASE ANGLE by 1 degree
+     * FINGER xxx xxx ELBOW X -> INCREASE ANGLE by 1 degree
      *           x
      *           x
      *         WRIST
      */
     // spotless:on
-    // for (var joint_pair : jointMap) {
-    //   m_driverController
-    //       .x()
-    //       .and(joint_pair.getSecond())
-    //       .whileTrue(m_trap.manualControl(joint_pair.getFirst(), true));
-    //   m_driverController
-    //       .y()
-    //       .and(joint_pair.getSecond())
-    //       .whileTrue(m_trap.manualControl(joint_pair.getFirst(), false));
-    // }
+    for (var joint_pair : jointMap) {
+      m_driverController
+          .x()
+          .and(joint_pair.getSecond())
+          .whileTrue(m_trap.manualControl(joint_pair.getFirst(), true));
+      m_driverController
+          .y()
+          .and(joint_pair.getSecond())
+          .whileTrue(m_trap.manualControl(joint_pair.getFirst(), false));
+    }
   }
 
   /**
@@ -153,11 +154,11 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    configureTrapDebugBindings();
+    // configureTrapDebugBindings();
 
     m_coDriverController.povDown().onTrue(Sequences.trapShoot(m_shooter, m_trap));
     m_coDriverController.povLeft().onTrue(m_trap.prepareToClimb());
-    m_coDriverController.povUp().onTrue(m_trap.dunkNote());
+    m_coDriverController.povUp().onTrue(Sequences.trapScore(m_trap));
     m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
     m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
     m_coDriverController.x().onTrue(Sequences.elevatorFarHigh(m_elevator, m_shooter, m_led));
