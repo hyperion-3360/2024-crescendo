@@ -63,6 +63,7 @@ public class Trap extends SubsystemBase {
     }
   }
 
+  // position throughout game
   public Command setZero() {
     return this.runOnce(() -> m_servoWrist.setZero())
         .andThen(new WaitCommand(m_servoWrist.travelTime()))
@@ -77,6 +78,7 @@ public class Trap extends SubsystemBase {
         .andThen(new WaitCommand(m_servoFinger.travelTime()).andThen(() -> setZero = true));
   }
 
+  // position to store the note in the robot so robot can still pass under chain
   public Command storeNote() {
     return this.runOnce(
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderstoreNote))
@@ -89,6 +91,7 @@ public class Trap extends SubsystemBase {
         .andThen(new PrintCommand("limit switch on"));
   }
 
+  // position to grab note from intake
   public Command grabPosition() {
     return this.runOnce(
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldergrabPosition))
@@ -101,10 +104,11 @@ public class Trap extends SubsystemBase {
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));
   }
 
+  // position to lift arm up BEFORE elevator so it doesn't hit leds (with a lot of delayed things so
+  // it doesn't hit too much (to be fine tuned before competition so it doesn't hit anywhere))
   public Command prepareToClimb() {
     return this.runOnce(
             () -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowprepareToClimbdelayed1))
-        .andThen(new WaitCommand(0.2))
         .andThen(
             () ->
                 m_servoShoulder.setAngle(
@@ -112,7 +116,6 @@ public class Trap extends SubsystemBase {
         .andThen(new WaitCommand(0.2))
         .andThen(
             () -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowprepareToClimbdelayed2))
-        .andThen(new WaitCommand(0.2))
         .andThen(
             () ->
                 m_servoShoulder.setAngle(
@@ -120,33 +123,35 @@ public class Trap extends SubsystemBase {
         .andThen(new WaitCommand(0.2))
         .andThen(
             () -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowprepareToClimbdelayed3))
-        .andThen(new WaitCommand(0.2))
         .andThen(
             () ->
                 m_servoShoulder.setAngle(
                     Constants.TrapConstants.kangleShoulderprepareToClimbdelayed3))
         .andThen(new WaitCommand(0.2))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowprepareToClimb))
-        .andThen(new WaitCommand(0.2))
         .andThen(
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderprepareToClimb))
-        .andThen(new WaitCommand(0.2))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristprepareToClimb))
         .andThen(new WaitCommand(m_servoWrist.travelTime()));
   }
 
+  // position to dunk the note in the trap
   public Command dunkNote() {
     return this.runOnce(
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderdunkNote))
         .andThen(new WaitCommand(m_servoShoulder.travelTime()))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowdunkNote))
-        .andThen(new WaitCommand(1))
-        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristdunkNote))
-        .andThen(new WaitCommand(0.6))
-        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened))
         .andThen(new WaitCommand(0.5))
-        .andThen(() -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderdisable))
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristdunkNote))
+        .andThen(new WaitCommand(0.3))
+        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened));
+  }
+
+  // position arm is in after dunking the note so it is ready to disable and doesn't hit anywhere
+  public Command prepareToDisable() {
+    return this.runOnce(
+            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderdisable))
         .andThen(new WaitCommand(m_servoShoulder.travelTime()))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowdisable))
         .andThen(new WaitCommand(m_servoElbow.travelTime()))
@@ -154,6 +159,7 @@ public class Trap extends SubsystemBase {
         .andThen(new WaitCommand(0.6));
   }
 
+  // manual control to fine tune arm positions using pov on joystick
   public Command manualControl(Joint j, boolean increase) {
     return this.runOnce(
         () -> {
