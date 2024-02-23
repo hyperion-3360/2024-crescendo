@@ -83,10 +83,14 @@ public final class Autos {
 
     private Boolean conditionLogicHandler(Boolean conditions[]) {
       boolean allConditionReadGreen = false;
+      int trueConditions = 0;
 
       for (int i = 0; i < conditions.length; i++) {
         if (conditions[i] == true) {
-          allConditionReadGreen = true;
+          ++trueConditions;
+          if (trueConditions == conditions.length) {
+            allConditionReadGreen = true;
+          }
         } else {
           break;
         }
