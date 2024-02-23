@@ -74,7 +74,7 @@ public class Elevator extends SubsystemBase {
     m_elevatorLeftMaster.set(m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
 
     // if the elevator touches the limit switch at the bottom of the rail set position to 0.0
-    if (bottomlimitSwitch.get()) {
+    if (!bottomlimitSwitch.get()) {
       m_encoder.setPosition(0.0);
       m_pid.reset();
     }
