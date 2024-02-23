@@ -5,16 +5,19 @@
 package frc.robot.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.NotePostionArrayConstants;
-
+import frc.robot.subsystems.Shooter;
 import java.util.ArrayList;
+import java.util.List;
 
 public final class Autos {
 
@@ -68,20 +71,48 @@ public final class Autos {
     return autoChooser.getSelected();
   }
 
-  private void desirabilityCalculator() {
-    PathPlannerPath pathNotePostions[] = {NotePostionArrayConstants.notePaths[]};
-    ArrayList<PathPlannerPath> m_pointsOfInterest = new ArrayList<PathPlannerPath>();
-    m_pointsOfInterest.add(PathPlannerPath.fromPathFile("speaker path")); // speaker path postion
-    m_pointsOfInterest.add(PathPlannerPath.fromPathFile("amp path")); // amp path postion
-    // adds every note path postions on the array list
-    for (int i = 0; i < pathNotePostions.length; i++) {
-      m_pointsOfInterest.add(pathNotePostions[i]);
+  private class PathfindingChooser {
+    public PathfindingChooser(String path, BooleanEvent conditions) {
+      List<PathPlannerPath> m_autoPath = PathPlannerAuto.getPathGroupFromAutoFile(path);
+      conditions = 
+    }
+
+    public static boolean available(Boolean conditions ) {
+      boolean isAvailable = conditions;
+      return isAvailable;
     }
   }
 
-  public static Command makePathfindingGoToPath() {
+  private PathPlannerPath desirabilityCalculator() {
+    Shooter m_shooter = new Shooter();
+    int chosenPath;
+    PathPlannerPath pathNotePostions[] = NotePostionArrayConstants.notePaths;
+    ArrayList<PathPlannerPath> m_pointsOfInterest = new ArrayList<PathPlannerPath>();
+    if (m_shooter.hasNote()) {
+      m_pointsOfInterest.remove(0);
+      m_pointsOfInterest.remove(1);
+      // adds every note path postions on the array list
+      for (int i = 0; i < pathNotePostions.length; i++) {
+        m_pointsOfInterest.add(i, pathNotePostions[i]);
+      }
+      chosenPath = 10 - (10 / 10);
+      m_pointsOfInterest.get(chosenPath).getPathPoses();
+      return m_pointsOfInterest.get(chosenPath);
+    } else {
+      m_pointsOfInterest.add(
+          0, PathPlannerPath.fromPathFile("speaker path")); // speaker path postion
+      m_pointsOfInterest.add(1, PathPlannerPath.fromPathFile("amp path")); // amp path postion
+      for (int i = 0; i < pathNotePostions.length; i++) {
+        m_pointsOfInterest.remove(i);
+      }
+      chosenPath = 10 - (10 / 10);
+      return m_pointsOfInterest.get(chosenPath);
+    }
+  }
+
+  public static Command makePathfindingGoToPath(PathPlannerPath chosenPath) {
     // Load the path we want to pathfind to and follow
-    PathPlannerPath path = PathPlannerPath.fromPathFile("place holder path");
+    PathPlannerPath path = chosenPath;
 
     // Create the constraints to use while pathfinding. The constraints defined in the path will
     // only be used for the path.
