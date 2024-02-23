@@ -92,7 +92,7 @@ public class RobotContainer {
             () -> conditionJoystick(translationAxis, translationLimiter, kJoystickDeadband),
             () -> conditionJoystick(strafeAxis, strafeLimiter, kJoystickDeadband),
             () -> conditionJoystick(rotationAxis, rotationLimiter, kJoystickDeadband),
-            () -> false));
+            () -> true));
 
     m_shooter.setDefaultCommand(m_shooter.stop());
     m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
@@ -162,8 +162,14 @@ public class RobotContainer {
     m_coDriverController.povLeft().onTrue(Sequences.climbElevator(m_elevator, m_shooter, m_trap));
     m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
     m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
-    m_coDriverController.x().onTrue(Sequences.elevatorFarHigh(m_elevator, m_shooter, m_led));
+    // m_coDriverController.x().onTrue(Sequences.elevatorFarHigh(m_elevator, m_shooter, m_led));
     m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
+    m_coDriverController
+        .x()
+        .onTrue(
+            m_elevator
+                .extendTheElevator(elevatorHeight.INTAKE)
+                .andThen(() -> m_led.setState(State.IDLE)));
     // m_coDriverController.x().toggleOnTrue(m_shooter.holdSpeed(levelSpeed.CLIMB));
 
     // m_coDriverController.a().onTrue(m_elevator.extendTheElevator(elevatorHeight.HIGH));
@@ -189,12 +195,12 @@ public class RobotContainer {
         .y()
         .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
 
-    m_driverController
-        .x()
-        .onTrue(
-            m_elevator
-                .extendTheElevator(elevatorHeight.INTAKE)
-                .andThen(() -> m_led.setState(State.IDLE)));
+    // m_driverController
+    //     .x()
+    //     .onTrue(
+    //         m_elevator
+    //             .extendTheElevator(elevatorHeight.INTAKE)
+    //             .andThen(() -> m_led.setState(State.IDLE)));
   }
 
   public Command getAutonomousCommand() {
