@@ -9,14 +9,11 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.NotePostionArrayConstants;
-import frc.robot.subsystems.Shooter;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public final class Autos {
@@ -66,50 +63,38 @@ public final class Autos {
   }
 
   // creates a class for choosing our pathfinding
-  private class PathfindingChooser {
+  public class PathfindingChooser {
+
+    private HashMap<Integer, PathPlannerPath> m_pathNodeMap =
+        new HashMap<Integer, PathPlannerPath>();
+    int pathStage = 0;
+
     // constructor where conditions are fed and accounted for to choose a path
-    public PathfindingChooser(
-        String mainPath, BooleanEvent conditions[], PathPlannerPath connexions[]) {
-      mainPath = autoChooser.getSelected().toString();
+    public PathfindingChooser(String mainPath, Boolean conditions[], PathPlannerPath connexions[]) {
       List<PathPlannerPath> m_autoPath = PathPlannerAuto.getPathGroupFromAutoFile(mainPath);
-      available(conditions);
-      // arraylist to list all of the connected paths, higher index number means higher priority
-      ArrayList<PathPlannerPath> nextPaths = new ArrayList<PathPlannerPath>();
+      // gives the required conditions to the available function
+      conditionLogicHandler(conditions);
+
       for (int i = 0; i < connexions.length; i++) {
-        nextPaths.add(i, connexions[i]);
+        m_pathNodeMap.put(pathStage, connexions[i]);
+        m_pathNodeMap.get(pathStage);
       }
     }
 
-    // function to check if the evaluated path is available or not
-    public static boolean available(BooleanEvent conditions[]) {
-      boolean isAvailable = false;
-      return isAvailable;
-    }
+    private Boolean conditionLogicHandler(Boolean conditions[]) {
+      boolean allConditionReadGreen = false;
 
-    private PathPlannerPath desirabilityCalculator() {
-      Shooter m_shooter = new Shooter();
-      int chosenPath;
-      PathPlannerPath pathNotePostions[] = NotePostionArrayConstants.notePaths;
-      ArrayList<PathPlannerPath> m_pointsOfInterest = new ArrayList<PathPlannerPath>();
-      if (m_shooter.hasNote()) {
-        m_pointsOfInterest.remove(0);
-        m_pointsOfInterest.remove(1);
-        // adds every note path postions on the array list
-        for (int i = 0; i < pathNotePostions.length; i++) {
-          m_pointsOfInterest.add(i, pathNotePostions[i]);
+      for (int i = 0; i < conditions.length; i++) {
+        if (conditions[i] == true) {
+          allConditionReadGreen = true;
+        } else {
+          break;
         }
-        chosenPath = 10 - (10 / 10);
-        m_pointsOfInterest.get(chosenPath).getPathPoses();
-        return m_pointsOfInterest.get(chosenPath);
+      }
+      if (allConditionReadGreen == true) {
+        return true;
       } else {
-        m_pointsOfInterest.add(
-            0, PathPlannerPath.fromPathFile("speaker path")); // speaker path postion
-        m_pointsOfInterest.add(1, PathPlannerPath.fromPathFile("amp path")); // amp path postion
-        for (int i = 0; i < pathNotePostions.length; i++) {
-          m_pointsOfInterest.remove(i);
-        }
-        chosenPath = 10 - (10 / 10);
-        return m_pointsOfInterest.get(chosenPath);
+        return false;
       }
     }
   }
@@ -129,7 +114,7 @@ public final class Autos {
             AutoBuilder.pathfindThenFollowPath(
                 path,
                 constraints,
-                3.0 // Rotation delay distance in meters. This is how far the robot should travel
+                2.0 // Rotation delay distance in meters. This is how far the robot should travel
                 // before
                 // attempting to rotate.
                 ));

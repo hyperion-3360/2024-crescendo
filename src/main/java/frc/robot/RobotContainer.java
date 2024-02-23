@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoCommands;
 import frc.robot.commands.Autos;
+// import frc.robot.commands.Autos.PathfindingChooser;
 import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
@@ -201,4 +202,10 @@ public class RobotContainer {
         PathPlannerAuto.getStaringPoseFromAutoFile(Autos.getSelectedOption().toString()));
     return new PathPlannerAuto(Autos.getSelectedOption().toString());
   }
+
+  // public Command getPathfindingCommand() {
+  //   PathfindingChooser m_pathfinding =
+  //       new PathfindingChooser(Autos.getSelectedOption().toString(), null, null);
+  //   m_swerveDrive.setPose(Autos.makePathfindingGoToPath(null));
+  // }
 }
