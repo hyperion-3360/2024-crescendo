@@ -67,6 +67,8 @@ public final class Autos {
 
     private HashMap<Integer, PathPlannerPath> m_pathNodeMap =
         new HashMap<Integer, PathPlannerPath>();
+    private HashMap<PathPlannerPath, Boolean[]> m_conditionPerNode =
+        new HashMap<PathPlannerPath, Boolean[]>();
     private int pathStage = 0;
     private int pathNodeI = 0;
     private Boolean conditions[];
@@ -78,9 +80,12 @@ public final class Autos {
 
       for (int i = 0; i < connexions.length; i++) {
         m_pathNodeMap.put(pathStage, connexions[i]);
+        m_conditionPerNode.put(connexions[i], conditions);
+        pathNodeChooser(conditions, connexions[i]);
+        if (pathNodeChooser(conditions, connexions[i]) != null) {
+          break;
+        }
       }
-
-      pathNodeChooser(conditions, connexions);
     }
 
     private Boolean conditionLogicHandler(Boolean conditions[]) {
@@ -104,16 +109,14 @@ public final class Autos {
       }
     }
 
-    public String pathNodeChooser(Boolean conditions[], PathPlannerPath connexions[]) {
-      do {
-        if (conditionLogicHandler(conditions) == true) {
-          ++pathStage;
-          return m_pathNodeMap.values().toString();
-        } else {
-          m_pathNodeMap.remove(pathStage, connexions[i]);
-        }
-        ++pathNodeI;
-      } while (pathNodeI < m_pathNodeMap.size());
+    public String pathNodeChooser(Boolean conditions[], PathPlannerPath connexions) {
+      if (conditionLogicHandler(conditions) == true) {
+        ++pathStage;
+        return m_pathNodeMap.values().toString();
+      } else {
+        m_pathNodeMap.remove(pathStage, connexions);
+      }
+      ++pathNodeI;
       return null;
     }
   }
