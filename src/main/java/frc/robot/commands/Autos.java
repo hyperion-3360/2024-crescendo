@@ -67,18 +67,20 @@ public final class Autos {
 
     private HashMap<Integer, PathPlannerPath> m_pathNodeMap =
         new HashMap<Integer, PathPlannerPath>();
-    int pathStage = 0;
+    private int pathStage = 0;
+    private int pathNodeI = 0;
+    private Boolean conditions[];
 
     // constructor where conditions are fed and accounted for to choose a path
-    public PathfindingChooser(String mainPath, Boolean conditions[], PathPlannerPath connexions[]) {
+    public PathfindingChooser(String mainPath, PathPlannerPath connexions[]) {
       List<PathPlannerPath> m_autoPath = PathPlannerAuto.getPathGroupFromAutoFile(mainPath);
       // gives the required conditions to the available function
-      conditionLogicHandler(conditions);
 
       for (int i = 0; i < connexions.length; i++) {
         m_pathNodeMap.put(pathStage, connexions[i]);
-        m_pathNodeMap.get(pathStage);
       }
+
+      pathNodeChooser(conditions, connexions);
     }
 
     private Boolean conditionLogicHandler(Boolean conditions[]) {
@@ -101,11 +103,26 @@ public final class Autos {
         return false;
       }
     }
+
+    public String pathNodeChooser(Boolean conditions[], PathPlannerPath connexions[]) {
+      do {
+        if (conditionLogicHandler(conditions) == true) {
+          ++pathStage;
+          return m_pathNodeMap.values().toString();
+        } else {
+          m_pathNodeMap.remove(pathStage, connexions[i]);
+        }
+        ++pathNodeI;
+      } while (pathNodeI < m_pathNodeMap.size());
+      return null;
+    }
   }
 
-  public static Command makePathfindingGoToPath(PathPlannerPath chosenPath) {
+  public static Command makePathfindingGoToPath() {
+    PathfindingChooser m_choosedPath =
+        new PathfindingChooser(autoChooser.getSelected().toString(), null);
     // Load the path we want to pathfind to and follow
-    PathPlannerPath path = chosenPath;
+    PathPlannerPath path = PathPlannerPath.fromPathFile();
 
     // Create the constraints to use while pathfinding. The constraints defined in the path will
     // only be used for the path.
