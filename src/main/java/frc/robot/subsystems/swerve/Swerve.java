@@ -47,8 +47,8 @@ public class Swerve extends SubsystemBase {
     positions = new SwerveModulePosition[4];
     for (SwerveModule mod : mSwerveMods) {
       positions[mod.moduleNumber] = mod.getPosition();
+      SmartDashboard.putData(m_field2d);
     }
-    ;
 
     m_odometry =
         new SwerveDriveOdometry(
@@ -215,7 +215,6 @@ public class Swerve extends SubsystemBase {
     var m_odometryPose = m_odometry.update(m_gyro.getRotation2d(), getModulePositions());
     // Renews the field periodically
     m_field2d.setRobotPose(m_odometryPose);
-    SmartDashboard.putData(m_field2d);
   }
 
   public Command resetOdometryBlueSide() {
