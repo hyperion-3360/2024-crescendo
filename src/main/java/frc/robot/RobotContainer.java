@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -85,14 +86,15 @@ public class RobotContainer {
 
     m_swerveDrive.resetModulesToAbsolute();
 
+    CameraServer.startAutomaticCapture();
+
     m_swerveDrive.setDefaultCommand(
         new TeleopSwerve(
             m_swerveDrive,
             () -> conditionJoystick(translationAxis, translationLimiter, kJoystickDeadband),
             () -> conditionJoystick(strafeAxis, strafeLimiter, kJoystickDeadband),
             () -> conditionJoystick(rotationAxis, rotationLimiter, kJoystickDeadband),
-            () ->
-                true)); /* true means that the field oriented is disabled and false means it's enabled */
+            () -> true));
 
     m_shooter.setDefaultCommand(m_shooter.stop());
     m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));

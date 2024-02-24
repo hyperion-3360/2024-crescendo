@@ -15,6 +15,16 @@ public class TeleopSwerve extends Command {
   private DoubleSupplier rotationSup;
   private BooleanSupplier robotCentricSup;
 
+  /**
+   * Swerve drive command for tele operation
+   *
+   * @param s_Swerve swerve submodule instance
+   * @param translationSup translation forward or backward
+   * @param strafeSup strafe moving laterally in field oriented or changing orientation in robot
+   *     centric
+   * @param rotationSup rotation robot turning on itself
+   * @param robotCentricSup robot centric (true) field oriented (false)
+   */
   public TeleopSwerve(
       Swerve s_Swerve,
       DoubleSupplier translationSup,
