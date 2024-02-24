@@ -97,7 +97,7 @@ public class RobotContainer {
             () -> true));
 
     m_shooter.setDefaultCommand(m_shooter.stop());
-    m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
+    // m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
     // eventMap.put("Shoot", new PrintCommand("i am shooting :)"));
     NamedCommands.registerCommand("shootHigh", AutoCommands.autoShoot(m_elevator, m_shooter));
