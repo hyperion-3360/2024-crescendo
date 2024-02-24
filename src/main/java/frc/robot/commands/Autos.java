@@ -9,10 +9,13 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.Shooter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -62,16 +65,51 @@ public final class Autos {
     return autoChooser.getSelected();
   }
 
-  // creates a class for choosing our pathfinding
-  public class PathfindingChooser {
+  private static class ConditionsMaker {
+    // TODO add more conditions to represent what behavior we want the AI to have
+    private Shooter m_shooter = new Shooter();
 
-    private HashMap<Integer, PathPlannerPath> m_pathNodeMap =
-        new HashMap<Integer, PathPlannerPath>();
-    private HashMap<PathPlannerPath, Boolean[]> m_conditionPerNode =
-        new HashMap<PathPlannerPath, Boolean[]>();
+    /**
+     * @param timeConstraints at what time treshold do you want this path to not activate ex: after
+     *     10 seconds of auto mode there's no way the robot has enough time to do a high shoot so
+     *     don't take that path
+     * @param wantNote do we want a note before changing path ex: we don't want to intake a note if
+     *     there's already one in the intake
+     */
+    private ConditionsMaker(double timeConstraints, boolean wantNote) {
+      timeCondition(timeConstraints);
+      noteCondition(wantNote);
+    }
+
+    private boolean timeCondition(double timeConstraints) {
+      if (timeConstraints > DriverStation.getMatchTime()) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    private boolean noteCondition(boolean wantNote) {
+      if (m_shooter.hasNote() == wantNote) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    public static Boolean getConditions(double timeConstraints, boolean wantNote) {
+      return ConditionsMaker.getConditions(timeConstraints, wantNote);
+    }
+  }
+
+  private static class PathfindingChooser {
+    // hash map for the path's index and the connected path to it
+    private HashMap<Integer, PathPlannerPath> m_pathNodeMap = new HashMap<>();
+    // hash map for the connected paths and their conditions
+    private HashMap<PathPlannerPath, List<Boolean>> m_conditionPerNode = new HashMap<>();
     private int pathStage = 0;
-    private int pathNodeI = 0;
-    private Boolean conditions[];
+    private List<Boolean> conditions = new ArrayList<>();
+    public String chosenPathNode;
 
     // constructor where conditions are fed and accounted for to choose a path
     public PathfindingChooser(String mainPath, PathPlannerPath connexions[]) {
@@ -79,6 +117,7 @@ public final class Autos {
       // gives the required conditions to the available function
 
       for (int i = 0; i < connexions.length; i++) {
+        conditions.add(ConditionsMaker.getConditions(i, false));
         m_pathNodeMap.put(pathStage, connexions[i]);
         m_conditionPerNode.put(connexions[i], conditions);
         pathNodeChooser(conditions, connexions[i]);
@@ -88,14 +127,14 @@ public final class Autos {
       }
     }
 
-    private Boolean conditionLogicHandler(Boolean conditions[]) {
+    private Boolean conditionLogicHandler(List<Boolean> conditions2) {
       boolean allConditionReadGreen = false;
       int trueConditions = 0;
 
-      for (int i = 0; i < conditions.length; i++) {
-        if (conditions[i] == true) {
+      for (int i = 0; i < conditions.size(); i++) {
+        if (conditions.get(i) == true) {
           ++trueConditions;
-          if (trueConditions == conditions.length) {
+          if (trueConditions == conditions.size()) {
             allConditionReadGreen = true;
           }
         } else {
@@ -109,14 +148,13 @@ public final class Autos {
       }
     }
 
-    public String pathNodeChooser(Boolean conditions[], PathPlannerPath connexions) {
+    public String pathNodeChooser(List<Boolean> conditions, PathPlannerPath connexions) {
       if (conditionLogicHandler(conditions) == true) {
         ++pathStage;
         return m_pathNodeMap.values().toString();
       } else {
         m_pathNodeMap.remove(pathStage, connexions);
       }
-      ++pathNodeI;
       return null;
     }
   }
@@ -125,7 +163,7 @@ public final class Autos {
     PathfindingChooser m_choosedPath =
         new PathfindingChooser(autoChooser.getSelected().toString(), null);
     // Load the path we want to pathfind to and follow
-    PathPlannerPath path = PathPlannerPath.fromPathFile();
+    PathPlannerPath path = PathPlannerPath.fromPathFile(m_choosedPath.chosenPathNode);
 
     // Create the constraints to use while pathfinding. The constraints defined in the path will
     // only be used for the path.
