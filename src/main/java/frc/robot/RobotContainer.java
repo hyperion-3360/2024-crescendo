@@ -91,7 +91,8 @@ public class RobotContainer {
             () -> conditionJoystick(translationAxis, translationLimiter, kJoystickDeadband),
             () -> conditionJoystick(strafeAxis, strafeLimiter, kJoystickDeadband),
             () -> conditionJoystick(rotationAxis, rotationLimiter, kJoystickDeadband),
-            () -> true));
+            () ->
+                true)); /* true means that the field oriented is disabled and false means it's enabled */
 
     m_shooter.setDefaultCommand(m_shooter.stop());
     m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
