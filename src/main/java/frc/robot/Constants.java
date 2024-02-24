@@ -17,6 +17,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
+import frc.robot.commands.Autos.ConditionsMaker;
+import frc.robot.commands.Autos.PathfindingChooser;
+import java.util.HashMap;
 
 public final class Constants {
 
@@ -259,5 +262,12 @@ public final class Constants {
       PathPlannerPath.fromPathFile("middle note back start"),
       PathPlannerPath.fromPathFile("middle note front start")
     };
+  }
+
+  public static class NodePathConditions {
+    public static final HashMap<PathPlannerPath, Boolean> kpathNodeUpperNote =
+        PathfindingChooser.setConditionPerNodeMap(
+            PathPlannerPath.fromPathFile("test path"),
+            PathfindingChooser.setConditionsArray(ConditionsMaker.setConditions(10, false)));
   }
 }

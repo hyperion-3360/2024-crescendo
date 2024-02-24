@@ -65,7 +65,7 @@ public final class Autos {
     return autoChooser.getSelected();
   }
 
-  private static class ConditionsMaker {
+  public static class ConditionsMaker {
     // TODO add more conditions to represent what behavior we want the AI to have
     private Shooter m_shooter = new Shooter();
 
@@ -106,30 +106,30 @@ public final class Autos {
     //   }
     // }
 
-    public static Boolean getConditions(double timeConstraints, boolean wantNote) {
-      return ConditionsMaker.getConditions(timeConstraints, wantNote);
+    public static Boolean setConditions(double timeConstraints, boolean wantNote) {
+      return ConditionsMaker.setConditions(timeConstraints, wantNote);
     }
   }
 
-  private static class PathfindingChooser {
+  public static class PathfindingChooser {
     // hash map for the path's index and the connected path to it
-    private HashMap<Integer, PathPlannerPath> m_pathNodeMap = new HashMap<>();
+    private HashMap<Short, PathPlannerPath> m_pathNodeMap = new HashMap<>();
     // hash map for the connected paths and their conditions
-    private HashMap<PathPlannerPath, Boolean> m_conditionPerNode = new HashMap<>();
-    private int pathStage = 0;
-    private List<Boolean> conditions = new ArrayList<>();
+    private static HashMap<PathPlannerPath, Boolean> m_conditionPerNode = new HashMap<>();
+    private short pathStage = 0;
+    private static List<Boolean> conditions = new ArrayList<>();
     private String chosenPathNode;
 
     // constructor where conditions are fed and accounted for to choose a path
     public PathfindingChooser(String mainPath, PathPlannerPath connexions[]) {
       List<PathPlannerPath> m_autoPath = PathPlannerAuto.getPathGroupFromAutoFile(mainPath);
-      conditions.add(ConditionsMaker.getConditions(0, false));
+      conditions.add(ConditionsMaker.setConditions(0, false));
       // gives the required conditions to the available function
 
       for (int i = 0; i < connexions.length; i++) {
         m_pathNodeMap.put(pathStage, connexions[i]);
         m_conditionPerNode.put(
-            connexions[i], conditions.set(i, ConditionsMaker.getConditions(10, true)));
+            connexions[i], conditions.set(i, ConditionsMaker.setConditions(10, true)));
         pathNodeChooser(conditions, connexions[i]);
         if (pathNodeChooser(conditions, connexions[i]) != null) {
           break;
@@ -143,11 +143,11 @@ public final class Autos {
      * conditions for another path node
      *
      * @param conditions the conditions specific to the connexion we want to check
-     * @return
+     * @return if all the conditions read green
      */
     private Boolean conditionLogicHandler(List<Boolean> conditions) {
       boolean allConditionReadGreen = false;
-      int trueConditions = 0;
+      short trueConditions = 0;
 
       for (int i = 0; i < conditions.size(); i++) {
         if (conditions.get(i) == true) {
@@ -181,6 +181,23 @@ public final class Autos {
         m_pathNodeMap.remove(pathStage, connexions);
       }
       return null;
+    }
+
+    public static HashMap<PathPlannerPath, Boolean> getConditionPerNodeMap() {
+      return m_conditionPerNode;
+    }
+
+    public static void setConditionPerNodeMap(
+        PathPlannerPath connexions, boolean wantedConditions) {
+      m_conditionPerNode.put(connexions, wantedConditions);
+    }
+
+    public static List<Boolean> getConditionsArray() {
+      return conditions;
+    }
+
+    public static Boolean setConditionsArray(Boolean condition) {
+      return conditions.set(0, condition);
     }
   }
 
