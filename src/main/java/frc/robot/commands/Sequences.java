@@ -109,8 +109,8 @@ public class Sequences {
   // sequence lift elevator and start wheels to climb !! wait will have to be modified !!
   public static Command climbElevator(Elevator elevator, Shooter shooter, Trap trap) {
     return Commands.sequence(
-        trap.prepareToClimb(),
-        new WaitCommand(0.5),
+        // trap.prepareToClimb(),
+        // new WaitCommand(0.5),
         elevator.extendTheElevator(elevatorHeight.HIGH),
         new WaitCommand(1),
         shooter.holdSpeed(levelSpeed.CLIMB),

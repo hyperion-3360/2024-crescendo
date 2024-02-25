@@ -210,7 +210,7 @@ public final class Constants {
     public static final double kangleShouldersetZeroDelayed = 5.0;
     // good mapped
     public static final double kangleShouldergrabPosition = 83.0; // GRABPOSITION
-    public static final double kangleElbowgrabPosition = 87.0;
+    public static final double kangleElbowgrabPosition = 83.0;
     public static final double kangleWristgrabPosition = 68.0;
     // to be adjusted
     public static final double kangleShoulderdunkNote = 155.0; // DUNKNOTE
@@ -231,9 +231,9 @@ public final class Constants {
     public static final double kangleShoulderprepareToClimbdelayed1 = 88.0;
     public static final double kangleShoulderprepareToClimbdelayed2 = 66.0;
     public static final double kangleShoulderprepareToClimbdelayed3 = 44.0; // PREPARETOCLIMB
-    public static final double kangleElbowprepareToClimbdelayed1 = 113.0;
-    public static final double kangleElbowprepareToClimbdelayed2 = 71.0;
-    public static final double kangleElbowprepareToClimbdelayed3 = 35.0;
+    public static final double kangleElbowprepareToClimbdelayed1 = 71.0;
+    public static final double kangleElbowprepareToClimbdelayed2 = 47.0;
+    public static final double kangleElbowprepareToClimbdelayed3 = 23.0;
     public static final double kangleElbowprepareToClimb = 0.0;
     public static final double kangleWristprepareToClimb = 155.0;
   }
