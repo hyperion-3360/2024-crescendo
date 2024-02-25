@@ -9,7 +9,11 @@
     "center field backup",
     "center field"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "other",
+    "center autos",
+    "mid autos"
+  ],
   "defaultMaxVel": 2.5,
   "defaultMaxAccel": 2.5,
   "defaultMaxAngVel": 540.0,

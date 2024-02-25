@@ -13,21 +13,6 @@ import frc.robot.subsystems.Shooter.levelSpeed;
 import frc.robot.subsystems.Trap;
 
 public class Sequences {
-  // makes the climber sequence
-  //   public static Command climberSequence(Climber m_climber, LEDs m_LED, Trap m_trap) {
-  //     return Commands.sequence(
-  //         Commands.runOnce(() -> m_LED.setState(State.CLIMBING)),
-  //         m_climber
-  //             .climberGoToSelectedLevel(climberPos.TOP)
-  //             .andThen(new WaitCommand(2))
-  //             .andThen(m_climber.climberGoToSelectedLevel(climberPos.INITAL)),
-  //         new WaitUntilCommand(() -> m_climber.onClimberTarget())
-  //             .andThen(
-  //                 m_trap
-  //                     .grabPosition()
-  //                     .andThen(new WaitUntilCommand(0))
-  //                     .andThen(m_trap.scoreNote())));
-  //   }
 
   public static Command elevatorHigh(Elevator elevator, Shooter shooter, LEDs leds) {
     return Commands.sequence(
@@ -109,8 +94,8 @@ public class Sequences {
   // sequence lift elevator and start wheels to climb !! wait will have to be modified !!
   public static Command climbElevator(Elevator elevator, Shooter shooter, Trap trap) {
     return Commands.sequence(
-        // trap.prepareToClimb(),
-        // new WaitCommand(0.5),
+        trap.prepareToClimb(),
+        new WaitCommand(0.5),
         elevator.extendTheElevator(elevatorHeight.HIGH),
         new WaitCommand(1),
         shooter.holdSpeed(levelSpeed.CLIMB),

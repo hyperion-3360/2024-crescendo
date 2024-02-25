@@ -30,7 +30,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shootHigh"
+                  "name": "farShootA"
                 }
               }
             ]
@@ -103,6 +103,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "center autos",
   "choreoAuto": false
 }
