@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2909887440145251,
-      "y": 5.555586717654917
+      "x": 1.335586411913565,
+      "y": 5.536999407332149
     },
     "rotation": 0
   },
@@ -16,24 +16,18 @@
           "data": {
             "commands": [
               {
-                "type": "wait",
-                "data": {
-                  "waitTime": 2.2
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "shootHigh"
                 }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.8
+                }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.6
           }
         },
         {
@@ -60,25 +54,6 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "farShootA"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.8
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
                 "type": "path",
                 "data": {
                   "pathName": "2f"
@@ -87,26 +62,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "intake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "farShootB"
+                  "name": "farShootA"
                 }
               },
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.8
+                  "waitTime": 2.7
                 }
               }
             ]
@@ -132,9 +94,60 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "farShootC"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4f"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "farShootA"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.45
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "5f"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "6f"
+                }
+              }
+            ]
           }
         }
       ]

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5,
+        "x": 2.91,
         "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.969001216020307,
-        "y": 5.55108162807471
+        "x": 2.7467345064311677,
+        "y": 5.542570230955599
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.0,
+        "x": 2.29,
         "y": 5.55
       },
       "prevControl": {
-        "x": 2.385721654449131,
-        "y": 5.546050028673813
+        "x": 2.4474843588187905,
+        "y": 5.550235190790613
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,7 +29,19 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.75,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 2.5,
@@ -39,13 +51,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -0.051685114624230206,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "mid field",
+  "folder": "far shot mid field",
   "previewStartingState": {
-    "rotation": -0.3385870008356161,
+    "rotation": 0.00416325024395474,
     "velocity": 0
   },
   "useDefaultConstraints": true

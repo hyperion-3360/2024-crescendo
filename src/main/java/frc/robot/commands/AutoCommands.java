@@ -12,7 +12,7 @@ public class AutoCommands {
   public static Command autoShoot(Elevator elevator, Shooter shooter) {
     return Commands.sequence(
         elevator.extendTheElevator(elevatorHeight.HIGH),
-        new WaitCommand(0.7),
+        new WaitCommand(0.8),
         shooter.setTargetLevel(levelSpeed.HIGH),
         shooter.setSpeedWithTarget(),
         new WaitCommand(1.15),

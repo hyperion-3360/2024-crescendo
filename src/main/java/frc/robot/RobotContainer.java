@@ -97,9 +97,8 @@ public class RobotContainer {
             () -> true));
 
     m_shooter.setDefaultCommand(m_shooter.stop());
-    // m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
+    m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
-    // eventMap.put("Shoot", new PrintCommand("i am shooting :)"));
     NamedCommands.registerCommand("shootHigh", AutoCommands.autoShoot(m_elevator, m_shooter));
     NamedCommands.registerCommand("intake", m_shooter.intake());
     NamedCommands.registerCommand("farShootA", AutoCommands.autoFarShoot1(m_elevator, m_shooter));
@@ -164,28 +163,12 @@ public class RobotContainer {
     m_coDriverController.povLeft().onTrue(Sequences.climbElevator(m_elevator, m_shooter, m_trap));
     m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
     m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
-    // m_coDriverController.x().onTrue(Sequences.elevatorFarHigh(m_elevator, m_shooter, m_led));
+    m_coDriverController.x().onTrue(Sequences.elevatorFarHigh(m_elevator, m_shooter, m_led));
     m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
-    m_coDriverController
-        .x()
-        .onTrue(
-            m_elevator
-                .extendTheElevator(elevatorHeight.INTAKE)
-                .andThen(() -> m_led.setState(State.IDLE)));
-    // m_coDriverController.x().toggleOnTrue(m_shooter.holdSpeed(levelSpeed.CLIMB));
 
-    // m_coDriverController.a().onTrue(m_elevator.extendTheElevator(elevatorHeight.HIGH));
-
+    m_coDriverController.rightBumper().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
     m_coDriverController.leftTrigger().whileTrue(m_climber.setSpeed1()).onFalse(m_climber.stop());
     m_coDriverController.rightTrigger().whileTrue(m_climber.setSpeed2()).onFalse(m_climber.stop());
-    // m_coDriverController
-    //     .leftTrigger()
-    //     .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.INITAL))
-    //     .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
-    // m_coDriverController
-    //     .rightTrigger()
-    //     .whileTrue(m_climber.climberGoToSelectedLevel(climberPos.TOP))
-    //     .onFalse(m_climber.climberGoToSelectedLevel(climberPos.STALL));
 
     m_driverController.a().toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led));
 
@@ -196,13 +179,6 @@ public class RobotContainer {
     m_driverController
         .y()
         .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
-
-    // m_driverController
-    //     .x()
-    //     .onTrue(
-    //         m_elevator
-    //             .extendTheElevator(elevatorHeight.INTAKE)
-    //             .andThen(() -> m_led.setState(State.IDLE)));
   }
 
   public Command getAutonomousCommand() {

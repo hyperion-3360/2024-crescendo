@@ -8,56 +8,34 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8925851607258775,
-        "y": 4.425516185476815
+        "x": 2.3925960515676494,
+        "y": 4.424272331987168
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.6055477944289225,
-        "y": 5.363003179710065
+        "x": 1.8,
+        "y": 4.97
       },
       "prevControl": {
-        "x": 1.3731632375138922,
-        "y": 5.129186561099762
-      },
-      "nextControl": {
-        "x": 1.817550023988937,
-        "y": 5.5763118655866935
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.030057373797426,
-        "y": 5.549798796104143
-      },
-      "prevControl": {
-        "x": 2.428030308632185,
-        "y": 5.480015848945656
+        "x": 2.066294479204679,
+        "y": 4.691135197408677
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1,
-      "rotationDegrees": 0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 1.3,
-      "maxWaypointRelativePos": 2.0,
+      "minWaypointRelativePos": 0.6,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 2.0,
+        "maxVelocity": 4.5,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0
@@ -66,20 +44,20 @@
   ],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.5,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 2.5,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -19.800361098912784,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "far shot mid field",
   "previewStartingState": {
-    "rotation": -27.007215263452593,
+    "rotation": -0.3385870008356161,
     "velocity": 0
   },
   "useDefaultConstraints": true

@@ -205,7 +205,7 @@ public final class Constants {
     public static final double kfingerOpened = 90.0;
     // good not in sequence yet
     public static final double kangleShouldersetZero = 0.0; // SETZERO   //higher number = higher
-    public static final double kangleElbowsetZero = 142.0; // higher number = lower
+    public static final double kangleElbowsetZero = 130.0; // higher number = lower // 142
     public static final double kangleWristsetZero = 155.0; // higher number = higher
     public static final double kangleShouldersetZeroDelayed = 5.0;
     // good mapped

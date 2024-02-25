@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.0,
-        "y": 5.58
+        "x": 1.8,
+        "y": 4.97
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.228430535564775,
-        "y": 5.521203162776696
+        "x": 2.1015156750109716,
+        "y": 5.076264160898045
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.7719224021053575,
-        "y": 6.307783382488163
+        "x": 2.9106626926863757,
+        "y": 5.55
       },
       "prevControl": {
-        "x": 1.7275696812107886,
-        "y": 5.9617008188791765
-      },
-      "nextControl": {
-        "x": 1.8132097317688087,
-        "y": 6.629946817026093
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.894345262853554,
-        "y": 6.985732621392462
-      },
-      "prevControl": {
-        "x": 2.325445360497709,
-        "y": 6.7895942933443365
+        "x": 2.733145984850922,
+        "y": 5.409256289655228
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,16 +30,16 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1,
-      "rotationDegrees": 22.111529684171373,
-      "rotateFast": false
+      "waypointRelativePos": 0.65,
+      "rotationDegrees": 29.404120095365307,
+      "rotateFast": true
     }
   ],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 1.5,
-      "maxWaypointRelativePos": 2.0,
+      "minWaypointRelativePos": 0.65,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 2.0,
         "maxAcceleration": 3.0,
@@ -66,20 +50,20 @@
   ],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.5,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 2.5,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 19.644755220978453,
+    "rotation": 3.073180023440322,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "far shot mid field",
   "previewStartingState": {
-    "rotation": 0.00416325024395474,
+    "rotation": -19.771105877797183,
     "velocity": 0
   },
   "useDefaultConstraints": true
