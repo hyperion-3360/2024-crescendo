@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.5,
-      "y": 5.55
+      "x": 1.335586411913565,
+      "y": 5.536999407332149
     },
     "rotation": 0
   },
@@ -16,24 +16,18 @@
           "data": {
             "commands": [
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 3.0
+                  "name": "shootHigh"
                 }
               },
               {
-                "type": "named",
+                "type": "wait",
                 "data": {
-                  "name": "shoot"
+                  "waitTime": 2.8
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.5
           }
         },
         {
@@ -43,7 +37,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "3m"
+                  "pathName": "1f"
                 }
               },
               {
@@ -56,28 +50,34 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "4m"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "wait",
+                "type": "path",
                 "data": {
-                  "waitTime": 2.0
+                  "pathName": "2f"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "shoot"
+                  "name": "farShootA"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.7
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "7f"
           }
         }
       ]
