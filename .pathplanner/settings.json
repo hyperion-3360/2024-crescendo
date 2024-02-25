@@ -5,8 +5,9 @@
   "pathFolders": [
     "other",
     "mid field",
-    "center field",
-    "far shot mid field"
+    "far shot mid field",
+    "center field backup",
+    "center field"
   ],
   "autoFolders": [],
   "defaultMaxVel": 2.5,
