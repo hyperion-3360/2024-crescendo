@@ -9,13 +9,15 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.lib.math.Conversions;
 import frc.lib.util.CTREMagEncoder;
 import frc.lib.util.SwerveModuleConstants;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
-public class SwerveModule {
+public class SwerveModule implements Sendable {
   public int moduleNumber;
   private Rotation2d angleOffset;
   private TalonFX mAngleMotor;
@@ -60,6 +62,10 @@ public class SwerveModule {
               "Wheel: %d, speed: %f, angle : %f",
               moduleNumber, desiredState.speedMetersPerSecond, desiredState.angle.getDegrees()));
     setSpeed(desiredState, isOpenLoop);
+  }
+
+  public void setWheelRotation(double rotation) {
+    mAngleMotor.setControl(anglePosition.withPosition(rotation).withVelocity(0.1));
   }
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
@@ -113,5 +119,19 @@ public class SwerveModule {
         Conversions.rotationsToMeters(
             mDriveMotor.getPosition().getValue(), Constants.Swerve.wheelCircumference),
         Rotation2d.fromRotations(mAngleMotor.getPosition().getValue()));
+  }
+
+  private double getTemperature() {
+    return mAngleMotor.getDeviceTemp().getValueAsDouble();
+  }
+
+  private boolean getHardwareFault() {
+    return mAngleMotor.getFault_Hardware().getValue();
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.addDoubleProperty("Angle motor temperature", this::getTemperature, null);
+    builder.addBooleanProperty("Angle motor faulty", this::getHardwareFault, null);
   }
 }

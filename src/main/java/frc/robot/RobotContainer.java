@@ -13,6 +13,7 @@ import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -71,6 +72,7 @@ public class RobotContainer {
   private final SlewRateLimiter rotationLimiter = new SlewRateLimiter(3);
 
   private final double kJoystickDeadband = 0.1;
+  private final boolean m_debugSwerve = false;
 
   UsbCamera m_camera1, m_camera2;
   UsbCamera m_currentCam;
@@ -116,31 +118,81 @@ public class RobotContainer {
     m_videoServer.setSource(m_camera1);
 
     m_swerveDrive.resetModulesToAbsolute();
+    if (m_debugSwerve) {
 
-    m_swerveDrive.setDefaultCommand(
-        new TeleopSwerve(
-            m_swerveDrive,
-            () -> conditionJoystick(translationAxis, translationLimiter, kJoystickDeadband),
-            () -> conditionJoystick(strafeAxis, strafeLimiter, kJoystickDeadband),
-            () -> conditionJoystick(rotationAxis, rotationLimiter, kJoystickDeadband),
-            () -> true));
+      m_driverController
+          .a()
+          .onTrue(
+              Commands.runOnce(
+                  () ->
+                      m_swerveDrive.drive(
+                          new Translation2d(0.0, 0.0).times(Constants.Swerve.maxSpeed),
+                          0.0 * Constants.Swerve.maxAngularVelocity,
+                          true,
+                          true),
+                  m_swerveDrive));
+      m_driverController
+          .y()
+          .onTrue(
+              Commands.repeatingSequence(
+                  Commands.sequence(
+                      m_swerveDrive.setWheelRotation(0, 0.0),
+                      m_swerveDrive.setWheelRotation(1, 0.0),
+                      m_swerveDrive.setWheelRotation(2, 0.0),
+                      m_swerveDrive.setWheelRotation(3, 0.0)),
+                  Commands.sequence(
+                      m_swerveDrive.setWheelRotation(0, 0.25),
+                      m_swerveDrive.setWheelRotation(1, 0.25),
+                      m_swerveDrive.setWheelRotation(2, 0.25),
+                      m_swerveDrive.setWheelRotation(3, 0.25)),
+                  Commands.sequence(
+                      m_swerveDrive.setWheelRotation(0, 0.5),
+                      m_swerveDrive.setWheelRotation(1, 0.5),
+                      m_swerveDrive.setWheelRotation(2, 0.5),
+                      m_swerveDrive.setWheelRotation(3, 0.5)),
+                  Commands.sequence(
+                      m_swerveDrive.setWheelRotation(0, 0.75),
+                      m_swerveDrive.setWheelRotation(1, 0.75),
+                      m_swerveDrive.setWheelRotation(2, 0.75),
+                      m_swerveDrive.setWheelRotation(3, 0.75)),
+                  Commands.sequence(
+                      m_swerveDrive.setWheelRotation(0, 0),
+                      m_swerveDrive.setWheelRotation(1, 0),
+                      m_swerveDrive.setWheelRotation(2, 0),
+                      m_swerveDrive.setWheelRotation(3, 0)),
+                  new WaitCommand(0.2)));
+    } else {
 
-    m_climber.setDefaultCommand(m_climber.run(() -> m_climber.setSpeed()));
+      m_swerveDrive.resetModulesToAbsolute();
 
-    m_shooter.setDefaultCommand(m_shooter.stop());
-    m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
+      m_climber.setDefaultCommand(m_climber.run(() -> m_climber.setSpeed()));
 
-    NamedCommands.registerCommand("shootHigh", AutoCommands.autoShoot(m_elevator, m_shooter));
-    NamedCommands.registerCommand("intake", m_shooter.intake().withTimeout(3));
-    NamedCommands.registerCommand("farShootA", AutoCommands.autoFarShoot1(m_elevator, m_shooter));
-    NamedCommands.registerCommand("farShootB", AutoCommands.autoFarShoot2(m_elevator, m_shooter));
-    NamedCommands.registerCommand("farShootC", AutoCommands.autoFarShoot3(m_elevator, m_shooter));
-    NamedCommands.registerCommand("farShootD", AutoCommands.autoFarShoot4(m_elevator, m_shooter));
-    NamedCommands.registerCommand("wait", new WaitCommand(1));
+      m_shooter.setDefaultCommand(m_shooter.stop());
+      m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
-    configureBindings();
+      NamedCommands.registerCommand("shootHigh", AutoCommands.autoShoot(m_elevator, m_shooter));
+      NamedCommands.registerCommand("intake", m_shooter.intake().withTimeout(3));
+      NamedCommands.registerCommand("farShootA", AutoCommands.autoFarShoot1(m_elevator, m_shooter));
+      NamedCommands.registerCommand("farShootB", AutoCommands.autoFarShoot2(m_elevator, m_shooter));
+      NamedCommands.registerCommand("farShootC", AutoCommands.autoFarShoot3(m_elevator, m_shooter));
+      NamedCommands.registerCommand("farShootD", AutoCommands.autoFarShoot4(m_elevator, m_shooter));
+      NamedCommands.registerCommand("wait", new WaitCommand(1));
 
-    Autos.setShuffleboardOptions();
+      m_swerveDrive.setDefaultCommand(
+          new TeleopSwerve(
+              m_swerveDrive,
+              () -> conditionJoystick(translationAxis, translationLimiter, kJoystickDeadband),
+              () -> conditionJoystick(strafeAxis, strafeLimiter, kJoystickDeadband),
+              () -> conditionJoystick(rotationAxis, rotationLimiter, kJoystickDeadband),
+              () -> true));
+
+      m_shooter.setDefaultCommand(m_shooter.stop());
+      m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
+
+      configureBindings();
+
+      Autos.setShuffleboardOptions();
+    }
   }
 
   /** Configure Joystick bindings for manually controlling and debugging the Trap arm */

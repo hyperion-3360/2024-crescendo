@@ -57,6 +57,10 @@ public class Swerve extends SubsystemBase {
             positions,
             new Pose2d(0, 0, new Rotation2d()));
     configurePathPlanner();
+    SmartDashboard.putData("Swerve module 0", mSwerveMods[0]);
+    SmartDashboard.putData("Swerve module 1", mSwerveMods[1]);
+    SmartDashboard.putData("Swerve module 2", mSwerveMods[2]);
+    SmartDashboard.putData("Swerve module 3", mSwerveMods[3]);
   }
 
   public void drive(
@@ -69,6 +73,17 @@ public class Swerve extends SubsystemBase {
                 : new ChassisSpeeds(translation.getX(), translation.getY(), rotation));
 
     setStates(swerveModuleStates, isOpenLoop);
+  }
+
+  /**
+   * Debugging function to turn an individual wheel a certain number of rotation WARNING: all other
+   * swerve related commands shall be disabled for this to work as expected
+   *
+   * @param mod wheel module (0-3)
+   * @param rotation number of rotations to perform
+   */
+  public Command setWheelRotation(int mod, double rotation) {
+    return this.runOnce(() -> mSwerveMods[mod].setWheelRotation(rotation));
   }
 
   public void setStates(SwerveModuleState[] targetStates, boolean isOpenLoop) {
