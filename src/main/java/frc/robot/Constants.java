@@ -210,7 +210,7 @@ public final class Constants {
     public static final double kangleShouldersetZeroDelayed = 5.0;
     // good mapped
     public static final double kangleShouldergrabPosition = 83.0; // GRABPOSITION
-    public static final double kangleElbowgrabPosition = 83.0;
+    public static final double kangleElbowgrabPosition = 78.0;
     public static final double kangleWristgrabPosition = 68.0;
     // to be adjusted
     public static final double kangleShoulderdunkNote = 155.0; // DUNKNOTE

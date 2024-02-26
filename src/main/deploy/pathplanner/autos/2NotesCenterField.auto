@@ -75,7 +75,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "3c"
+                  "pathName": "2c"
                 }
               },
               {
@@ -98,6 +98,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         }
       ]
