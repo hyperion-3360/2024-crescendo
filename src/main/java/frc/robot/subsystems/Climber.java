@@ -56,19 +56,31 @@ public class Climber extends SubsystemBase {
   public void periodic() {
 
     m_climberRightMaster.set(triggerSpeed);
-
-    // System.out.println("pos " + m_encoder.getPosition() + " speed " + triggerSpeed);
+    System.out.println(triggerSpeed);
   }
 
-  public Command setSpeed1() {
-    return this.run(() -> triggerSpeed = Math.pow(new XboxController(1).getLeftTriggerAxis(), 3));
-  }
+  // public Command setSpeed1() {
+  //   return this.run(() -> triggerSpeed = Math.pow(new XboxController(1).getLeftTriggerAxis(),
+  // 3));
+  // }
 
-  public Command setSpeed2() {
-    return this.run(() -> triggerSpeed = -Math.pow(new XboxController(1).getRightTriggerAxis(), 3));
-  }
+  // public Command setSpeed2() {
+  //   return this.run(() -> triggerSpeed = -Math.pow(new XboxController(1).getRightTriggerAxis(),
+  // 3));
+  // }
 
   public Command stop() {
     return this.run(() -> triggerSpeed = 0.0);
+  }
+
+  public void setSpeed() {
+    double speed = new XboxController(1).getRawAxis(1);
+    if (Math.abs(speed) > 0.05) {
+      if (speed > 0) {
+        triggerSpeed = Math.pow(speed, 2);
+      } else {
+        triggerSpeed = -Math.pow(speed, 2);
+      }
+    } else triggerSpeed = 0.0;
   }
 }

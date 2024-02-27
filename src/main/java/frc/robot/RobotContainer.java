@@ -12,6 +12,7 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -96,6 +97,8 @@ public class RobotContainer {
             () -> conditionJoystick(rotationAxis, rotationLimiter, kJoystickDeadband),
             () -> true));
 
+    m_climber.setDefaultCommand(m_climber.run(() -> m_climber.setSpeed()));
+
     m_shooter.setDefaultCommand(m_shooter.stop());
     m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
@@ -104,6 +107,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("farShootA", AutoCommands.autoFarShoot1(m_elevator, m_shooter));
     NamedCommands.registerCommand("farShootB", AutoCommands.autoFarShoot2(m_elevator, m_shooter));
     NamedCommands.registerCommand("farShootC", AutoCommands.autoFarShoot3(m_elevator, m_shooter));
+    NamedCommands.registerCommand("wait", new WaitCommand(1));
 
     configureBindings();
 
@@ -167,8 +171,6 @@ public class RobotContainer {
     m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
 
     m_coDriverController.rightBumper().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
-    m_coDriverController.leftTrigger().whileTrue(m_climber.setSpeed1()).onFalse(m_climber.stop());
-    m_coDriverController.rightTrigger().whileTrue(m_climber.setSpeed2()).onFalse(m_climber.stop());
 
     m_driverController.a().toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led));
 
