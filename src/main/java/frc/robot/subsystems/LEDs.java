@@ -58,7 +58,6 @@ public class LEDs extends SubsystemBase {
     PREPARE_SHOT_AMP, // Aim activated pale yellow quick flash, with vision aim function running
     SHOOT_READY_AMP, // Aim ready deep purple, vision aim lock
     TRAP_HAS_NOTE, // Limit switch activated, purple
-    GEAR_BLOCKED, // servo blocking gears of the shooter extremely rapid flashing red EMERGENCY LEDS
   }
 
   /* current LED state */
@@ -71,14 +70,12 @@ public class LEDs extends SubsystemBase {
   private ledValue kGreen = new ledValue(0, 255, 0, 0);
   private ledValue kpurple = new ledValue(255, 0, 255, 0);
   private ledValue kDark = new ledValue(0, 0, 0, 0);
-  private ledValue kRed = new ledValue(255, 0, 0, 0);
 
   /* current ledvalue, used for blinking */
   private ledValue m_currentValue;
 
   private int kSlowFlashingDelay = (1000000 / 4); // 4 times per second delay in usec
   private int kFastFlashingDelay = (1000000 / 10); // 10 times per second delay in usec
-  private int kExtremelyFastFlashingDelay = (1000000 / 15); // 15 times per second delay in usec
 
   /* instance member for singleton implementation */
   private static LEDs m_instance = null;
@@ -151,10 +148,6 @@ public class LEDs extends SubsystemBase {
         m_flashDuration = 0;
         m_currentValue = kpurple;
         break;
-      case GEAR_BLOCKED:
-        m_flashDuration = RobotController.getFPGATime() + kFastFlashingDelay;
-        m_currentValue = kRed;
-        break;
       default:
         break;
     }
@@ -184,13 +177,6 @@ public class LEDs extends SubsystemBase {
         if (currentTime > m_flashDuration) {
           m_currentValue = m_currentValue == kpurple ? kDark : kpurple;
           m_flashDuration = RobotController.getFPGATime() + kSlowFlashingDelay;
-          setRGB(m_currentValue);
-        }
-        break;
-      case GEAR_BLOCKED:
-        if (currentTime > m_flashDuration) {
-          m_currentValue = m_currentValue == kRed ? kDark : kpurple;
-          m_flashDuration = RobotController.getFPGATime() + kExtremelyFastFlashingDelay;
           setRGB(m_currentValue);
         }
         break;
