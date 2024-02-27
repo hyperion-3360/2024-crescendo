@@ -131,4 +131,9 @@ public class Sequences {
         new WaitCommand(5),
         shooter.stop());
   }
+
+  public static Command blockGear(Shooter shooter, LEDs leds) {
+    return Commands.sequence(
+        shooter.gearBlockMode(), Commands.runOnce(() -> leds.setState(State.GEAR_BLOCKED)));
+  }
 }

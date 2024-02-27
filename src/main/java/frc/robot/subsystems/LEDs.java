@@ -57,8 +57,8 @@ public class LEDs extends SubsystemBase {
     CLIMBING, // Climb yellow, during the entire climb sequence
     PREPARE_SHOT_AMP, // Aim activated pale yellow quick flash, with vision aim function running
     SHOOT_READY_AMP, // Aim ready deep purple, vision aim lock
-    TRAP_HAS_NOTE,
-    GEAR_BLOCKED // Limit switch activated, purple
+    TRAP_HAS_NOTE, // Limit switch activated, purple
+    GEAR_BLOCKED, // servo blocking gears of the shooter extremely rapid flashing red EMERGENCY LEDS
   }
 
   /* current LED state */

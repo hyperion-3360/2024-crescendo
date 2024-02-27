@@ -48,6 +48,10 @@ public class Shooter extends SubsystemBase {
   private final double kIntakeHookAngleOpen = 5.0;
   private final double kIntakeHookAngleClose = 31;
 
+  // gear blocker constants
+  private final double kGearBlocked = 20.0;
+  private final double kGearBlockerRestPosition = 0.0;
+
   // declaring motors for the shooter
   private CANSparkMax m_leftMaster =
       new CANSparkMax(Constants.ShooterConstants.kLeftMasterId, MotorType.kBrushless);
@@ -76,6 +80,8 @@ public class Shooter extends SubsystemBase {
 
   // creating the blocker servo
   private Servo m_blocker = new Servo(Constants.ShooterConstants.kservoBlockerId);
+  // creating the gear blocker servo
+  private Servo m_gearBlocker = new Servo(Constants.ShooterConstants.kservoGearBlockerId);
 
   public Shooter() {
 
@@ -290,6 +296,16 @@ public class Shooter extends SubsystemBase {
   // set down the hook
   public Command hookIntake() {
     return this.runOnce(() -> m_blocker.setAngle(kIntakeHookAngleClose));
+  }
+
+  // set the gear blocker hook into blocking position to prevent the gears from turning
+  public Command gearBlockMode() {
+    return this.runOnce(() -> m_gearBlocker.setAngle(kGearBlocked));
+  }
+
+  // set the gear blocker hook into rest postion so the gears aren't blocked during a match
+  public Command gearBlockerRestMode() {
+    return this.runOnce(() -> m_gearBlocker.setAngle(kGearBlockerRestPosition));
   }
 
   // set up the hook
