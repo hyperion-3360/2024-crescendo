@@ -16,7 +16,8 @@ public final class Autos {
     TwoNotesCenterField("2NotesCenterField"),
     ThreeNotesCenterField("3NotesCenterField"),
     FourNotesCenterField("4NotesCenterField"),
-    CrossRobotZone("crossRobotZone");
+    CrossRobotZone("crossRobotZone"),
+    FourNotesMidFieldStartCenter("4NotesMidFieldStartCenter");
 
     private String m_path;
 
@@ -47,6 +48,7 @@ public final class Autos {
     autoChooser.addOption("score 3 notes center field", Mode.ThreeNotesCenterField);
     autoChooser.addOption("score 4 notes center field", Mode.FourNotesCenterField);
     autoChooser.addOption("cross the robot zone", Mode.CrossRobotZone);
+    autoChooser.addOption("score 4 Notes Mid Field Start Center", Mode.FourNotesMidFieldStartCenter);
 
     Shuffleboard.getTab("Autos").add("Auto Mode", autoChooser);
 
