@@ -107,6 +107,37 @@
                 "data": {
                   "name": "intake"
                 }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.15
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "farShoot"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "5f"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
               }
             ]
           }
