@@ -56,7 +56,6 @@ public class Climber extends SubsystemBase {
   public void periodic() {
 
     m_climberRightMaster.set(triggerSpeed);
-    System.out.println(triggerSpeed);
   }
 
   // public Command setSpeed1() {
