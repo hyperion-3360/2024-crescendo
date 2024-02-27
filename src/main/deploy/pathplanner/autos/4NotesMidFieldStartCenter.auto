@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7206500428625856,
-      "y": 3.9482872991641966
+      "x": 0.6920604359088829,
+      "y": 4.0924038798765645
     },
-    "rotation": 0
+    "rotation": 6.845067745253934
   },
   "command": {
     "type": "sequential",
@@ -18,13 +18,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "StartMiddle1"
+                  "pathName": "turn"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "farShoot"
+                  "name": "farShootA"
                 }
               }
             ]
@@ -37,7 +37,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "TakeRightNote"
+                  "pathName": "c1"
                 }
               },
               {
@@ -64,18 +64,6 @@
                 "data": {
                   "name": "farShoot"
                 }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.15
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake"
-                }
               }
             ]
           }
@@ -88,18 +76,6 @@
                 "type": "path",
                 "data": {
                   "pathName": "3f"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "farShoot"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.15
                 }
               },
               {
