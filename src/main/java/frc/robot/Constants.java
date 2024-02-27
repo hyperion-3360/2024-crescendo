@@ -177,6 +177,7 @@ public final class Constants {
     public static final int kRightFollowerId = 15;
     public static final int kInfraredSensorId = 4;
     public static final int kservoBlockerId = 5;
+    public static final int kservoGearBlockerId = 4;
   }
 
   public static class ElevatorConstants {
