@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4062614961110564,
-      "y": 4.0246598861101655
+      "x": 1.6782029852269313,
+      "y": 4.509574400335118
     },
     "rotation": 0.6386346373546427
   },
@@ -30,7 +30,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "farShootA"
+                  "name": "farShootB"
                 }
               }
             ]
@@ -101,9 +101,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "wait"
           }
         }
       ]
