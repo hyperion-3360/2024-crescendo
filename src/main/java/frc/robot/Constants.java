@@ -19,7 +19,7 @@ import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 import frc.robot.commands.Autos.ConditionsMaker;
 import frc.robot.commands.Autos.PathfindingChooser;
-import java.util.HashMap;
+import java.util.List;
 
 public final class Constants {
 
@@ -254,20 +254,16 @@ public final class Constants {
             new ReplanningConfig());
   }
 
-  public static class NotePostionArrayConstants {
-    public static final PathPlannerPath notePaths[] = {
-      // TODO add note postions as paths
-      PathPlannerPath.fromPathFile("upper note back start"),
-      PathPlannerPath.fromPathFile("upper note front start"),
-      PathPlannerPath.fromPathFile("middle note back start"),
-      PathPlannerPath.fromPathFile("middle note front start")
+  public static class PathPlannerConnexions {
+    public static final PathPlannerPath[] kClosetUpperNote = {
+      PathPlannerPath.fromPathFile("test 1"), PathPlannerPath.fromPathFile("test 2")
     };
   }
 
   public static class NodePathConditions {
-    public static final HashMap<PathPlannerPath, Boolean> kpathNodeUpperNote =
-        PathfindingChooser.setConditionPerNodeMap(
-            PathPlannerPath.fromPathFile("test path"),
-            PathfindingChooser.setConditionsArray(ConditionsMaker.setConditions(10, false)));
+    public static final List<Boolean> kpathNodeUpperNote =
+        PathfindingChooser.setConditionPerNodeMap(1, ConditionsMaker.setConditions(10, false));
+    public static final List<Boolean> kpathNodeMiddleNote =
+        PathfindingChooser.setConditionPerNodeMap(1, ConditionsMaker.setConditions(10, false));
   }
 }

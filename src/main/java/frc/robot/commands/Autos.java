@@ -18,6 +18,7 @@ import frc.robot.subsystems.Shooter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class Autos {
 
@@ -106,7 +107,7 @@ public final class Autos {
     //   }
     // }
 
-    public static Boolean setConditions(double timeConstraints, boolean wantNote) {
+    public static List<Boolean> setConditions(double timeConstraints, boolean wantNote) {
       return ConditionsMaker.setConditions(timeConstraints, wantNote);
     }
   }
@@ -115,7 +116,7 @@ public final class Autos {
     // hash map for the path's index and the connected path to it
     private HashMap<Short, PathPlannerPath> m_pathNodeMap = new HashMap<>();
     // hash map for the connected paths and their conditions
-    private static HashMap<PathPlannerPath, Boolean> m_conditionPerNode = new HashMap<>();
+    private static HashMap<Integer, List<Boolean>> m_conditionPerNode = new HashMap<>();
     private short pathStage = 0;
     private static List<Boolean> conditions = new ArrayList<>();
     private String chosenPathNode;
@@ -123,13 +124,12 @@ public final class Autos {
     // constructor where conditions are fed and accounted for to choose a path
     public PathfindingChooser(String mainPath, PathPlannerPath connexions[]) {
       List<PathPlannerPath> m_autoPath = PathPlannerAuto.getPathGroupFromAutoFile(mainPath);
-      conditions.add(ConditionsMaker.setConditions(0, false));
+      conditions.addAll(ConditionsMaker.setConditions(0, false));
       // gives the required conditions to the available function
 
-      for (int i = 0; i < connexions.length; i++) {
+      for (Integer i = 0; i < connexions.length; i++) {
         m_pathNodeMap.put(pathStage, connexions[i]);
-        m_conditionPerNode.put(
-            connexions[i], conditions.set(i, ConditionsMaker.setConditions(10, true)));
+        m_conditionPerNode.putAll(getConditionPerNodeMap());
         pathNodeChooser(conditions, connexions[i]);
         if (pathNodeChooser(conditions, connexions[i]) != null) {
           break;
@@ -183,21 +183,13 @@ public final class Autos {
       return null;
     }
 
-    public static HashMap<PathPlannerPath, Boolean> getConditionPerNodeMap() {
+    public static Map<? extends Integer, ? extends List<Boolean>> getConditionPerNodeMap() {
       return m_conditionPerNode;
     }
 
-    public static void setConditionPerNodeMap(
-        PathPlannerPath connexions, boolean wantedConditions) {
-      m_conditionPerNode.put(connexions, wantedConditions);
-    }
-
-    public static List<Boolean> getConditionsArray() {
-      return conditions;
-    }
-
-    public static Boolean setConditionsArray(Boolean condition) {
-      return conditions.set(0, condition);
+    public static List<Boolean> setConditionPerNodeMap(
+        Integer connexions, List<Boolean> wantedConditions) {
+      return m_conditionPerNode.put(connexions, wantedConditions);
     }
   }
 
