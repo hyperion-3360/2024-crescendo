@@ -112,7 +112,7 @@ public final class Constants {
 
     /* Neutral Modes */
     public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Brake;
-    public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Coast;
+    public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake;
 
     /* Module Specific Constants */
 
@@ -219,10 +219,14 @@ public final class Constants {
     public static final double kangleElbowdunkNote = 10.0;
     public static final double kangleWristdunkNote = 100.0;
     // good
-    public static final double kangleShoulderdisable = 110.0; // CLEAR FOR ROBOT DISABLE
-    public static final double kangleElbowdisable = 90.0;
-    public static final double kangleWristdisable = 155.0;
+    public static final double kangleShoulderdisable1 = 110.0; // PREPARETODISABLE1
+    public static final double kangleElbowdisable1 = 0.0;
+    public static final double kangleWristdisable1 = 155.0;
     // good
+    public static final double kangleShoulderdisable2 = 110.0; // PREPARETODISABLE2
+    public static final double kangleElbowdisable2 = 30.0;
+    public static final double kangleWristdisable2 = 30.0;
+    // working on it
     public static final double kangleShoulderstoreNote = 0.0; // STORENOTE
     public static final double kangleElbowstoreNote = 142.0;
     public static final double kangleWriststoreNote = 155.0;

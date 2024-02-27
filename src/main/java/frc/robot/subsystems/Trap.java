@@ -91,7 +91,11 @@ public class Trap extends SubsystemBase {
         .andThen(new WaitCommand(m_servoElbow.travelTime()))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristgrabPosition))
         .andThen(new WaitCommand(m_servoWrist.travelTime()))
-        .andThen(new WaitUntilCommand(() -> !m_limitSwitch.get()))
+        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened));
+  }
+
+  public Command waitLimitSwitch() {
+    return this.runOnce(() -> new WaitUntilCommand(() -> !m_limitSwitch.get()))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));
   }
 
@@ -139,13 +143,22 @@ public class Trap extends SubsystemBase {
   }
 
   // position arm is in after dunking the note so it is ready to disable and doesn't hit anywhere
-  public Command prepareToDisable() {
+  public Command prepareToDisable1() {
     return this.runOnce(
-            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderdisable))
+            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderdisable1))
         .andThen(new WaitCommand(m_servoShoulder.travelTime()))
-        .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowdisable))
+        .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowdisable1))
         .andThen(new WaitCommand(m_servoElbow.travelTime()))
-        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristdisable));
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristdisable1));
+  }
+
+  public Command prepareToDisable2() {
+    return this.runOnce(
+            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderdisable2))
+        .andThen(new WaitCommand(m_servoShoulder.travelTime()))
+        .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowdisable2))
+        .andThen(new WaitCommand(0.6))
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristdisable2));
   }
 
   // manual control to fine tune arm positions using pov on joystick

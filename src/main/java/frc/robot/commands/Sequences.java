@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.Elevator;
@@ -76,11 +77,14 @@ public class Sequences {
   // sequence to feed the note to the trap and store it
   public static Command trapShoot(Shooter m_shooter, Trap m_trap) {
     return Commands.sequence(
+        m_trap.grabPosition(),
+        new WaitCommand(0.3),
         m_shooter.hookRelease(),
         m_shooter.setTargetLevel(levelSpeed.TRAP),
         m_shooter.setSpeedWithTarget(),
-        m_trap.grabPosition(),
+        new PrintCommand("limit switch"),
         new WaitUntilCommand(m_trap::trapHasNote),
+        m_trap.waitLimitSwitch(),
         m_trap.storeNote(),
         new WaitCommand(2),
         m_shooter.stop());
@@ -88,14 +92,27 @@ public class Sequences {
 
   // sequence to score note in trap
   public static Command trapScore(Trap m_trap) {
-    return Commands.sequence(m_trap.dunkNote(), new WaitCommand(0.6), m_trap.prepareToDisable());
+    return Commands.sequence(
+        m_trap.dunkNote(),
+        new WaitCommand(0.6),
+        m_trap.prepareToDisable1(),
+        m_trap.prepareToDisable2());
   }
 
   // sequence lift elevator and start wheels to climb !! wait will have to be modified !!
-  public static Command climbElevator(Elevator elevator, Shooter shooter, Trap trap) {
+  public static Command climbElevatorNote(Elevator elevator, Shooter shooter, Trap trap) {
     return Commands.sequence(
         trap.prepareToClimb(),
         new WaitCommand(0.5),
+        elevator.extendTheElevator(elevatorHeight.HIGH),
+        new WaitCommand(1),
+        shooter.holdSpeed(levelSpeed.CLIMB),
+        new WaitCommand(5),
+        shooter.stop());
+  }
+
+  public static Command climbElevator(Elevator elevator, Shooter shooter) {
+    return Commands.sequence(
         elevator.extendTheElevator(elevatorHeight.HIGH),
         new WaitCommand(1),
         shooter.holdSpeed(levelSpeed.CLIMB),

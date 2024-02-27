@@ -75,10 +75,10 @@ public class Shooter extends SubsystemBase {
     m_leftMaster.setInverted(true);
     m_leftFollower.setInverted(true);
 
-    m_leftMaster.setIdleMode(IdleMode.kCoast);
-    m_leftFollower.setIdleMode(IdleMode.kCoast);
-    m_rightMaster.setIdleMode(IdleMode.kCoast);
-    m_rightFollower.setIdleMode(IdleMode.kCoast);
+    m_leftMaster.setIdleMode(IdleMode.kBrake);
+    m_leftFollower.setIdleMode(IdleMode.kBrake);
+    m_rightMaster.setIdleMode(IdleMode.kBrake);
+    m_rightFollower.setIdleMode(IdleMode.kBrake);
 
     m_leftFollower.follow(m_leftMaster);
     m_rightFollower.follow(m_rightMaster);
