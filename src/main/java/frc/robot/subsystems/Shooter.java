@@ -28,7 +28,7 @@ public class Shooter extends SubsystemBase {
     CLIMB
   }
 
-  private static double highSpeed = 0.8; // need to add perk to adjust speed according to distance
+  private static double highSpeed = 0.85; // need to add perk to adjust speed according to distance
   private static double farHighSpeed = 1.0;
   private static double lowSpeed = 0.5; // requires testing
   private static double intakeSpeed = 0.4;

@@ -55,9 +55,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "far shot mid field",
+  "folder": "mid field",
   "previewStartingState": {
-    "rotation": 44.12711493176618,
+    "rotation": 31.71362986648603,
     "velocity": 0
   },
   "useDefaultConstraints": true

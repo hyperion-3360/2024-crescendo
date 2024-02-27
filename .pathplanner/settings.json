@@ -3,12 +3,11 @@
   "robotLength": 0.94,
   "holonomicMode": true,
   "pathFolders": [
+    "wee",
     "other",
     "mid field",
-    "far shot mid field",
     "center field backup",
-    "center field",
-    "wee"
+    "center field"
   ],
   "autoFolders": [
     "other",
