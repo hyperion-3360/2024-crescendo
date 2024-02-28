@@ -305,7 +305,8 @@ public class Shooter extends SubsystemBase {
     return Commands.sequence(
         setTargetLevel(levelSpeed.VOMIT),
         setSpeedWithTarget(),
-        waitForShot(),
+        new WaitCommand(4),
+        this.runOnce(() -> { m_intakeNoteStatus = IntakeNoteStatus.IDLE; }),
         setTargetLevel(levelSpeed.STOP),
         setSpeedWithTarget());
   }
