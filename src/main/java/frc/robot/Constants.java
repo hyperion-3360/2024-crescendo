@@ -259,12 +259,12 @@ public final class Constants {
     public static final PathPlannerPath[] kCloseUpperNote() {
 
       switch (PathfindingChooser.getPathStage()) {
-        case 1:
+        case 0:
           PathPlannerPath[] kTest = {
             PathPlannerPath.fromPathFile("test 1"), PathPlannerPath.fromPathFile("test 2")
           };
           return kTest;
-        case 2:
+        case 1:
           PathPlannerPath[] kTest1 = {
             PathPlannerPath.fromPathFile("test 1"), PathPlannerPath.fromPathFile("test 2")
           };
