@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -60,7 +61,18 @@ public class Shooter extends SubsystemBase {
   // infrared sensor for intake
   private DigitalInput m_infraredSensor =
       new DigitalInput(Constants.ShooterConstants.kInfraredSensorId);
-
+  private DigitalInput m_shotIR =
+      new DigitalInput(Constants.ShooterConstants.kShooterOutputIR);
+  private enum IntakeNoteStatus {
+    IDLE,
+    HAS_NOTE,
+    FIRST_ARC,
+    DOUGHNUT,
+    SECOND_ARC,
+    HAS_SHOT
+  }
+  private IntakeNoteStatus m_intakeNoteStatus = IntakeNoteStatus.IDLE;
+  
   // creating the blocker servo
   private Servo m_blocker = new Servo(Constants.ShooterConstants.kservoBlockerId);
 
@@ -101,8 +113,12 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
+    triggerIntakeNoteStatus();
+
     // setting speed to motors
     SmartDashboard.putBoolean("Has Note?", hasNote());
+    SmartDashboard.putBoolean("Has Shot?", hasShot());
+    SmartDashboard.putString("Intake status", m_intakeNoteStatus.toString());
   }
 
   // switch case for different speeds according to the level
@@ -192,6 +208,81 @@ public class Shooter extends SubsystemBase {
     return !m_infraredSensor.get();
   }
 
+  public void consumeShotStatus(){
+    m_intakeNoteStatus = IntakeNoteStatus.IDLE;
+  }
+  public boolean hasShot(){
+    return (m_intakeNoteStatus == IntakeNoteStatus.HAS_SHOT);
+  }
+
+  /***
+   * State machine to detect when a note is shot out of the intake
+   * The IR beams do not have a high enough frequency to detect the
+   * 2 half-circle arcs of the note at high speeds, so we have a max shot delay
+   * Kinda working, but TODO: optimize this stuff (detect when note is shot)
+   * The IR for the shot was recently moved and we are now constantly in state FIRST_ARC
+   * when a note is intaked... Seems to still be working fine 
+   */
+  private Double m_noteStatusTimer = null;
+  private Double m_shootSequenceTimer = null;
+  private double MAX_SHOT_DELAY = 1; // 1s max to execute the shoot sequence
+  private boolean resetIfMaxShotDelay(){
+    if(m_shootSequenceTimer != null && (Timer.getFPGATimestamp() - m_shootSequenceTimer) > MAX_SHOT_DELAY){
+      System.out.println("Resetting status for shot. Max delay passed");
+      m_intakeNoteStatus = IntakeNoteStatus.HAS_SHOT;
+      m_shootSequenceTimer = null;
+      return true;
+    }
+    return false;
+  }
+  private void triggerIntakeNoteStatus(){
+    switch(m_intakeNoteStatus){
+      case IDLE:
+      case HAS_SHOT:
+        if(!m_infraredSensor.get()){
+          m_intakeNoteStatus = IntakeNoteStatus.HAS_NOTE;
+        }
+        break;
+      case HAS_NOTE:
+        if(!m_shotIR.get()){
+          m_intakeNoteStatus = IntakeNoteStatus.FIRST_ARC;
+        }
+        break;
+      case FIRST_ARC: // Wait until we detect the center of the note
+        if(m_shotIR.get()){
+          m_shootSequenceTimer = Timer.getFPGATimestamp(); // Start the timer for the shoot sequence
+          m_intakeNoteStatus = IntakeNoteStatus.DOUGHNUT;
+        }
+        break;
+      case DOUGHNUT: // Detect second arc of the note to know that the shot is complete
+        if(!resetIfMaxShotDelay() && !m_shotIR.get()){
+          m_intakeNoteStatus = IntakeNoteStatus.SECOND_ARC;
+        }
+        break;
+      case SECOND_ARC: // Wait until the note has passed 
+        if(!resetIfMaxShotDelay() && m_shotIR.get()){
+          m_shootSequenceTimer = null;
+          m_intakeNoteStatus = IntakeNoteStatus.HAS_SHOT;
+        }
+        break;
+    }
+
+    // Failsafe in case past a certain delay, both IR sensors do not detect a note, reset the status
+    if(m_intakeNoteStatus != IntakeNoteStatus.IDLE && m_infraredSensor.get() && m_shotIR.get()){
+      if(m_noteStatusTimer == null){
+        m_noteStatusTimer = Timer.getFPGATimestamp();
+      }
+      else if(Timer.getFPGATimestamp() - m_noteStatusTimer > 2){ // 1s delay max...
+        System.out.println("Note status failsafe trigerred. Resetting status");
+        m_intakeNoteStatus = IntakeNoteStatus.IDLE;
+        m_noteStatusTimer = null;
+      }
+    }else if(m_noteStatusTimer != null){ // if the note is only passing through
+      m_noteStatusTimer = null;
+    }
+  }
+
+
   // set down the hook
   public Command hookIntake() {
     return this.runOnce(() -> m_blocker.setAngle(kIntakeHookAngleClose));
@@ -202,12 +293,20 @@ public class Shooter extends SubsystemBase {
     return this.runOnce(() -> m_blocker.setAngle(kIntakeHookAngleOpen));
   }
 
+  public Command waitForShot() {
+    return Commands.sequence(
+      new WaitUntilCommand(this::hasShot),
+      this.runOnce(() -> { System.out.println("HAS SHOT");}),
+      this.runOnce(this::consumeShotStatus)
+    );
+  }
   // EMERGENCY command in case of intake anomaly
   public Command vomit() {
     return Commands.sequence(
         setTargetLevel(levelSpeed.VOMIT),
         setSpeedWithTarget(),
         new WaitCommand(4),
+        this.runOnce(() -> { m_intakeNoteStatus = IntakeNoteStatus.IDLE; }),
         setTargetLevel(levelSpeed.STOP),
         setSpeedWithTarget());
   }
@@ -217,7 +316,7 @@ public class Shooter extends SubsystemBase {
         hookRelease(),
         setTargetLevel(levelSpeed.EJECT),
         setSpeedWithTarget(),
-        new WaitCommand(4),
+        waitForShot(),
         setTargetLevel(levelSpeed.STOP),
         setSpeedWithTarget(),
         hookIntake());
