@@ -68,9 +68,8 @@ public final class Autos {
   }
 
   public static PathPlannerPath[] getSelectedOptionConnexions() {
-    Mode chosenPath = autoChooser.getSelected();
     // TODO add more pathplanner connexions
-    switch (chosenPath) {
+    switch (getSelectedOption()) {
       case TwoNotesMidField:
         return PathPlannerConnexions.kClosetUpperNote;
       case ThreeNotesCenterField:
