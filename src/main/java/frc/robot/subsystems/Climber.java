@@ -73,7 +73,7 @@ public class Climber extends SubsystemBase {
   }
 
   public void setSpeed() {
-    double speed = new XboxController(1).getRawAxis(1);
+    double speed = new XboxController(1).getRawAxis(5);
     if (Math.abs(speed) > 0.05) {
       if (speed > 0) {
         triggerSpeed = Math.pow(speed, 2);
