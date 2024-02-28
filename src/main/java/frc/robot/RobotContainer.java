@@ -176,7 +176,12 @@ public class RobotContainer {
 
     m_coDriverController.rightBumper().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
 
-    m_driverController.a().toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led));
+    m_driverController
+        .a()
+        .toggleOnTrue(
+            Sequences.intakeSequence(m_shooter, m_led)
+                .andThen(
+                    () -> m_coDriverController.getHID().setRumble(RumbleType.kBothRumble, 0.3)));
 
     m_driverController
         .b()

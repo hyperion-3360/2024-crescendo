@@ -48,7 +48,8 @@ public final class Autos {
     autoChooser.addOption("score 3 notes center field", Mode.ThreeNotesCenterField);
     autoChooser.addOption("score 4 notes center field", Mode.FourNotesCenterField);
     autoChooser.addOption("cross the robot zone", Mode.CrossRobotZone);
-    autoChooser.addOption("score 4 Notes Mid Field Start Center", Mode.FourNotesMidFieldStartCenter);
+    autoChooser.addOption(
+        "score 4 Notes Mid Field Start Center", Mode.FourNotesMidFieldStartCenter);
 
     Shuffleboard.getTab("Autos").add("Auto Mode", autoChooser);
 
