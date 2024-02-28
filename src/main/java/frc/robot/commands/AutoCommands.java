@@ -41,7 +41,7 @@ public class AutoCommands {
         shooter.setSpeedWithTarget(),
         new WaitCommand(1.15),
         shooter.hookRelease(),
-        new WaitCommand(0.5),
+        shooter.waitForShot(),
         shooter.stop(),
         elevator.extendTheElevator(elevatorHeight.INTAKE));
   }
@@ -53,7 +53,7 @@ public class AutoCommands {
         shooter.setSpeedWithTarget(),
         new WaitCommand(1.15),
         shooter.hookRelease(),
-        new WaitCommand(0.5),
+        shooter.waitForShot(),
         shooter.stop(),
         elevator.extendTheElevator(elevatorHeight.INTAKE));
   }
@@ -65,7 +65,7 @@ public class AutoCommands {
         shooter.setSpeedWithTarget(),
         new WaitCommand(1.15),
         shooter.hookRelease(),
-        new WaitCommand(0.5),
+        shooter.waitForShot(),
         shooter.stop(),
         elevator.extendTheElevator(elevatorHeight.INTAKE));
   }

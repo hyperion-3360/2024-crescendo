@@ -119,7 +119,7 @@ public class Elevator extends SubsystemBase {
         this.m_elevatorTarget = 39.5;
         break;
       case AUTOFAR4:
-        this.m_elevatorTarget = 63;
+        this.m_elevatorTarget = 60;
         break;
     }
   }

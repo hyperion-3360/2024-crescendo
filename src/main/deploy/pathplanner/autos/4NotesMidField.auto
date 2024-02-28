@@ -68,7 +68,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.7
+                  "waitTime": 2.5
                 }
               }
             ]
@@ -112,7 +112,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.7
+                  "waitTime": 2.5
                 }
               }
             ]
@@ -145,6 +145,12 @@
                 "type": "path",
                 "data": {
                   "pathName": "6f"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "farShootD"
                 }
               }
             ]
