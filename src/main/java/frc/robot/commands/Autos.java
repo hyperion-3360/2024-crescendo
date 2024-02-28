@@ -149,6 +149,7 @@ public final class Autos {
 
     // constructor where conditions are fed and accounted for to choose a path
     public PathfindingChooser(String mainPath, PathPlannerPath connexions[]) {
+      chosenPathNode = null;
       List<PathPlannerPath> m_autoPath = PathPlannerAuto.getPathGroupFromAutoFile(mainPath);
       conditions.addAll(ConditionsMaker.setConditions(0, false));
       // gives the required conditions to the available function
@@ -168,8 +169,8 @@ public final class Autos {
      * aren't and one of them proves to be false it will break from the loop and check the
      * conditions for another path node
      *
-     * @param conditions the conditions specific to the connexion we want to check
-     * @return if all the conditions read green
+     * @param conditions the conditions specific to the connexion we want to check as a boolean list
+     * @return the conditions status (if they are all true it'll return true else it returns false)
      */
     private Boolean conditionLogicHandler(List<Boolean> conditions) {
       boolean allConditionReadGreen = false;
