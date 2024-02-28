@@ -272,7 +272,7 @@ public final class Constants {
         default:
           try {
             throw new Exception(
-                "path stage overun this means that path stage incremented past its intended point");
+                "path stage overun path stage incremented past its intended point check path stage cap");
           } catch (Exception e) {
             e.printStackTrace();
           }
