@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.PathPlannerConnexions;
 import frc.robot.subsystems.Shooter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +65,31 @@ public final class Autos {
 
   public static Mode getSelectedOption() {
     return autoChooser.getSelected();
+  }
+
+  public static PathPlannerPath[] getSelectedOptionConnexions() {
+    Mode chosenPath = autoChooser.getSelected();
+    // TODO add more pathplanner connexions
+    switch (chosenPath) {
+      case TwoNotesMidField:
+        return PathPlannerConnexions.kClosetUpperNote;
+      case ThreeNotesCenterField:
+        return PathPlannerConnexions.kClosetUpperNote;
+      case TwoNotesCenterField:
+        return PathPlannerConnexions.kClosetUpperNote;
+      case FourNotesCenterField:
+        return PathPlannerConnexions.kClosetUpperNote;
+      case FourNotesFarShot:
+        return PathPlannerConnexions.kClosetUpperNote;
+      case FourNotesMidField:
+        return PathPlannerConnexions.kClosetUpperNote;
+      case ThreeNotesMidField:
+        return PathPlannerConnexions.kClosetUpperNote;
+      case crossRobotZone:
+        return PathPlannerConnexions.kClosetUpperNote;
+      default:
+        return null;
+    }
   }
 
   public static class ConditionsMaker {
@@ -195,7 +221,7 @@ public final class Autos {
 
   public static Command makePathfindingGoToPath() {
     PathfindingChooser m_choosedPath =
-        new PathfindingChooser(autoChooser.getSelected().toString(), null);
+        new PathfindingChooser(autoChooser.getSelected().toString(), getSelectedOptionConnexions());
     // Load the path we want to pathfind to and follow
     PathPlannerPath path = PathPlannerPath.fromPathFile(m_choosedPath.chosenPathNode);
 

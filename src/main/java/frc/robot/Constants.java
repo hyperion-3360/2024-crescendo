@@ -264,6 +264,6 @@ public final class Constants {
     public static final List<Boolean> kpathNodeUpperNote =
         PathfindingChooser.setConditionPerNodeMap(1, ConditionsMaker.setConditions(10, false));
     public static final List<Boolean> kpathNodeMiddleNote =
-        PathfindingChooser.setConditionPerNodeMap(1, ConditionsMaker.setConditions(10, false));
+        PathfindingChooser.setConditionPerNodeMap(2, ConditionsMaker.setConditions(10, false));
   }
 }

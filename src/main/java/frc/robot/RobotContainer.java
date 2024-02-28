@@ -209,9 +209,7 @@ public class RobotContainer {
     return new PathPlannerAuto(Autos.getSelectedOption().toString());
   }
 
-  // public Command getPathfindingCommand() {
-  //   PathfindingChooser m_pathfinding =
-  //       new PathfindingChooser(Autos.getSelectedOption().toString(), null, null);
-  //   m_swerveDrive.setPose(Autos.makePathfindingGoToPath(null));
-  // }
+  public Command getPathfindingCommand() {
+    return Autos.makePathfindingGoToPath();
+  }
 }
