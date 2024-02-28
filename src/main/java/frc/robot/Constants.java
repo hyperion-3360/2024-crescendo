@@ -30,6 +30,14 @@ public final class Constants {
     public static final int kLEDwhitePort = 2;
   }
 
+  public static final class Camera {
+    public static final int kWidth = 320;
+    public static final int kHeight = 200;
+    public static final int kFPS = 10;
+    public static final int kCameraDriver = 1;
+    public static final int kCameraIntake = 0;
+  }
+
   public static final class Swerve {
     public static final int pigeonID = 1;
 

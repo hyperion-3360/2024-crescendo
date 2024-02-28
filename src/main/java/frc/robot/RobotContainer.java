@@ -7,11 +7,16 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoSink;
+import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -67,6 +72,10 @@ public class RobotContainer {
 
   private final double kJoystickDeadband = 0.1;
 
+  UsbCamera m_camera1, m_camera2;
+  UsbCamera m_currentCam;
+  VideoSink m_videoServer;
+
   /***
    * conditionJoystick
    * Condition a joystick axis value given a slewrate limiter and deadband
@@ -85,9 +94,28 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    m_swerveDrive.resetModulesToAbsolute();
+    m_camera1 = CameraServer.startAutomaticCapture(Constants.Camera.kCameraIntake);
+    m_camera1.setVideoMode(
+        PixelFormat.kMJPEG,
+        Constants.Camera.kWidth,
+        Constants.Camera.kHeight,
+        Constants.Camera.kFPS);
 
-    CameraServer.startAutomaticCapture();
+    m_camera2 = CameraServer.startAutomaticCapture(Constants.Camera.kCameraDriver);
+    m_camera2.setVideoMode(
+        PixelFormat.kMJPEG,
+        Constants.Camera.kWidth,
+        Constants.Camera.kHeight,
+        Constants.Camera.kFPS);
+
+    m_videoServer = CameraServer.getServer();
+
+    m_camera1.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
+    m_camera2.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
+
+    m_videoServer.setSource(m_camera1);
+
+    m_swerveDrive.resetModulesToAbsolute();
 
     m_swerveDrive.setDefaultCommand(
         new TeleopSwerve(
@@ -185,6 +213,16 @@ public class RobotContainer {
     m_driverController
         .y()
         .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
+
+    m_driverController.x().onTrue(changeCameraPerspective());
+  }
+
+  public Command changeCameraPerspective() {
+    return Commands.runOnce(
+        () -> {
+          m_currentCam = m_currentCam == m_camera1 ? m_camera2 : m_camera1;
+          m_videoServer.setSource(m_currentCam);
+        });
   }
 
   public Command getAutonomousCommand() {
