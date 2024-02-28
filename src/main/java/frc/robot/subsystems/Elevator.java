@@ -61,8 +61,8 @@ public class Elevator extends SubsystemBase {
     m_elevatorLeftMaster.setIdleMode(IdleMode.kBrake);
     m_elevatorRight.setIdleMode(IdleMode.kBrake);
 
-    m_elevatorLeftMaster.setOpenLoopRampRate(2);
-    m_elevatorRight.setOpenLoopRampRate(2);
+    m_elevatorLeftMaster.setOpenLoopRampRate(0.5);
+    m_elevatorRight.setOpenLoopRampRate(0.5);
 
     m_encoder.setPosition(0.0);
   }
