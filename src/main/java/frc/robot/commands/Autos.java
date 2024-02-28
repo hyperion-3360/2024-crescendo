@@ -127,7 +127,7 @@ public final class Autos {
       conditions.addAll(ConditionsMaker.setConditions(0, false));
       // gives the required conditions to the available function
 
-      for (Integer i = 0; i < connexions.length; i++) {
+      for (Integer i = 0; i < connexions.length + m_autoPath.size(); i++) {
         m_pathNodeMap.put(pathStage, connexions[i]);
         m_conditionPerNode.putAll(getConditionPerNodeMap());
         pathNodeChooser(conditions, connexions[i]);
