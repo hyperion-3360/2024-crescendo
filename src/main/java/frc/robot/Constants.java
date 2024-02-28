@@ -224,7 +224,7 @@ public final class Constants {
     // in progress
     public static final double kangleShoulderdisable2 = 110.0; // PREPARETODISABLE2
     public static final double kangleElbowdisable2 = 30.0;
-    public static final double kangleWristdisable2 = 10.0;
+    public static final double kangleWristdisable2 = 0.0;
     // good
     public static final double kangleShoulderstoreNote = 0.0; // STORENOTE
     public static final double kangleElbowstoreNote = 142.0;
