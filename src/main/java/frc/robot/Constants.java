@@ -256,7 +256,7 @@ public final class Constants {
 
   public static class PathPlannerConnexions {
 
-    public static final PathPlannerPath[] kCloseUpperNote() throws Exception {
+    public static final PathPlannerPath[] kCloseUpperNote() {
 
       switch (PathfindingChooser.getPathStage()) {
         case 1:
@@ -270,8 +270,13 @@ public final class Constants {
           };
           return kTest1;
         default:
-          throw new Exception(
-              "path stage overun this means that path stage incremented past its intended point");
+          try {
+            throw new Exception(
+                "path stage overun this means that path stage incremented past its intended point");
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+          return null;
       }
     }
   }
