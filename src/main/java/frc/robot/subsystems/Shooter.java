@@ -205,7 +205,7 @@ public class Shooter extends SubsystemBase {
 
   // infrared sensor to see if we have a note
   public boolean hasNote() {
-    return m_intakeNoteStatus == IntakeNoteStatus.HAS_NOTE;
+    return !m_infraredSensor.get();
   }
 
   public void consumeShotStatus(){
@@ -215,7 +215,26 @@ public class Shooter extends SubsystemBase {
     return (m_intakeNoteStatus == IntakeNoteStatus.HAS_SHOT);
   }
 
+  /***
+   * State machine to detect when a note is shot out of the intake
+   * The IR beams do not have a high enough frequency to detect the
+   * 2 half-circle arcs of the note at high speeds, so we have a max shot delay
+   * Kinda working, but TODO: optimize this stuff (detect when note is shot)
+   * The IR for the shot was recently moved and we are now constantly in state FIRST_ARC
+   * when a note is intaked... Seems to still be working fine 
+   */
   private Double m_noteStatusTimer = null;
+  private Double m_shootSequenceTimer = null;
+  private double MAX_SHOT_DELAY = 1; // 1s max to execute the shoot sequence
+  private boolean resetIfMaxShotDelay(){
+    if(m_shootSequenceTimer != null && (Timer.getFPGATimestamp() - m_shootSequenceTimer) > MAX_SHOT_DELAY){
+      System.out.println("Resetting status for shot. Max delay passed");
+      m_intakeNoteStatus = IntakeNoteStatus.HAS_SHOT;
+      m_shootSequenceTimer = null;
+      return true;
+    }
+    return false;
+  }
   private void triggerIntakeNoteStatus(){
     switch(m_intakeNoteStatus){
       case IDLE:
@@ -231,16 +250,18 @@ public class Shooter extends SubsystemBase {
         break;
       case FIRST_ARC: // Wait until we detect the center of the note
         if(m_shotIR.get()){
+          m_shootSequenceTimer = Timer.getFPGATimestamp(); // Start the timer for the shoot sequence
           m_intakeNoteStatus = IntakeNoteStatus.DOUGHNUT;
         }
         break;
       case DOUGHNUT: // Detect second arc of the note to know that the shot is complete
-        if(!m_shotIR.get()){
+        if(!resetIfMaxShotDelay() && !m_shotIR.get()){
           m_intakeNoteStatus = IntakeNoteStatus.SECOND_ARC;
         }
         break;
       case SECOND_ARC: // Wait until the note has passed 
-        if(m_shotIR.get()){
+        if(!resetIfMaxShotDelay() && m_shotIR.get()){
+          m_shootSequenceTimer = null;
           m_intakeNoteStatus = IntakeNoteStatus.HAS_SHOT;
         }
         break;
