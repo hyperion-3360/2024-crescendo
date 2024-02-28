@@ -255,15 +255,31 @@ public final class Constants {
   }
 
   public static class PathPlannerConnexions {
-    public static final PathPlannerPath[] kClosetUpperNote = {
-      PathPlannerPath.fromPathFile("test 1"), PathPlannerPath.fromPathFile("test 2")
-    };
+
+    public static final PathPlannerPath[] kCloseUpperNote() throws Exception {
+
+      switch (PathfindingChooser.getPathStage()) {
+        case 1:
+          PathPlannerPath[] kTest = {
+            PathPlannerPath.fromPathFile("test 1"), PathPlannerPath.fromPathFile("test 2")
+          };
+          return kTest;
+        case 2:
+          PathPlannerPath[] kTest1 = {
+            PathPlannerPath.fromPathFile("test 1"), PathPlannerPath.fromPathFile("test 2")
+          };
+          return kTest1;
+        default:
+          throw new Exception(
+              "path stage overun this means that path stage incremented past its intended point");
+      }
+    }
   }
 
   public static class NodePathConditions {
-    public static final List<Boolean> kpathNodeUpperNote =
+    public static final List<Boolean> kCloseUpperNote =
         PathfindingChooser.setConditionPerNodeMap(1, ConditionsMaker.setConditions(10, false));
-    public static final List<Boolean> kpathNodeMiddleNote =
+    public static final List<Boolean> kTest =
         PathfindingChooser.setConditionPerNodeMap(2, ConditionsMaker.setConditions(10, false));
   }
 }

@@ -71,21 +71,21 @@ public final class Autos {
     // TODO add more pathplanner connexions
     switch (getSelectedOption()) {
       case TwoNotesMidField:
-        return PathPlannerConnexions.kClosetUpperNote;
-      case ThreeNotesCenterField:
-        return PathPlannerConnexions.kClosetUpperNote;
-      case TwoNotesCenterField:
-        return PathPlannerConnexions.kClosetUpperNote;
-      case FourNotesCenterField:
-        return PathPlannerConnexions.kClosetUpperNote;
-      case FourNotesFarShot:
-        return PathPlannerConnexions.kClosetUpperNote;
-      case FourNotesMidField:
-        return PathPlannerConnexions.kClosetUpperNote;
-      case ThreeNotesMidField:
-        return PathPlannerConnexions.kClosetUpperNote;
-      case crossRobotZone:
-        return PathPlannerConnexions.kClosetUpperNote;
+        return PathPlannerConnexions.kCloseUpperNote();
+        // case ThreeNotesCenterField:
+        //   return PathPlannerConnexions.kCloseUpperNote;
+        // case TwoNotesCenterField:
+        //   return PathPlannerConnexions.kCloseUpperNote;
+        // case FourNotesCenterField:
+        //   return PathPlannerConnexions.kCloseUpperNote;
+        // case FourNotesFarShot:
+        //   return PathPlannerConnexions.kCloseUpperNote;
+        // case FourNotesMidField:
+        //   return PathPlannerConnexions.kCloseUpperNote;
+        // case ThreeNotesMidField:
+        //   return PathPlannerConnexions.kCloseUpperNote;
+        // case crossRobotZone:
+        //   return PathPlannerConnexions.kCloseUpperNote;
       default:
         return null;
     }
@@ -142,7 +142,7 @@ public final class Autos {
     private HashMap<Short, PathPlannerPath> m_pathNodeMap = new HashMap<>();
     // hash map for the connected paths and their conditions
     private static HashMap<Integer, List<Boolean>> m_conditionPerNode = new HashMap<>();
-    private short pathStage = 0;
+    private static short pathStage = 0;
     private static List<Boolean> conditions = new ArrayList<>();
     private String chosenPathNode;
 
@@ -173,7 +173,8 @@ public final class Autos {
      */
     private Boolean conditionLogicHandler(List<Boolean> conditions) {
       boolean allConditionReadGreen = false;
-      short trueConditions = 0;
+      byte trueConditions = 0;
+      pathStage = 0;
 
       for (int i = 0; i < conditions.size(); i++) {
         if (conditions.get(i) == true) {
@@ -216,6 +217,10 @@ public final class Autos {
     public static List<Boolean> setConditionPerNodeMap(
         Integer connexions, List<Boolean> wantedConditions) {
       return m_conditionPerNode.put(connexions, wantedConditions);
+    }
+
+    public static short getPathStage() {
+      return PathfindingChooser.pathStage;
     }
   }
 
