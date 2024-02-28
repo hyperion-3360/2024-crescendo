@@ -28,10 +28,10 @@ public class Trap extends SubsystemBase {
   public boolean setZero = false;
 
   public enum Joint {
-    SHOULDER, // Idle orange, default
-    ELBOW, // Intake white slow flash, when intake is rolling
-    WRIST, // Detected note green, note in beam cutter triggered
-    FINGER, // Aim activated white quick flash, with vision aim function running
+    SHOULDER,
+    ELBOW,
+    WRIST,
+    FINGER,
   }
 
   private boolean m_debug = false;
@@ -82,7 +82,7 @@ public class Trap extends SubsystemBase {
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));
   }
 
-  // position to grab note from intake
+  // position to grab note from intake.
   public Command grabPosition() {
     return this.runOnce(
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldergrabPosition))
@@ -94,7 +94,10 @@ public class Trap extends SubsystemBase {
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened));
   }
 
-  public Command waitLimitSwitch() {
+  // weird command don't delete because it works in trap shoot sequence. it doesn't pick up on limit
+  // switch for some reason but it is placed after the has note in the sequence. it is basically
+  // just a command to close the finger.
+  public Command closeFinger() {
     return this.runOnce(() -> new WaitUntilCommand(() -> !m_limitSwitch.get()))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));
   }
@@ -142,7 +145,9 @@ public class Trap extends SubsystemBase {
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened));
   }
 
-  // position arm is in after dunking the note so it is ready to disable and doesn't hit anywhere
+  // position arm is in after dunking the note so it is ready to disable and doesn't hit anywhere.
+  // needs to be before the disable2 because it lifts the arm up before it folds the wrist and
+  // lowers the elbow in disable2
   public Command prepareToDisable1() {
     return this.runOnce(
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderdisable1))
@@ -152,6 +157,7 @@ public class Trap extends SubsystemBase {
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristdisable1));
   }
 
+  // position that folds wrist and arm will rest on shooter.
   public Command prepareToDisable2() {
     return this.runOnce(
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderdisable2))
@@ -161,7 +167,7 @@ public class Trap extends SubsystemBase {
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristdisable2));
   }
 
-  // manual control to fine tune arm positions using pov on joystick
+  // manual control to fine tune arm positions using pov on joystick.
   public Command manualControl(Joint j, boolean increase) {
     return this.runOnce(
         () -> {
@@ -174,12 +180,13 @@ public class Trap extends SubsystemBase {
         });
   }
 
+  // used in trap shoot sequence to detect note in the arm
   public boolean trapHasNote() {
     return !m_limitSwitch.get();
   }
 }
 
-// 250ms for shoulder
+// 250ms for shoulder (not acurate anymore)
 
 // uwu
 // :3

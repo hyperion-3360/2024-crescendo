@@ -203,34 +203,34 @@ public final class Constants {
 
     public static final double kfingerClosed = 170.0; // angle of finger servo when closed/opened
     public static final double kfingerOpened = 90.0;
-    // good not in sequence yet
+    // good
     public static final double kangleShouldersetZero = 0.0; // SETZERO   //higher number = higher
-    public static final double kangleElbowsetZero = 130.0; // higher number = lower // 142
+    public static final double kangleElbowsetZero = 130.0; // higher number = lower
     public static final double kangleWristsetZero = 155.0; // higher number = higher
     public static final double kangleShouldersetZeroDelayed = 5.0;
-    // good mapped
+    // good
     public static final double kangleShouldergrabPosition = 83.0; // GRABPOSITION
     public static final double kangleElbowgrabPosition = 78.0;
     public static final double kangleWristgrabPosition = 68.0;
-    // to be adjusted
+    // in progress
     public static final double kangleShoulderdunkNote = 155.0; // DUNKNOTE
-    // public static final double kangleElbowdunkNote = 20.0;
-    // public static final double kangleWristdunkNote = 130.0;
     public static final double kangleElbowdunkNote = 10.0;
     public static final double kangleWristdunkNote = 100.0;
-    // good
+    // in progress
     public static final double kangleShoulderdisable1 = 110.0; // PREPARETODISABLE1
     public static final double kangleElbowdisable1 = 0.0;
     public static final double kangleWristdisable1 = 155.0;
-    // good
+    // in progress
     public static final double kangleShoulderdisable2 = 110.0; // PREPARETODISABLE2
     public static final double kangleElbowdisable2 = 30.0;
     public static final double kangleWristdisable2 = 30.0;
-    // working on it
+    // good
     public static final double kangleShoulderstoreNote = 0.0; // STORENOTE
     public static final double kangleElbowstoreNote = 142.0;
     public static final double kangleWriststoreNote = 155.0;
-    // good
+    // sorry for all the delayed in prepare to climb but they are needed to avoid the arm from
+    // hitting everywhere and they also make it less hard for servos to get from one position to
+    // the other
     public static final double kangleShoulderprepareToClimb = 110.0;
     public static final double kangleShoulderprepareToClimbdelayed1 = 88.0;
     public static final double kangleShoulderprepareToClimbdelayed2 = 66.0;

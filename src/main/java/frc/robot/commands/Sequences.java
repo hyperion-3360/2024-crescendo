@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.Elevator;
@@ -82,9 +81,8 @@ public class Sequences {
         m_shooter.hookRelease(),
         m_shooter.setTargetLevel(levelSpeed.TRAP),
         m_shooter.setSpeedWithTarget(),
-        new PrintCommand("limit switch"),
         new WaitUntilCommand(m_trap::trapHasNote),
-        m_trap.waitLimitSwitch(),
+        m_trap.closeFinger(),
         m_trap.storeNote(),
         new WaitCommand(2),
         m_shooter.stop());
@@ -100,6 +98,7 @@ public class Sequences {
   }
 
   // sequence lift elevator and start wheels to climb !! wait will have to be modified !!
+  // climb with the arm
   public static Command climbElevatorNote(Elevator elevator, Shooter shooter, Trap trap) {
     return Commands.sequence(
         trap.prepareToClimb(),
@@ -111,6 +110,7 @@ public class Sequences {
         shooter.stop());
   }
 
+  // climb without the arm
   public static Command climbElevator(Elevator elevator, Shooter shooter) {
     return Commands.sequence(
         elevator.extendTheElevator(elevatorHeight.HIGH),
