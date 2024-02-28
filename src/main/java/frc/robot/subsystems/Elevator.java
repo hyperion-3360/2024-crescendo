@@ -22,7 +22,8 @@ public class Elevator extends SubsystemBase {
     INTAKE,
     AUTOFAR1,
     AUTOFAR2,
-    AUTOFAR3
+    AUTOFAR3,
+    AUTOFAR4
   }
 
   // instanciate a limit switch
@@ -116,6 +117,9 @@ public class Elevator extends SubsystemBase {
         break;
       case AUTOFAR3:
         this.m_elevatorTarget = 39.5;
+        break;
+      case AUTOFAR4:
+        this.m_elevatorTarget = 63;
         break;
     }
   }

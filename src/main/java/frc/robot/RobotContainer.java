@@ -103,10 +103,11 @@ public class RobotContainer {
     m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
     NamedCommands.registerCommand("shootHigh", AutoCommands.autoShoot(m_elevator, m_shooter));
-    NamedCommands.registerCommand("intake", m_shooter.intake());
+    NamedCommands.registerCommand("intake", m_shooter.intake().withTimeout(3));
     NamedCommands.registerCommand("farShootA", AutoCommands.autoFarShoot1(m_elevator, m_shooter));
     NamedCommands.registerCommand("farShootB", AutoCommands.autoFarShoot2(m_elevator, m_shooter));
     NamedCommands.registerCommand("farShootC", AutoCommands.autoFarShoot3(m_elevator, m_shooter));
+    NamedCommands.registerCommand("farShootD", AutoCommands.autoFarShoot4(m_elevator, m_shooter));
     NamedCommands.registerCommand("wait", new WaitCommand(1));
 
     configureBindings();

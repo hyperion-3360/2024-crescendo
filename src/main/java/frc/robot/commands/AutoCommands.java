@@ -57,4 +57,16 @@ public class AutoCommands {
         shooter.stop(),
         elevator.extendTheElevator(elevatorHeight.INTAKE));
   }
+
+  public static Command autoFarShoot4(Elevator elevator, Shooter shooter) {
+    return Commands.sequence(
+        elevator.extendTheElevator(elevatorHeight.AUTOFAR4),
+        shooter.setTargetLevel(levelSpeed.FAR_HIGH),
+        shooter.setSpeedWithTarget(),
+        new WaitCommand(1.15),
+        shooter.hookRelease(),
+        new WaitCommand(0.5),
+        shooter.stop(),
+        elevator.extendTheElevator(elevatorHeight.INTAKE));
+  }
 }
