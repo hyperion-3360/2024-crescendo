@@ -176,6 +176,7 @@ public final class Constants {
     public static final int kLeftFollowerId = 13;
     public static final int kRightFollowerId = 15;
     public static final int kInfraredSensorId = 4;
+    public static final int kShooterOutputIR = 5;
     public static final int kservoBlockerId = 5;
   }
 

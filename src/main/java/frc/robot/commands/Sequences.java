@@ -54,7 +54,7 @@ public class Sequences {
   public static Command shoot(Shooter shooter, Elevator elevator, LEDs leds) {
     return Commands.sequence(
         shooter.hookRelease(),
-        new WaitCommand(0.7),
+        shooter.waitForShot(),
         leds.runOnce(() -> leds.setState(State.SHOT_DONE)),
         shooter.stop(),
         elevator.extendTheElevator(elevatorHeight.INTAKE),
