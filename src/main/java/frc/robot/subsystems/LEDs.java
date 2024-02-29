@@ -152,7 +152,7 @@ public class LEDs extends SubsystemBase {
         break;
       case GEAR_BLOCKED:
         m_flashDuration = RobotController.getFPGATime() + kFastFlashingDelay;
-        m_currentValue = kred;
+        m_currentValue = kRed;
         break;
       default:
         break;
