@@ -17,7 +17,8 @@ public class Elevator extends SubsystemBase {
 
   public enum elevatorHeight {
     HIGH,
-    FAR_HIGH,
+    FAR_HIGH_CLIMB,
+    FAR_HIGH_AMP,
     LOW,
     INTAKE,
     AUTOFAR1,
@@ -97,9 +98,13 @@ public class Elevator extends SubsystemBase {
         this.m_elevatorTarget = ElevatorConstants.kHighTarget;
         height = "Speaker";
         break;
-      case FAR_HIGH:
+      case FAR_HIGH_CLIMB:
         this.m_elevatorTarget = ElevatorConstants.kFarHighTarget;
-        height = "Far Speaker";
+        height = "Far shot from climb";
+        break;
+      case FAR_HIGH_AMP:
+        this.m_elevatorTarget = ElevatorConstants.kFarHighTarget;
+        height = "Far shot from amp";
         break;
       case LOW:
         this.m_elevatorTarget = ElevatorConstants.kLowTarget;

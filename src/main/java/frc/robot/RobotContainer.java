@@ -199,10 +199,16 @@ public class RobotContainer {
     m_coDriverController.povRight().onTrue(Sequences.climbElevator(m_elevator, m_shooter));
     m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
     m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
-    m_coDriverController.x().onTrue(Sequences.elevatorFarHigh(m_elevator, m_shooter, m_led));
+    m_coDriverController
+        .leftBumper()
+        .onTrue(Sequences.elevatorFarHighFromClimb(m_elevator, m_shooter, m_led));
+    m_coDriverController
+        .rightBumper()
+        .onTrue(Sequences.elevatorFarHighFromAmp(m_elevator, m_shooter, m_led));
+
     m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
 
-    m_coDriverController.rightBumper().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
+    m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
 
     m_driverController.a().toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led));
 

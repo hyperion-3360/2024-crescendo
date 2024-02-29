@@ -26,10 +26,22 @@ public class Sequences {
                     new WaitCommand(1).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
-  public static Command elevatorFarHigh(Elevator elevator, Shooter shooter, LEDs leds) {
+  public static Command elevatorFarHighFromClimb(Elevator elevator, Shooter shooter, LEDs leds) {
     return Commands.sequence(
             leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
-            elevator.extendTheElevator(elevatorHeight.FAR_HIGH),
+            elevator.extendTheElevator(elevatorHeight.FAR_HIGH_CLIMB),
+            new WaitCommand(1.5))
+        .andThen(
+            shooter
+                .holdSpeed(levelSpeed.FAR_HIGH)
+                .alongWith(
+                    new WaitCommand(1.2).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
+  }
+
+  public static Command elevatorFarHighFromAmp(Elevator elevator, Shooter shooter, LEDs leds) {
+    return Commands.sequence(
+            leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
+            elevator.extendTheElevator(elevatorHeight.FAR_HIGH_AMP),
             new WaitCommand(1.5))
         .andThen(
             shooter
