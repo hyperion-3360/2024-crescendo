@@ -210,6 +210,29 @@ public final class Autos {
       return null;
     }
 
+    public static final PathPlannerPath[] pathMapFactory() {
+      switch (PathfindingChooser.getPathStage()) {
+        case 0:
+          PathPlannerPath[] kTest = {
+            PathPlannerPath.fromPathFile("test 1"), PathPlannerPath.fromPathFile("test 2")
+          };
+          return kTest;
+        case 1:
+          PathPlannerPath[] kTest1 = {
+            PathPlannerPath.fromPathFile("test 1"), PathPlannerPath.fromPathFile("test 2")
+          };
+          return kTest1;
+        default:
+          try {
+            throw new Exception(
+                "path stage overun path stage incremented past its intended point check path stage cap");
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+          return null;
+      }
+    }
+
     public static Map<? extends Integer, ? extends List<Boolean>> getConditionPerNodeMap() {
       return m_conditionPerNode;
     }

@@ -7,7 +7,6 @@ package frc.robot;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -254,32 +253,7 @@ public final class Constants {
             new ReplanningConfig());
   }
 
-  public static class PathPlannerConnexions {
-
-    public static final PathPlannerPath[] kCloseUpperNote() {
-
-      switch (PathfindingChooser.getPathStage()) {
-        case 0:
-          PathPlannerPath[] kTest = {
-            PathPlannerPath.fromPathFile("test 1"), PathPlannerPath.fromPathFile("test 2")
-          };
-          return kTest;
-        case 1:
-          PathPlannerPath[] kTest1 = {
-            PathPlannerPath.fromPathFile("test 1"), PathPlannerPath.fromPathFile("test 2")
-          };
-          return kTest1;
-        default:
-          try {
-            throw new Exception(
-                "path stage overun path stage incremented past its intended point check path stage cap");
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-          return null;
-      }
-    }
-  }
+  public static class PathPlannerConnexions {}
 
   public static class NodePathConditions {
     public static final List<Boolean> kCloseUpperNote =
