@@ -216,6 +216,13 @@ public class RobotContainer {
             Sequences.intakeSequence(m_shooter, m_led)
                 .andThen(
                     () -> m_coDriverController.getHID().setRumble(RumbleType.kBothRumble, 0.3)));
+    m_coDriverController
+        .start()
+        .and(m_coDriverController.back())
+        .onTrue(
+            Sequences.blockGear(m_shooter, m_led)
+                .andThen(
+                    () -> m_coDriverController.getHID().setRumble(RumbleType.kBothRumble, 0.6)));
 
     m_driverController
         .b()
