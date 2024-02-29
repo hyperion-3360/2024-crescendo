@@ -223,6 +223,7 @@ public class RobotContainer {
             Sequences.blockGear(m_shooter, m_led)
                 .andThen(
                     () -> m_coDriverController.getHID().setRumble(RumbleType.kBothRumble, 0.6)));
+    m_coDriverController.back().onTrue(m_shooter.gearBlockerRestMode());
 
     m_driverController
         .b()
