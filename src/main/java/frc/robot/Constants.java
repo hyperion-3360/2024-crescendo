@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -16,8 +17,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
+import frc.robot.commands.Autos;
 import frc.robot.commands.Autos.ConditionsMaker;
 import frc.robot.commands.Autos.PathfindingChooser;
+import java.util.HashMap;
 import java.util.List;
 
 public final class Constants {
@@ -253,7 +256,13 @@ public final class Constants {
             new ReplanningConfig());
   }
 
-  public static class PathPlannerConnexions {}
+  public static class PathPlannerConnexions {
+    public static final HashMap<Short, PathPlannerPath> kTwoNotesMidFieldConnexions =
+        Autos.PathfindingChooser.pathMapFactory(
+            (short) 1,
+            PathPlannerPath.fromPathFile("test 1"),
+            PathPlannerPath.fromPathFile("test 2"));
+  }
 
   public static class NodePathConditions {
     public static final List<Boolean> kCloseUpperNote =

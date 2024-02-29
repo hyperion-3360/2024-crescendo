@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.util.Units;
@@ -67,11 +66,11 @@ public final class Autos {
     return autoChooser.getSelected();
   }
 
-  public static PathPlannerPath[] getSelectedOptionConnexions() {
+  public static HashMap<Short, PathPlannerPath> getSelectedOptionConnexions() {
     // TODO add more pathplanner connexions
     switch (getSelectedOption()) {
       case TwoNotesMidField:
-        return PathPlannerConnexions.kCloseUpperNote();
+        return PathPlannerConnexions.kTwoNotesMidFieldConnexions;
         // case ThreeNotesCenterField:
         //   return PathPlannerConnexions.kCloseUpperNote;
         // case TwoNotesCenterField:
@@ -139,7 +138,7 @@ public final class Autos {
 
   public static class PathfindingChooser {
     // hash map for the path's index and the connected path to it
-    private HashMap<Short, PathPlannerPath> m_pathNodeMap = new HashMap<>();
+    private static HashMap<Short, PathPlannerPath> m_pathNodeMap = new HashMap<>();
     // hash map for the connected paths and their conditions
     private static HashMap<Integer, List<Boolean>> m_conditionPerNode = new HashMap<>();
     private static short pathStage = 0;
@@ -147,20 +146,11 @@ public final class Autos {
     private String chosenPathNode;
 
     // constructor where conditions are fed and accounted for to choose a path
-    public PathfindingChooser(String mainPath, PathPlannerPath connexions[]) {
+    public PathfindingChooser(String mainPath, HashMap<Short, PathPlannerPath> connexions) {
       chosenPathNode = null;
-      List<PathPlannerPath> m_autoPath = PathPlannerAuto.getPathGroupFromAutoFile(mainPath);
-      conditions.addAll(ConditionsMaker.setConditions(0, false));
       // gives the required conditions to the available function
-
-      for (Integer i = 0; i < connexions.length + m_autoPath.size(); i++) {
-        m_pathNodeMap.put(pathStage, connexions[i]);
-        m_conditionPerNode.putAll(getConditionPerNodeMap());
-        pathNodeChooser(conditions, connexions[i]);
-        if (pathNodeChooser(conditions, connexions[i]) != null) {
-          break;
-        }
-      }
+      m_conditionPerNode.putAll(getConditionPerNodeMap());
+      pathNodeChooser(conditions, connexions);
     }
 
     /**
@@ -200,7 +190,8 @@ public final class Autos {
      * @param connexions the path nodes which will give it's attached condition
      * @return the chosen path node so the pathfinding knows where to go
      */
-    public String pathNodeChooser(List<Boolean> conditions, PathPlannerPath connexions) {
+    public String pathNodeChooser(
+        List<Boolean> conditions, HashMap<Short, PathPlannerPath> connexions) {
       if (conditionLogicHandler(conditions) == true) {
         ++pathStage;
         return chosenPathNode = m_pathNodeMap.values().toString();
@@ -210,27 +201,12 @@ public final class Autos {
       return null;
     }
 
-    public static final PathPlannerPath[] pathMapFactory() {
-      switch (PathfindingChooser.getPathStage()) {
-        case 0:
-          PathPlannerPath[] kTest = {
-            PathPlannerPath.fromPathFile("test 1"), PathPlannerPath.fromPathFile("test 2")
-          };
-          return kTest;
-        case 1:
-          PathPlannerPath[] kTest1 = {
-            PathPlannerPath.fromPathFile("test 1"), PathPlannerPath.fromPathFile("test 2")
-          };
-          return kTest1;
-        default:
-          try {
-            throw new Exception(
-                "path stage overun path stage incremented past its intended point check path stage cap");
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-          return null;
+    public static HashMap<Short, PathPlannerPath> connexionsPerStage(
+        Short wantedStage, PathPlannerPath... wantedPathforStage) {
+      for (short i = 0; i < wantedPathforStage.length; i++) {
+        m_pathNodeMap.put(wantedStage, wantedPathforStage[i]);
       }
+      return m_pathNodeMap;
     }
 
     public static Map<? extends Integer, ? extends List<Boolean>> getConditionPerNodeMap() {
