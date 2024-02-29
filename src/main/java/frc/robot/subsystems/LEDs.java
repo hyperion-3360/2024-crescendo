@@ -57,7 +57,8 @@ public class LEDs extends SubsystemBase {
     CLIMBING, // Climb yellow, during the entire climb sequence
     PREPARE_SHOT_AMP, // Aim activated pale yellow quick flash, with vision aim function running
     SHOOT_READY_AMP, // Aim ready deep purple, vision aim lock
-    TRAP_HAS_NOTE, // Limit switch activated, purple
+    TRAP_HAS_NOTE,
+    GEAR_BLOCKED // Limit switch activated, purple
   }
 
   /* current LED state */
@@ -146,6 +147,10 @@ public class LEDs extends SubsystemBase {
         break;
       case TRAP_HAS_NOTE:
         m_flashDuration = 0;
+        m_currentValue = kpurple;
+        break;
+      case GEAR_BLOCKED:
+        m_flashDuration = RobotController.getFPGATime() + kFastFlashingDelay;
         m_currentValue = kpurple;
         break;
       default:

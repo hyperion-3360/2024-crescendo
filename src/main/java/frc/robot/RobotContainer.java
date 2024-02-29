@@ -14,6 +14,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.util.PixelFormat;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -210,7 +211,12 @@ public class RobotContainer {
 
     m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
 
-    m_driverController.a().toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led));
+    m_driverController
+        .a()
+        .toggleOnTrue(
+            Sequences.intakeSequence(m_shooter, m_led)
+                .andThen(
+                    () -> m_coDriverController.getHID().setRumble(RumbleType.kBothRumble, 0.3)));
 
     m_driverController
         .b()
