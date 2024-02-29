@@ -133,7 +133,10 @@ public class Sequences {
   }
 
   public static Command blockGear(Shooter shooter, LEDs leds) {
-    return Commands.sequence(
-        shooter.gearBlockMode(), Commands.runOnce(() -> leds.setState(State.GEAR_BLOCKED)));
+    return shooter.runOnce(
+        () ->
+            shooter
+                .gearBlockMode()
+                .alongWith(leds.runOnce(() -> leds.setState(State.GEAR_BLOCKED))));
   }
 }

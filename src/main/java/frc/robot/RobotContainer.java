@@ -128,7 +128,7 @@ public class RobotContainer {
 
     m_climber.setDefaultCommand(m_climber.run(() -> m_climber.setSpeed()));
 
-    m_shooter.setDefaultCommand(m_shooter.stop());
+    m_shooter.setDefaultCommand(m_shooter.shooterDefaultCommand());
     m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
     NamedCommands.registerCommand("shootHigh", AutoCommands.autoShoot(m_elevator, m_shooter));

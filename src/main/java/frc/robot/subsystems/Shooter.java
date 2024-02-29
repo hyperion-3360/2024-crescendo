@@ -49,7 +49,7 @@ public class Shooter extends SubsystemBase {
   private final double kIntakeHookAngleClose = 31;
 
   // gear blocker constants
-  private final double kGearBlocked = 20.0;
+  private final double kGearBlocked = 50.0;
   private final double kGearBlockerRestPosition = 0.0;
 
   // declaring motors for the shooter
@@ -350,5 +350,9 @@ public class Shooter extends SubsystemBase {
 
   public Command holdSpeed(levelSpeed level) {
     return this.run(() -> this.setSpeedFor(level));
+  }
+
+  public Command shooterDefaultCommand() {
+    return this.runOnce(() -> this.stop()).andThen(this.gearBlockerRestMode());
   }
 }
