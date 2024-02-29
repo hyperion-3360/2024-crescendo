@@ -49,8 +49,10 @@ public class Shooter extends SubsystemBase {
   private final double kIntakeHookAngleClose = 31;
 
   // gear blocker constants
-  private final double kGearBlocked = 50.0;
-  private final double kGearBlockerRestPosition = 0.0;
+  private final double kGearBlocked = 0.0;
+  private final double kGearBlockerRestPosition = 180.0;
+
+  private boolean gearSetZero = false;
 
   // declaring motors for the shooter
   private CANSparkMax m_leftMaster =
@@ -116,6 +118,7 @@ public class Shooter extends SubsystemBase {
 
     // setting the blocker to closed on boot
     m_blocker.setAngle(kIntakeHookAngleClose);
+    m_gearBlocker.setAngle(180.0);
   }
 
   @Override
@@ -353,6 +356,10 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command shooterDefaultCommand() {
-    return this.runOnce(() -> this.stop()).andThen(this.gearBlockerRestMode());
+    return this.runOnce(() -> this.stop())
+        .andThen(
+            this.runOnce(
+                    () -> gearBlockerRestMode().alongWith(this.runOnce(() -> gearSetZero = true)))
+                .unless(() -> this.gearSetZero));
   }
 }
