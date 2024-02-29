@@ -78,6 +78,7 @@ public class LEDs extends SubsystemBase {
 
   private int kSlowFlashingDelay = (1000000 / 4); // 4 times per second delay in usec
   private int kFastFlashingDelay = (1000000 / 10); // 10 times per second delay in usec
+  private int kExtremelyFastFlashingDelay = (1000000 / 15); // 15 times per second delay in usec
 
   /* instance member for singleton implementation */
   private static LEDs m_instance = null;
