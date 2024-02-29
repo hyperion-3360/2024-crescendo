@@ -71,6 +71,7 @@ public class LEDs extends SubsystemBase {
   private ledValue kGreen = new ledValue(0, 255, 0, 0);
   private ledValue kpurple = new ledValue(255, 0, 255, 0);
   private ledValue kDark = new ledValue(0, 0, 0, 0);
+  private ledValue kRed = new ledValue(255, 0, 0, 0);
 
   /* current ledvalue, used for blinking */
   private ledValue m_currentValue;
@@ -151,7 +152,7 @@ public class LEDs extends SubsystemBase {
         break;
       case GEAR_BLOCKED:
         m_flashDuration = RobotController.getFPGATime() + kFastFlashingDelay;
-        m_currentValue = kpurple;
+        m_currentValue = kred;
         break;
       default:
         break;
