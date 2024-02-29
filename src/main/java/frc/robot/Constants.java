@@ -258,7 +258,7 @@ public final class Constants {
 
   public static class PathPlannerConnexions {
     public static final HashMap<Short, PathPlannerPath> kTwoNotesMidFieldConnexions =
-        Autos.PathfindingChooser.pathMapFactory(
+        Autos.PathfindingChooser.connexionsPerStage(
             (short) 1,
             PathPlannerPath.fromPathFile("test 1"),
             PathPlannerPath.fromPathFile("test 2"));

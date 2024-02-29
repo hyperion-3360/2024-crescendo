@@ -101,7 +101,7 @@ public final class Autos {
      * @param wantNote do we want a note before changing path ex: we don't want to intake a note if
      *     there's already one in the intake
      */
-    private ConditionsMaker(double timeConstraints, boolean wantNote) {
+    public ConditionsMaker(double timeConstraints, boolean wantNote) {
       timeCondition(timeConstraints);
       noteCondition(wantNote);
     }
@@ -130,10 +130,6 @@ public final class Autos {
     //     return false;
     //   }
     // }
-
-    public static List<Boolean> setConditions(double timeConstraints, boolean wantNote) {
-      return ConditionsMaker.setConditions(timeConstraints, wantNote);
-    }
   }
 
   public static class PathfindingChooser {
