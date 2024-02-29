@@ -127,7 +127,6 @@ public class RobotContainer {
             () -> true));
 
     m_climber.setDefaultCommand(m_climber.run(() -> m_climber.setSpeed()));
-
     m_shooter.setDefaultCommand(m_shooter.stop());
     m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
@@ -211,9 +210,13 @@ public class RobotContainer {
 
     m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
 
-    m_driverController.a().toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led));
-    //    .andThen(() -> m_driverController.getHID().setRumble(RumbleType.kBothRumble, 0.3)));
-    m_coDriverController.start().and(m_coDriverController.back()).onTrue(m_shooter.gearBlockMode());
+    m_driverController
+        .a()
+        .toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led, m_driverController));
+    m_coDriverController
+        .start()
+        .and(m_coDriverController.back())
+        .onTrue(Sequences.blockShooterGears(m_shooter, m_led, m_coDriverController));
 
     m_driverController
         .b()

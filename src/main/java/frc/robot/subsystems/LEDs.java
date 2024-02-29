@@ -152,8 +152,8 @@ public class LEDs extends SubsystemBase {
         m_currentValue = kpurple;
         break;
       case GEAR_BLOCKED:
-        m_flashDuration = RobotController.getFPGATime() + kFastFlashingDelay;
         m_currentValue = kRed;
+        m_flashDuration = RobotController.getFPGATime() + kFastFlashingDelay;
         break;
       default:
         break;
@@ -189,8 +189,8 @@ public class LEDs extends SubsystemBase {
         break;
       case GEAR_BLOCKED:
         if (currentTime > m_flashDuration) {
-          m_currentValue = m_currentValue == kRed ? kDark : kpurple;
-          m_flashDuration = RobotController.getFPGATime() + kExtremelyFastFlashingDelay;
+          m_currentValue = m_currentValue == kRed ? kDark : kRed;
+          m_flashDuration = RobotController.getFPGATime() + kFastFlashingDelay;
           setRGB(m_currentValue);
         }
         break;

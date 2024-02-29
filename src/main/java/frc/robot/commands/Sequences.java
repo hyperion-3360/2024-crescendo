@@ -1,9 +1,11 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.elevatorHeight;
 import frc.robot.subsystems.LEDs;
@@ -75,14 +77,17 @@ public class Sequences {
   }
 
   // intake sequence to set leds to the right state
-  public static Command intakeSequence(Shooter m_shooter, LEDs m_LED) {
+  public static Command intakeSequence(
+      Shooter shooter, LEDs leds, CommandXboxController controller) {
     return Commands.sequence(
-            Commands.runOnce(() -> m_LED.setState(State.INTAKE_ROLLING)),
-            m_shooter
-                .intake()
-                .andThen(() -> m_LED.setState(State.NOTE_INSIDE))
-                .andThen(new WaitCommand(2).andThen(() -> m_LED.setState(State.IDLE))))
-        .handleInterrupt(() -> m_LED.setState(State.IDLE));
+            Commands.runOnce(() -> leds.setState(State.INTAKE_ROLLING)),
+            intakeRumbleOn(controller, shooter).alongWith(shooter.intake()),
+            leds.runOnce(() -> leds.setState(State.NOTE_INSIDE))
+                .andThen(new WaitCommand(2).andThen(() -> leds.setState(State.IDLE))))
+        .handleInterrupt(
+            () -> {
+              leds.setState(State.IDLE);
+            });
   }
 
   // sequence to feed the note to the trap and store it
@@ -132,11 +137,32 @@ public class Sequences {
         shooter.stop());
   }
 
-  public static Command blockGear(Shooter shooter, LEDs leds) {
-    return shooter.runOnce(
-        () ->
-            shooter
-                .gearBlockMode()
-                .alongWith(leds.runOnce(() -> leds.setState(State.GEAR_BLOCKED))));
+  public static Command blockShooterGears(
+      Shooter shooter, LEDs leds, CommandXboxController controller) {
+    return Commands.sequence(
+        shooter.stop(),
+        shooter.gearBlockMode(),
+        Commands.parallel(
+            climbRumble(controller), (leds.runOnce(() -> leds.setState(State.GEAR_BLOCKED)))));
+  }
+
+  public static Command rumble(CommandXboxController controller, boolean on) {
+    if (on) {
+      return Commands.run(() -> controller.getHID().setRumble(RumbleType.kBothRumble, 0.2));
+    } else {
+      return Commands.run(() -> controller.getHID().setRumble(RumbleType.kBothRumble, 0));
+    }
+  }
+
+  public static Command intakeRumbleOn(CommandXboxController controller, Shooter shooter) {
+    return Commands.run(() -> controller.getHID().setRumble(RumbleType.kBothRumble, 0.6))
+        .until(shooter::hasNote)
+        .andThen(() -> controller.getHID().setRumble(RumbleType.kBothRumble, 0));
+  }
+
+  public static Command climbRumble(CommandXboxController controller) {
+    return Commands.run(() -> controller.getHID().setRumble(RumbleType.kBothRumble, 0.3))
+        .withTimeout(5)
+        .andThen(() -> controller.getHID().setRumble(RumbleType.kBothRumble, 0));
   }
 }
