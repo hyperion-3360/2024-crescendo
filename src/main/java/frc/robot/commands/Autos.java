@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
@@ -55,5 +56,49 @@ public final class Autos {
 
   public static Mode getSelectedOption() {
     return autoChooser.getSelected();
+  }
+
+  public static class PathfindingNode {
+
+    public PathfindingNode(PathPlannerPath currentPath) {
+      getCurrentPath();
+      getConnexionToCurrentPath(currentPath);
+    }
+
+    private void getConnexionToCurrentPath(PathPlannerPath currentPath) {}
+
+    private void getCurrentPath() {
+      // TODO Auto-generated method stub
+      throw new UnsupportedOperationException("Unimplemented method 'getCurrentPath'");
+    }
+  }
+
+  public interface ConditionFactory {
+    public Boolean timeCondition();
+
+    public Boolean noteCondition();
+
+    public Boolean seeingNoteCondition();
+  }
+
+  public static class NodeFactory implements ConditionFactory {
+
+    @Override
+    public Boolean timeCondition() {
+      // TODO Auto-generated method stub
+      throw new UnsupportedOperationException("Unimplemented method 'timeCondition'");
+    }
+
+    @Override
+    public Boolean noteCondition() {
+      // TODO Auto-generated method stub
+      throw new UnsupportedOperationException("Unimplemented method 'noteCondition'");
+    }
+
+    @Override
+    public Boolean seeingNoteCondition() {
+      // TODO Auto-generated method stub
+      throw new UnsupportedOperationException("Unimplemented method 'seeingNoteCondition'");
+    }
   }
 }
