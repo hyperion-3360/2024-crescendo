@@ -24,7 +24,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.8
+                  "waitTime": 2.7
                 }
               }
             ]
@@ -68,16 +68,10 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.7
+                  "waitTime": 2.5
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "7f"
           }
         }
       ]

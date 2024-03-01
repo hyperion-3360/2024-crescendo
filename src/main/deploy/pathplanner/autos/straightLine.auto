@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.5299637873657116,
-      "y": 2.125724867352208
+      "x": 0.6524285270792767,
+      "y": 2.272343225242006
     },
     "rotation": 0
   },
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "cross robot zone"
+            "pathName": "leave"
           }
         }
       ]

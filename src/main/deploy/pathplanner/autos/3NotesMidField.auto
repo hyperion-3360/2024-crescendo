@@ -24,7 +24,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.8
+                  "waitTime": 2.7
                 }
               }
             ]
@@ -68,7 +68,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.7
+                  "waitTime": 2.5
                 }
               }
             ]
@@ -106,22 +106,16 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "farShootA"
+                  "name": "farShootD"
                 }
               },
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.45
+                  "waitTime": 2.5
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "8f"
           }
         }
       ]
