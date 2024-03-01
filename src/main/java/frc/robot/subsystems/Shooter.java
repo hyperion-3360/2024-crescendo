@@ -127,8 +127,8 @@ public class Shooter extends SubsystemBase {
 
     // setting speed to motors
     SmartDashboard.putBoolean("Has Note?", hasNote());
-    SmartDashboard.putBoolean("Has Shot?", hasShot());
-    SmartDashboard.putString("Intake status", m_intakeNoteStatus.toString());
+    // SmartDashboard.putBoolean("Has Shot?", hasShot());
+    // SmartDashboard.putString("Intake status", m_intakeNoteStatus.toString());
   }
 
   // switch case for different speeds according to the level
@@ -287,7 +287,7 @@ public class Shooter extends SubsystemBase {
       if (m_noteStatusTimer == null) {
         m_noteStatusTimer = Timer.getFPGATimestamp();
       } else if (Timer.getFPGATimestamp() - m_noteStatusTimer > 2) { // 1s delay max...
-        System.out.println("Note status failsafe trigerred. Resetting status");
+        // System.out.println("Note status failsafe trigerred. Resetting status");
         m_intakeNoteStatus = IntakeNoteStatus.IDLE;
         m_noteStatusTimer = null;
       }
@@ -319,10 +319,6 @@ public class Shooter extends SubsystemBase {
   public Command waitForShot() {
     return Commands.sequence(
         new WaitUntilCommand(this::hasShot),
-        this.runOnce(
-            () -> {
-              System.out.println("HAS SHOT");
-            }),
         this.runOnce(this::consumeShotStatus));
   }
 
