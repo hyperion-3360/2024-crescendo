@@ -222,10 +222,17 @@ public final class Constants {
     public static final double kangleShouldergrabPosition = 83.0; // GRABPOSITION
     public static final double kangleElbowgrabPosition = 100.0;
     public static final double kangleWristgrabPosition = 78.0;
-    // in progress
-    public static final double kangleShoulderdunkNote = 180.0; // DUNKNOTE
+
+    // DUNK NOTE ANGLES
+    // Shoulder moves first to its most vertical position
+    public static final double kangleShoulderdunkNote = 180.0;
+    // Elbow and wrist initial positions to stuck the note at an angle
     public static final double kangleElbowdunkNote = 30.0;
     public static final double kangleWristdunkNote = 90.0;
+    // Try to drop the note into the trap by pushing down and moving up the wrist a bit
+    public static final double kangleWristFinalPush = 95.0;
+    public static final double kangleElbowFinalPush = 40.0;
+
     // in progress
     public static final double kangleShoulderdisable1 = 110.0; // PREPARETODISABLE1
     public static final double kangleElbowdisable1 = 30.0;
