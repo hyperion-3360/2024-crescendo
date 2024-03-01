@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
@@ -67,36 +68,42 @@ public final class Autos {
 
     private void getConnexionToCurrentPath(PathPlannerPath currentPath) {}
 
-    private void getCurrentPath() {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'getCurrentPath'");
-    }
+    private void getCurrentPath() {}
   }
 
   public interface ConditionFactory {
-    public Boolean timeCondition();
+    public Boolean timeCondition(double timeConstraints);
 
-    public Boolean noteCondition();
+    public Boolean noteCondition(boolean wantNoteInShooter);
 
-    public Boolean seeingNoteCondition();
+    public Boolean seeingNoteCondition(boolean wantNoteInSight);
   }
 
   public static class NodeFactory implements ConditionFactory {
 
-    @Override
-    public Boolean timeCondition() {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'timeCondition'");
+    public NodeFactory(
+        double timeConstraints, boolean wantNoteInShooter, PathPlannerPath currentPath) {
+      timeCondition(timeConstraints);
+      noteCondition(wantNoteInShooter);
     }
 
     @Override
-    public Boolean noteCondition() {
+    public Boolean timeCondition(double timeConstraints) {
+      if (timeConstraints > DriverStation.getMatchTime()) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    @Override
+    public Boolean noteCondition(boolean wantNoteInShooter) {
       // TODO Auto-generated method stub
       throw new UnsupportedOperationException("Unimplemented method 'noteCondition'");
     }
 
     @Override
-    public Boolean seeingNoteCondition() {
+    public Boolean seeingNoteCondition(boolean wantNoteInSight) {
       // TODO Auto-generated method stub
       throw new UnsupportedOperationException("Unimplemented method 'seeingNoteCondition'");
     }
