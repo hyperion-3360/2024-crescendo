@@ -86,9 +86,9 @@ public class Trap extends SubsystemBase {
   public Command grabPosition() {
     return this.runOnce(
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldergrabPosition))
-        .andThen(new WaitCommand(m_servoShoulder.travelTime()))
+        .andThen(new WaitCommand(0.1))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowgrabPosition))
-        .andThen(new WaitCommand(m_servoElbow.travelTime()))
+        .andThen(new WaitCommand(0.3))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristgrabPosition))
         .andThen(new WaitCommand(m_servoWrist.travelTime()))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened));
@@ -136,12 +136,12 @@ public class Trap extends SubsystemBase {
   // position to dunk the note in the trap
   public Command dunkNote() {
     return this.runOnce(
-            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderdunkNote))
+          () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderdunkNote)
+        )
         .andThen(new WaitCommand(m_servoShoulder.travelTime()))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowdunkNote))
-        .andThen(new WaitCommand(0.5))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristdunkNote))
-        .andThen(new WaitCommand(0.3))
+        .andThen(new WaitCommand(0.5))
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened));
   }
 

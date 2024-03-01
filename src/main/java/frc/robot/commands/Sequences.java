@@ -109,8 +109,9 @@ public class Sequences {
   public static Command trapScore(Trap m_trap) {
     return Commands.sequence(
         m_trap.dunkNote(),
-        new WaitCommand(0.6),
+        new WaitCommand(1),
         m_trap.prepareToDisable1(),
+        new WaitCommand(0.2),
         m_trap.prepareToDisable2());
   }
 
@@ -161,7 +162,7 @@ public class Sequences {
   }
 
   public static Command climbRumble(CommandXboxController controller) {
-    return Commands.run(() -> controller.getHID().setRumble(RumbleType.kBothRumble, 0.3))
+    return Commands.run(() -> controller.getHID().setRumble(RumbleType.kBothRumble, 0.2))
         .withTimeout(5)
         .andThen(() -> controller.getHID().setRumble(RumbleType.kBothRumble, 0));
   }

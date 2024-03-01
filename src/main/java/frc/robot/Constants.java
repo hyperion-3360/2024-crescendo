@@ -220,19 +220,19 @@ public final class Constants {
     public static final double kangleShouldersetZeroDelayed = 5.0;
     // good
     public static final double kangleShouldergrabPosition = 83.0; // GRABPOSITION
-    public static final double kangleElbowgrabPosition = 83.0;
+    public static final double kangleElbowgrabPosition = 100.0;
     public static final double kangleWristgrabPosition = 78.0;
     // in progress
-    public static final double kangleShoulderdunkNote = 155.0; // DUNKNOTE
-    public static final double kangleElbowdunkNote = 10.0;
-    public static final double kangleWristdunkNote = 100.0;
+    public static final double kangleShoulderdunkNote = 180.0; // DUNKNOTE
+    public static final double kangleElbowdunkNote = 30.0;
+    public static final double kangleWristdunkNote = 90.0;
     // in progress
     public static final double kangleShoulderdisable1 = 110.0; // PREPARETODISABLE1
-    public static final double kangleElbowdisable1 = 0.0;
-    public static final double kangleWristdisable1 = 155.0;
+    public static final double kangleElbowdisable1 = 30.0;
+    public static final double kangleWristdisable1 = 165.0;
     // in progress
     public static final double kangleShoulderdisable2 = 110.0; // PREPARETODISABLE2
-    public static final double kangleElbowdisable2 = 30.0;
+    public static final double kangleElbowdisable2 = 60.0;
     public static final double kangleWristdisable2 = 0.0;
     // good
     public static final double kangleShoulderstoreNote = 0.0; // STORENOTE
@@ -245,10 +245,10 @@ public final class Constants {
     public static final double kangleShoulderprepareToClimbdelayed1 = 88.0;
     public static final double kangleShoulderprepareToClimbdelayed2 = 66.0;
     public static final double kangleShoulderprepareToClimbdelayed3 = 44.0; // PREPARETOCLIMB
-    public static final double kangleElbowprepareToClimbdelayed1 = 71.0;
-    public static final double kangleElbowprepareToClimbdelayed2 = 47.0;
-    public static final double kangleElbowprepareToClimbdelayed3 = 23.0;
-    public static final double kangleElbowprepareToClimb = 0.0;
+    public static final double kangleElbowprepareToClimbdelayed1 = 88.0;
+    public static final double kangleElbowprepareToClimbdelayed2 = 64.0;
+    public static final double kangleElbowprepareToClimbdelayed3 = 40.0;
+    public static final double kangleElbowprepareToClimb = 30.0;
     public static final double kangleWristprepareToClimb = 155.0;
   }
 
