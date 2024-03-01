@@ -139,15 +139,19 @@ public class Trap extends SubsystemBase {
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderdunkNote))
         .andThen(new WaitCommand(m_servoShoulder.travelTime()))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowdunkNote))
+        .andThen(new WaitCommand(0.3))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristdunkNote))
         .andThen(new WaitCommand(0.5))
         // Note should now be stuck in the trap at an angle
         // Trying to push it through the trap. Moving the wrist up a bit and the elbow down
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleWristFinalPush))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowFinalPush))
-        .andThen(new WaitCommand(0.5))
+        .andThen(new WaitCommand(0.2))
         // Opening up the finger
-        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened));
+        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened))
+        .andThen(new WaitCommand(0.1))
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristprepareToClimb))
+        .andThen(new WaitCommand(0.1));
   }
 
   // position arm is in after dunking the note so it is ready to disable and doesn't hit anywhere.

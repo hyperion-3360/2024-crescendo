@@ -219,26 +219,26 @@ public final class Constants {
     public static final double kangleWristsetZero = 155.0; // higher number = higher
     public static final double kangleShouldersetZeroDelayed = 5.0;
     // good
-    public static final double kangleShouldergrabPosition = 83.0; // GRABPOSITION
-    public static final double kangleElbowgrabPosition = 100.0;
+    public static final double kangleShouldergrabPosition = 60.0; // old 83 GRABPOSITION
+    public static final double kangleElbowgrabPosition = 88.0; //old 100
     public static final double kangleWristgrabPosition = 78.0;
 
     // DUNK NOTE ANGLES
     // Shoulder moves first to its most vertical position
-    public static final double kangleShoulderdunkNote = 180.0;
+    public static final double kangleShoulderdunkNote = 97.0;
     // Elbow and wrist initial positions to stuck the note at an angle
-    public static final double kangleElbowdunkNote = 30.0;
-    public static final double kangleWristdunkNote = 90.0;
+    public static final double kangleElbowdunkNote = 80.0;
+    public static final double kangleWristdunkNote = 50.0;
     // Try to drop the note into the trap by pushing down and moving up the wrist a bit
-    public static final double kangleWristFinalPush = 95.0;
-    public static final double kangleElbowFinalPush = 40.0;
+    public static final double kangleWristFinalPush = 5.0;
+    public static final double kangleElbowFinalPush = 90.0;
 
     // in progress
-    public static final double kangleShoulderdisable1 = 110.0; // PREPARETODISABLE1
+    public static final double kangleShoulderdisable1 = 70.0; // PREPARETODISABLE1
     public static final double kangleElbowdisable1 = 30.0;
     public static final double kangleWristdisable1 = 165.0;
     // in progress
-    public static final double kangleShoulderdisable2 = 110.0; // PREPARETODISABLE2
+    public static final double kangleShoulderdisable2 = 70.0; // PREPARETODISABLE2
     public static final double kangleElbowdisable2 = 60.0;
     public static final double kangleWristdisable2 = 0.0;
     // good
@@ -248,14 +248,14 @@ public final class Constants {
     // sorry for all the delayed in prepare to climb but they are needed to avoid the arm from
     // hitting everywhere and they also make it less hard for servos to get from one position to
     // the other
-    public static final double kangleShoulderprepareToClimb = 110.0;
-    public static final double kangleShoulderprepareToClimbdelayed1 = 88.0;
-    public static final double kangleShoulderprepareToClimbdelayed2 = 66.0;
-    public static final double kangleShoulderprepareToClimbdelayed3 = 44.0; // PREPARETOCLIMB
-    public static final double kangleElbowprepareToClimbdelayed1 = 88.0;
-    public static final double kangleElbowprepareToClimbdelayed2 = 64.0;
-    public static final double kangleElbowprepareToClimbdelayed3 = 40.0;
-    public static final double kangleElbowprepareToClimb = 30.0;
+    public static final double kangleShoulderprepareToClimb = 70.0;
+    public static final double kangleShoulderprepareToClimbdelayed1 = 63.0;
+    public static final double kangleShoulderprepareToClimbdelayed2 = 46.0;
+    public static final double kangleShoulderprepareToClimbdelayed3 = 54.0; // PREPARETOCLIMB
+    public static final double kangleElbowprepareToClimbdelayed1 = 40.0;
+    public static final double kangleElbowprepareToClimbdelayed2 = 30.0;
+    public static final double kangleElbowprepareToClimbdelayed3 = 10.0;
+    public static final double kangleElbowprepareToClimb = 10.0;
     public static final double kangleWristprepareToClimb = 155.0;
   }
 
