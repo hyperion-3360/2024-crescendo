@@ -94,7 +94,7 @@ public class Sequences {
   public static Command trapShoot(Shooter m_shooter, Trap m_trap) {
     return Commands.sequence(
         m_trap.grabPosition(),
-        new WaitCommand(0.3),
+        new WaitCommand(0.5),
         m_shooter.hookRelease(),
         m_shooter.setTargetLevel(levelSpeed.TRAP),
         m_shooter.setSpeedWithTarget(),
