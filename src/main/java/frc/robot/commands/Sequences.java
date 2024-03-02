@@ -108,10 +108,9 @@ public class Sequences {
         m_shooter.setSpeedWithTarget(),
         new WaitUntilCommand(m_trap::trapHasNote),
         m_trap.closeFinger(),
+        m_shooter.stop(),
         new WaitCommand(0.2),
-        m_trap.storeNote(),
-        new WaitCommand(2),
-        m_shooter.stop());
+        m_trap.storeNote());
   }
 
   // sequence to score note in trap

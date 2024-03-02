@@ -192,7 +192,7 @@ public final class Constants {
   public static class ElevatorConstants {
     public static final double kDeadzone = 0.0035;
     public static final double kHighTarget = 68.8; // was negativ, changed to mec request
-    public static final double kFarHighTarget = 37; // needs more fine tuning maybe
+    public static final double kFarHighTarget = 68.8; // needs more fine tuning maybe
     public static final double kLowTarget = 65; // 61
     public static final double kIntakeTarget = 0.0;
   }
@@ -256,7 +256,7 @@ public final class Constants {
     public static final double kangleShoulderprepareToClimbdelayed1 = 63.0;
     public static final double kangleShoulderprepareToClimbdelayed2 = 66.0;
     public static final double kangleShoulderprepareToClimbdelayed3 = 70.0; // PREPARETOCLIMB
-    public static final double kangleElbowprepareToClimbdelayed1 = 40.0;
+    public static final double kangleElbowprepareToClimbdelayed1 = 50.0;
     public static final double kangleElbowprepareToClimbdelayed2 = 30.0;
     public static final double kangleElbowprepareToClimbdelayed3 = 10.0;
     public static final double kangleElbowprepareToClimb = 10.0;
