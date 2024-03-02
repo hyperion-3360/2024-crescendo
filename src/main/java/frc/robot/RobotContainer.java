@@ -14,7 +14,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.util.PixelFormat;
-import edu.wpi.first.wpilibj.Timer;
 // import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -210,16 +209,19 @@ public class RobotContainer {
     m_coDriverController
         .b()
         .onTrue(Sequences.shoot(m_shooter, m_elevator, m_led))
-        .onFalse(
+        .onTrue(
             Commands.runOnce(
                 () -> {
-                  Double m_shootingTimeOnFalse = Timer.getFPGATimestamp();
-                  if (m_shootingTimeOnFalse > 3) {
-                    Sequences.shoot(m_shooter, m_elevator, m_led).cancel();
-                    m_shootingTimeOnFalse = null;
-                  }
+                  new WaitCommand(3)
+                      .andThen(
+                          () ->
+                              Commands.runOnce(
+                                  () -> {
+                                    if (m_shooter.hasNote() == true) {
+                                      Sequences.shoot(m_shooter, m_elevator, m_led).cancel();
+                                    }
+                                  }));
                 }));
-
     m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
 
     m_driverController
