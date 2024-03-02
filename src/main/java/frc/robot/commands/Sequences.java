@@ -74,6 +74,7 @@ public class Sequences {
             shooter.hookIntake(),
             new WaitCommand(1.5),
             leds.runOnce(() -> leds.setState(State.IDLE)))
+        .withTimeout(4)
         .handleInterrupt(
             () -> elevator.extendTheElevator(elevatorHeight.INTAKE).andThen(shooter.hookIntake()))
         .andThen(() -> leds.setState(State.IDLE));

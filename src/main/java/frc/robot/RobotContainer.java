@@ -206,22 +206,8 @@ public class RobotContainer {
         .rightBumper()
         .onTrue(Sequences.elevatorFarHighFromAmp(m_elevator, m_shooter, m_led));
 
-    m_coDriverController
-        .b()
-        .onTrue(Sequences.shoot(m_shooter, m_elevator, m_led))
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  new WaitCommand(3)
-                      .andThen(
-                          () ->
-                              Commands.runOnce(
-                                  () -> {
-                                    if (m_shooter.hasNote() == true) {
-                                      Sequences.shoot(m_shooter, m_elevator, m_led).cancel();
-                                    }
-                                  }));
-                }));
+    m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
+
     m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
 
     m_driverController
