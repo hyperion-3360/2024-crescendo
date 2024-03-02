@@ -120,6 +120,10 @@ public class Sequences {
         m_trap.dunkNote(),
         new WaitCommand(1),
         m_trap.prepareToDisable1(),
+        new WaitCommand(0.5),
+        m_trap.pushNote(),
+        new WaitCommand(0.5),
+        m_trap.prepareToDisable1(),
         new WaitCommand(0.2),
         m_trap.prepareToDisable2());
   }

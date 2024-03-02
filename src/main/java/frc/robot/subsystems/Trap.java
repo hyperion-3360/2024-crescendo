@@ -94,6 +94,14 @@ public class Trap extends SubsystemBase {
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened));
   }
 
+  public Command pushNote() {
+    return this.runOnce(
+            () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderpushNote))
+        .andThen(new WaitCommand(0.1))
+        .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowpushNote))
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristpushNote));
+  }
+
   // weird command don't delete because it works in trap shoot sequence. it doesn't pick up on limit
   // switch for some reason but it is placed after the has note in the sequence. it is basically
   // just a command to close the finger.

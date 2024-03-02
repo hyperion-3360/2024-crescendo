@@ -115,6 +115,7 @@ public class RobotContainer {
     m_camera2.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
 
     m_videoServer.setSource(m_camera2);
+    m_currentCam = m_camera2;
 
     m_swerveDrive.resetModulesToAbsolute();
 
@@ -213,10 +214,10 @@ public class RobotContainer {
     m_driverController
         .a()
         .toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led, m_driverController));
-    m_coDriverController
+    m_driverController
         .start()
-        .and(m_coDriverController.back())
-        .onTrue(Sequences.blockShooterGears(m_shooter, m_led, m_coDriverController));
+        .and(m_driverController.back())
+        .onTrue(Sequences.blockShooterGears(m_shooter, m_led, m_driverController));
 
     m_driverController
         .b()

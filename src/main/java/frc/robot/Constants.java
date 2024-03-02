@@ -220,8 +220,12 @@ public final class Constants {
     public static final double kangleShouldersetZeroDelayed = 5.0;
     // good
     public static final double kangleShouldergrabPosition = 60.0; // old 83 GRABPOSITION
-    public static final double kangleElbowgrabPosition = 90.0; // old 100
+    public static final double kangleElbowgrabPosition = 95.0; // old 100
     public static final double kangleWristgrabPosition = 110.0;
+
+    public static final double kangleShoulderpushNote = 97.0; // old 83 GRABPOSITION
+    public static final double kangleElbowpushNote = 80.0; // old 100
+    public static final double kangleWristpushNote = 100.0;
 
     // DUNK NOTE ANGLES
     // Shoulder moves first to its most vertical position
