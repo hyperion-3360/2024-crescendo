@@ -74,7 +74,7 @@ public class Trap extends SubsystemBase {
   public Command storeNote() {
     return this.runOnce(
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderstoreNote))
-        .andThen(new WaitCommand(m_servoShoulder.travelTime()))
+        .andThen(new WaitCommand(0.1))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowstoreNote))
         .andThen(new WaitCommand(m_servoElbow.travelTime()))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWriststoreNote))
@@ -139,7 +139,7 @@ public class Trap extends SubsystemBase {
             () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderdunkNote))
         .andThen(new WaitCommand(m_servoShoulder.travelTime()))
         .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowdunkNote))
-        .andThen(new WaitCommand(0.3))
+        .andThen(new WaitCommand(0.32))
         .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristdunkNote))
         .andThen(new WaitCommand(0.5))
         // Note should now be stuck in the trap at an angle

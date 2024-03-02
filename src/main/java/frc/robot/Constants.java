@@ -211,7 +211,7 @@ public final class Constants {
     public static final int kservoFingerId = 6;
     public static final int kfingerlimitswitchId = 6;
 
-    public static final double kfingerClosed = 170.0; // angle of finger servo when closed/opened
+    public static final double kfingerClosed = 180.0; // angle of finger servo when closed/opened
     public static final double kfingerOpened = 90.0;
     // good
     public static final double kangleShouldersetZero = 0.0; // SETZERO   //higher number = higher
@@ -220,8 +220,8 @@ public final class Constants {
     public static final double kangleShouldersetZeroDelayed = 5.0;
     // good
     public static final double kangleShouldergrabPosition = 60.0; // old 83 GRABPOSITION
-    public static final double kangleElbowgrabPosition = 88.0; // old 100
-    public static final double kangleWristgrabPosition = 78.0;
+    public static final double kangleElbowgrabPosition = 90.0; // old 100
+    public static final double kangleWristgrabPosition = 110.0;
 
     // DUNK NOTE ANGLES
     // Shoulder moves first to its most vertical position
@@ -250,8 +250,8 @@ public final class Constants {
     // the other
     public static final double kangleShoulderprepareToClimb = 70.0;
     public static final double kangleShoulderprepareToClimbdelayed1 = 63.0;
-    public static final double kangleShoulderprepareToClimbdelayed2 = 46.0;
-    public static final double kangleShoulderprepareToClimbdelayed3 = 54.0; // PREPARETOCLIMB
+    public static final double kangleShoulderprepareToClimbdelayed2 = 66.0;
+    public static final double kangleShoulderprepareToClimbdelayed3 = 70.0; // PREPARETOCLIMB
     public static final double kangleElbowprepareToClimbdelayed1 = 40.0;
     public static final double kangleElbowprepareToClimbdelayed2 = 30.0;
     public static final double kangleElbowprepareToClimbdelayed3 = 10.0;

@@ -33,7 +33,7 @@ public class Shooter extends SubsystemBase {
   private static double farHighSpeed = 1.0;
   private static double lowSpeed = 0.5; // requires testing
   private static double intakeSpeed = 0.4;
-  private static double trapSpeed = 0.2; // requires testing
+  private static double trapSpeed = 0.18; // requires testing
   private static double stopSpeed = 0;
   private static double climbSpeed = 0.3;
   private static double vomitSpeed = -0.5;
@@ -318,8 +318,7 @@ public class Shooter extends SubsystemBase {
 
   public Command waitForShot() {
     return Commands.sequence(
-        new WaitUntilCommand(this::hasShot),
-        this.runOnce(this::consumeShotStatus));
+        new WaitUntilCommand(this::hasShot), this.runOnce(this::consumeShotStatus));
   }
 
   // EMERGENCY command in case of intake anomaly

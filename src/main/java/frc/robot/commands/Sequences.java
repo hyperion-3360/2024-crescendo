@@ -100,6 +100,7 @@ public class Sequences {
         m_shooter.setSpeedWithTarget(),
         new WaitUntilCommand(m_trap::trapHasNote),
         m_trap.closeFinger(),
+        new WaitCommand(0.2),
         m_trap.storeNote(),
         new WaitCommand(2),
         m_shooter.stop());
