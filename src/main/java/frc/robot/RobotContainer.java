@@ -114,7 +114,7 @@ public class RobotContainer {
     m_camera1.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
     m_camera2.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
 
-    m_videoServer.setSource(m_camera1);
+    m_videoServer.setSource(m_camera2);
 
     m_swerveDrive.resetModulesToAbsolute();
 
