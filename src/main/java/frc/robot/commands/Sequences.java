@@ -66,14 +66,22 @@ public class Sequences {
 
   public static Command shoot(Shooter shooter, Elevator elevator, LEDs leds) {
     return Commands.sequence(
-        shooter.hookRelease(),
-        new WaitCommand(0.7),
-        leds.runOnce(() -> leds.setState(State.SHOT_DONE)),
-        shooter.stop(),
-        elevator.extendTheElevator(elevatorHeight.INTAKE),
-        shooter.hookIntake(),
-        new WaitCommand(1.5),
-        leds.runOnce(() -> leds.setState(State.IDLE)));
+            shooter.hookRelease(),
+            new WaitCommand(0.7),
+            leds.runOnce(() -> leds.setState(State.SHOT_DONE)),
+            shooter.stop(),
+            elevator.extendTheElevator(elevatorHeight.INTAKE),
+            shooter.hookIntake(),
+            new WaitCommand(1.5),
+            leds.runOnce(() -> leds.setState(State.IDLE)))
+        .withTimeout(4)
+        .handleInterrupt(
+            () ->
+                shooter
+                    .stop()
+                    .andThen(elevator.extendTheElevator(elevatorHeight.INTAKE))
+                    .andThen(shooter.hookIntake()))
+        .andThen(() -> leds.setState(State.IDLE));
   }
 
   // intake sequence to set leds to the right state
