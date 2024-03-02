@@ -318,8 +318,7 @@ public class Shooter extends SubsystemBase {
 
   public Command waitForShot() {
     return Commands.sequence(
-        new WaitUntilCommand(this::hasShot),
-        this.runOnce(this::consumeShotStatus));
+        new WaitUntilCommand(this::hasShot), this.runOnce(this::consumeShotStatus));
   }
 
   // EMERGENCY command in case of intake anomaly
