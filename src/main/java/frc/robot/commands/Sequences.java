@@ -20,7 +20,7 @@ public class Sequences {
     return Commands.sequence(
             leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
             elevator.extendTheElevator(elevatorHeight.HIGH),
-            new WaitCommand(1.5))
+            new WaitCommand(0.5))
         .andThen(
             shooter
                 .holdSpeed(levelSpeed.HIGH)
@@ -32,36 +32,36 @@ public class Sequences {
     return Commands.sequence(
             leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
             elevator.extendTheElevator(elevatorHeight.FAR_HIGH_CLIMB),
-            new WaitCommand(1.5))
+            new WaitCommand(0.5))
         .andThen(
             shooter
                 .holdSpeed(levelSpeed.FAR_HIGH)
                 .alongWith(
-                    new WaitCommand(1.2).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
+                    new WaitCommand(1).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
   public static Command elevatorFarHighFromAmp(Elevator elevator, Shooter shooter, LEDs leds) {
     return Commands.sequence(
             leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
             elevator.extendTheElevator(elevatorHeight.FAR_HIGH_AMP),
-            new WaitCommand(1.5))
+            new WaitCommand(0.5))
         .andThen(
             shooter
                 .holdSpeed(levelSpeed.FAR_HIGH)
                 .alongWith(
-                    new WaitCommand(1.2).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
+                    new WaitCommand(1).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
   public static Command elevatorLow(Elevator elevator, Shooter shooter, LEDs leds) {
     return Commands.sequence(
             leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
             elevator.extendTheElevator(elevatorHeight.LOW),
-            new WaitCommand(1.5))
+            new WaitCommand(0.5))
         .andThen(
             shooter
                 .holdSpeed(levelSpeed.LOW)
                 .alongWith(
-                    new WaitCommand(0.7).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
+                    new WaitCommand(1).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
   public static Command shoot(Shooter shooter, Elevator elevator, LEDs leds) {
