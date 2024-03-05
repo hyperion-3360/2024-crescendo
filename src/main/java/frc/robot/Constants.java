@@ -204,7 +204,62 @@ public final class Constants {
   }
 
   public static class TrapConstants {
-    public static final int kmotor1ID = 0;
+    public static final int kShoulderId = 9; // servo ports + limit switch
+    public static final int kElbowId = 8;
+    public static final int kservoWristId = 7;
+    public static final int kservoFingerId = 6;
+    public static final int kfingerlimitswitchId = 6;
+
+    public static final double kfingerClosed = 180.0; // angle of finger servo when closed/opened
+    public static final double kfingerOpened = 90.0;
+    // good
+    public static final double kShoulderSetZero = 0.0; // SETZERO
+    public static final double kElbowSetZero = 0.0;
+    public static final double kangleWristsetZero = 155.0; // higher number = higher
+    public static final double kangleShouldersetZeroDelayed = 5.0;
+    // good
+    public static final double kShoulderGrabPosition = 0.0;
+    public static final double kElbowGrabPosition = 0.0;
+    public static final double kangleWristgrabPosition = 110.0;
+
+    public static final double kShoulderPushNote = 0.0; // GRABPOSITION
+    public static final double kElbowPushNote = 0.0;
+    public static final double kangleWristpushNote = 100.0;
+
+    // DUNK NOTE ANGLES
+    // Shoulder moves first to its most vertical position
+    public static final double kShoulderDunkNote = 0.0;
+    // Elbow and wrist initial positions to stuck the note at an angle
+    public static final double kElbowDunkNote = 0.0;
+    public static final double kangleWristdunkNote = 50.0;
+    // Try to drop the note into the trap by pushing down and moving up the wrist a bit
+    public static final double kangleWristFinalPush = 5.0;
+    public static final double kElbowFinalPush = 0.0;
+
+    // in progress
+    public static final double kShoulderdisable1 = 0.0; // PREPARETODISABLE1
+    public static final double kElbowdisable1 = 0.0;
+    public static final double kangleWristdisable1 = 165.0;
+    // in progress
+    public static final double kShoulderdisable2 = 70.0; // PREPARETODISABLE2
+    public static final double kElbowdisable2 = 60.0;
+    public static final double kangleWristdisable2 = 0.0;
+    // good
+    public static final double kShoulderstoreNote = 0.0; // STORENOTE
+    public static final double kElbowstoreNote = 0.0;
+    public static final double kangleWriststoreNote = 155.0;
+    // sorry for all the delayed in prepare to climb but they are needed to avoid the arm from
+    // hitting everywhere and they also make it less hard for servos to get from one position to
+    // the other
+    public static final double kShoulderprepareToClimb = 0.0;
+    public static final double kShoulderprepareToClimbdelayed1 = 0.0;
+    public static final double kShoulderprepareToClimbdelayed2 = 0.0;
+    public static final double kShoulderprepareToClimbdelayed3 = 0.0; // PREPARETOCLIMB
+    public static final double kElbowprepareToClimbdelayed1 = 0.0;
+    public static final double kElbowprepareToClimbdelayed2 = 0.0;
+    public static final double kElbowprepareToClimbdelayed3 = 0.0;
+    public static final double kElbowprepareToClimb = 0.0;
+    public static final double kangleWristprepareToClimb = 155.0;
   }
 
   public static class AutoConstants {
