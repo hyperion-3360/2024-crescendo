@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.elevatorHeight;
@@ -12,7 +11,6 @@ import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.LEDs.State;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Shooter.levelSpeed;
-import frc.robot.subsystems.Trap;
 
 public class Sequences {
 
@@ -98,47 +96,47 @@ public class Sequences {
             });
   }
 
-  // sequence to feed the note to the trap and store it
-  public static Command trapShoot(Shooter m_shooter, Trap m_trap) {
-    return Commands.sequence(
-        m_trap.grabPosition(),
-        new WaitCommand(0.5),
-        m_shooter.hookRelease(),
-        m_shooter.setTargetLevel(levelSpeed.TRAP),
-        m_shooter.setSpeedWithTarget(),
-        new WaitUntilCommand(m_trap::trapHasNote),
-        m_trap.closeFinger(),
-        m_shooter.stop(),
-        new WaitCommand(0.2),
-        m_trap.storeNote());
-  }
+  // // sequence to feed the note to the trap and store it
+  // public static Command trapShoot(Shooter m_shooter, Trap m_trap) {
+  //   return Commands.sequence(
+  //       m_trap.grabPosition(),
+  //       new WaitCommand(0.5),
+  //       m_shooter.hookRelease(),
+  //       m_shooter.setTargetLevel(levelSpeed.TRAP),
+  //       m_shooter.setSpeedWithTarget(),
+  //       new WaitUntilCommand(m_trap::trapHasNote),
+  //       m_trap.closeFinger(),
+  //       m_shooter.stop(),
+  //       new WaitCommand(0.2),
+  //       m_trap.storeNote());
+  // }
 
-  // sequence to score note in trap
-  public static Command trapScore(Trap m_trap) {
-    return Commands.sequence(
-        m_trap.dunkNote(),
-        new WaitCommand(1),
-        m_trap.prepareToDisable1(),
-        new WaitCommand(0.5),
-        m_trap.pushNote(),
-        new WaitCommand(0.5),
-        m_trap.prepareToDisable1(),
-        new WaitCommand(0.2),
-        m_trap.prepareToDisable2());
-  }
+  // // sequence to score note in trap
+  // public static Command trapScore(Trap m_trap) {
+  //   return Commands.sequence(
+  //       m_trap.dunkNote(),
+  //       new WaitCommand(1),
+  //       m_trap.prepareToDisable1(),
+  //       new WaitCommand(0.5),
+  //       m_trap.pushNote(),
+  //       new WaitCommand(0.5),
+  //       m_trap.prepareToDisable1(),
+  //       new WaitCommand(0.2),
+  //       m_trap.prepareToDisable2());
+  // }
 
-  // sequence lift elevator and start wheels to climb !! wait will have to be modified !!
-  // climb with the arm
-  public static Command climbElevatorNote(Elevator elevator, Shooter shooter, Trap trap) {
-    return Commands.sequence(
-        trap.prepareToClimb(),
-        new WaitCommand(0.5),
-        elevator.extendTheElevator(elevatorHeight.HIGH),
-        new WaitCommand(1),
-        shooter.holdSpeed(levelSpeed.CLIMB),
-        new WaitCommand(5),
-        shooter.stop());
-  }
+  // // sequence lift elevator and start wheels to climb !! wait will have to be modified !!
+  // // climb with the arm
+  // public static Command climbElevatorNote(Elevator elevator, Shooter shooter, Trap trap) {
+  //   return Commands.sequence(
+  //       trap.prepareToClimb(),
+  //       new WaitCommand(0.5),
+  //       elevator.extendTheElevator(elevatorHeight.HIGH),
+  //       new WaitCommand(1),
+  //       shooter.holdSpeed(levelSpeed.CLIMB),
+  //       new WaitCommand(5),
+  //       shooter.stop());
+  // }
 
   // climb without the arm
   public static Command climbElevator(Elevator elevator, Shooter shooter) {

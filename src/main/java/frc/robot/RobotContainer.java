@@ -11,7 +11,6 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoSink;
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.util.PixelFormat;
 // import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -35,8 +34,6 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -129,7 +126,7 @@ public class RobotContainer {
 
     m_climber.setDefaultCommand(m_climber.run(() -> m_climber.setSpeed()));
     m_shooter.setDefaultCommand(m_shooter.stop());
-    m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
+    // m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
     NamedCommands.registerCommand("shootHigh", AutoCommands.autoShoot(m_elevator, m_shooter));
     NamedCommands.registerCommand("intake", m_shooter.intake().withTimeout(3));
@@ -147,12 +144,12 @@ public class RobotContainer {
   /** Configure Joystick bindings for manually controlling and debugging the Trap arm */
   public void configureTrapDebugBindings() {
 
-    // map joystick POV primary direction to each joint of the arm
-    List<Pair<Trap.Joint, Trigger>> jointMap = new ArrayList<Pair<Trap.Joint, Trigger>>();
-    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.SHOULDER, m_driverController.povUp()));
-    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.ELBOW, m_driverController.povRight()));
-    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.WRIST, m_driverController.povDown()));
-    jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.FINGER, m_driverController.povLeft()));
+    // // map joystick POV primary direction to each joint of the arm
+    // List<Pair<Trap.Joint, Trigger>> jointMap = new ArrayList<Pair<Trap.Joint, Trigger>>();
+    // jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.SHOULDER, m_driverController.povUp()));
+    // jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.ELBOW, m_driverController.povRight()));
+    // jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.WRIST, m_driverController.povDown()));
+    // jointMap.add(new Pair<Trap.Joint, Trigger>(Trap.Joint.FINGER, m_driverController.povLeft()));
 
     // spotless:off
     /**
@@ -167,16 +164,16 @@ public class RobotContainer {
      *         WRIST
      */
     // spotless:on
-    for (var joint_pair : jointMap) {
-      m_driverController
-          .x()
-          .and(joint_pair.getSecond())
-          .whileTrue(m_trap.manualControl(joint_pair.getFirst(), true));
-      m_driverController
-          .y()
-          .and(joint_pair.getSecond())
-          .whileTrue(m_trap.manualControl(joint_pair.getFirst(), false));
-    }
+    // for (var joint_pair : jointMap) {
+    //   m_driverController
+    //       .x()
+    //       .and(joint_pair.getSecond())
+    //       .whileTrue(m_trap.manualControl(joint_pair.getFirst(), true));
+    //   m_driverController
+    //       .y()
+    //       .and(joint_pair.getSecond())
+    //       .whileTrue(m_trap.manualControl(joint_pair.getFirst(), false));
+    // }
   }
 
   /**
@@ -192,11 +189,11 @@ public class RobotContainer {
 
     // configureTrapDebugBindings();
 
-    m_coDriverController.povDown().onTrue(Sequences.trapShoot(m_shooter, m_trap));
-    m_coDriverController.povUp().onTrue(Sequences.trapScore(m_trap));
-    m_coDriverController
-        .povLeft()
-        .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
+    // m_coDriverController.povDown().onTrue(Sequences.trapShoot(m_shooter, m_trap));
+    // m_coDriverController.povUp().onTrue(Sequences.trapScore(m_trap));
+    // m_coDriverController
+    //     .povLeft()
+    //     .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
     m_coDriverController.povRight().onTrue(Sequences.climbElevator(m_elevator, m_shooter));
     m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
     m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
@@ -228,8 +225,6 @@ public class RobotContainer {
         .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
 
     m_driverController.x().onTrue(changeCameraPerspective());
-
-    m_driverController.leftBumper().onTrue(m_trap.setZero());
   }
 
   public Command changeCameraPerspective() {
