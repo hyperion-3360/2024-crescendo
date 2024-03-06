@@ -5,7 +5,10 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.lib.util.TimedServo;
 import frc.robot.Constants;
 
@@ -28,6 +31,9 @@ public class Trap extends SubsystemBase {
 
   public boolean setZero = false;
 
+  private double m_shoulderSpeed = 0.0;
+  private double m_elbowSpeed = 0.0;
+
   public Trap() {
     m_shoulder.restoreFactoryDefaults();
     m_elbow.restoreFactoryDefaults();
@@ -41,6 +47,49 @@ public class Trap extends SubsystemBase {
     if (DriverStation.isDisabled()) {
       setZero = false;
     }
+
+    m_elbow.set(m_elbowSpeed);
+    m_shoulder.set(m_shoulderSpeed);
+  }
+
+  /**
+   * @param target: the desired position in positive numbers
+   * @param speed: the desired speed between 0 and 1 (the code converts the velocity in the first
+   *     runOnce())
+   * @return the movement of the motor to desired position with desired speed for the SHOULDER motor
+   */
+  public Command shoulderMoveTo(double target, double speed) {
+    return Commands.sequence(
+        this.runOnce(
+            () -> {
+              if (target > m_shoulderEncoder.getPosition()) {
+                m_shoulderSpeed = speed;
+              } else if (target < m_shoulderEncoder.getPosition()) {
+                m_shoulderSpeed -= speed;
+              } else m_shoulderSpeed = 0;
+            }),
+        new WaitUntilCommand(() -> Math.abs(m_shoulderEncoder.getPosition() - target) <= 0.015),
+        this.runOnce(() -> m_shoulderSpeed = 0));
+  }
+
+  /**
+   * @param target: the desired position in positive numbers
+   * @param speed: the desired speed between 0 and 1 (the code converts the velocity in the first
+   *     runOnce())
+   * @return the movement of the motor to desired position with desired speed for the ELBOW motor
+   */
+  public Command elbowMoveTo(double target, double speed) {
+    return Commands.sequence(
+        this.runOnce(
+            () -> {
+              if (target > m_elbowEncoder.getPosition()) {
+                m_elbowSpeed = speed;
+              } else if (target < m_elbowEncoder.getPosition()) {
+                m_elbowSpeed -= speed;
+              } else m_elbowSpeed = 0;
+            }),
+        new WaitUntilCommand(() -> Math.abs(m_elbowEncoder.getPosition() - target) <= 0.015),
+        this.runOnce(() -> m_elbowSpeed = 0));
   }
 
   // position throughout game
