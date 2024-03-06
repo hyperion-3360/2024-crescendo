@@ -1,8 +1,8 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.MutableMeasure.mutable;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -10,7 +10,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Velocity;
@@ -180,9 +180,10 @@ public class Elevator extends SubsystemBase {
   // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
   private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
   // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
-  private final MutableMeasure<Distance> m_distance = mutable(Meters.of(0));
+  private final MutableMeasure<Angle> m_angle = mutable(Rotations.of(0));
   // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
-  private final MutableMeasure<Velocity<Distance>> m_velocity = mutable(MetersPerSecond.of(0));
+  private final MutableMeasure<Velocity<Angle>> m_angular_velocity =
+      mutable(RotationsPerSecond.of(0));
 
   // Create a new SysId routine for characterizing the drive.
   private final SysIdRoutine m_sysIdRoutine =
@@ -198,27 +199,25 @@ public class Elevator extends SubsystemBase {
               // Tell SysId how to record a frame of data for each motor on the mechanism being
               // characterized.
               log -> {
-                // Record a frame for the left motors.  Since these share an encoder, we consider
-                // the entire group to be one motor.
                 log.motor("elevator-left")
                     .voltage(
                         m_appliedVoltage.mut_replace(
                             m_elevatorLeftMaster.getAppliedOutput()
                                 * m_elevatorLeftMaster.getBusVoltage(),
                             Volts))
-                    .linearPosition(m_distance.mut_replace(m_encoder.getPosition(), Meters))
-                    .linearVelocity(
-                        m_velocity.mut_replace(m_encoder.getVelocity(), MetersPerSecond));
-                // Record a frame for the right motors.  Since these share an encoder, we consider
-                // the entire group to be one motor.
+                    .angularPosition(m_angle.mut_replace(m_encoder.getPosition(), Rotations))
+                    .angularVelocity(
+                        m_angular_velocity.mut_replace(
+                            m_encoder.getVelocity() / 60.0, RotationsPerSecond));
                 log.motor("elevator-right")
                     .voltage(
                         m_appliedVoltage.mut_replace(
                             m_elevatorRight.getAppliedOutput() * m_elevatorRight.getBusVoltage(),
                             Volts))
-                    .linearPosition(m_distance.mut_replace(m_rightEncoder.getPosition(), Meters))
-                    .linearVelocity(
-                        m_velocity.mut_replace(m_rightEncoder.getVelocity(), MetersPerSecond));
+                    .angularPosition(m_angle.mut_replace(m_rightEncoder.getPosition(), Rotations))
+                    .angularVelocity(
+                        m_angular_velocity.mut_replace(
+                            m_rightEncoder.getVelocity() / 60.0, RotationsPerSecond));
               },
               // Tell SysId to make generated commands require this subsystem, suffix test state in
               // WPILog with this subsystem's name
