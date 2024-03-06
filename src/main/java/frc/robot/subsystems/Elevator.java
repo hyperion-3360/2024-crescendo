@@ -1,15 +1,26 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.MutableMeasure.mutable;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
 
@@ -37,6 +48,7 @@ public class Elevator extends SubsystemBase {
       new CANSparkMax(Constants.SubsystemConstants.kelevatorLeftId, MotorType.kBrushless);
 
   private RelativeEncoder m_encoder = m_elevatorLeftMaster.getEncoder();
+  private RelativeEncoder m_rightEncoder = m_elevatorRight.getEncoder();
 
   // creating a target
   private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
@@ -49,6 +61,8 @@ public class Elevator extends SubsystemBase {
   private String height = "no data";
 
   private PIDController m_pid = new PIDController(kP, kI, kD);
+
+  private boolean m_sysIdEnable = true;
 
   // creating an elevator
   public Elevator() {
@@ -63,32 +77,46 @@ public class Elevator extends SubsystemBase {
     m_elevatorLeftMaster.setIdleMode(IdleMode.kBrake);
     m_elevatorRight.setIdleMode(IdleMode.kBrake);
 
-    m_elevatorLeftMaster.setOpenLoopRampRate(0.5);
-    m_elevatorRight.setOpenLoopRampRate(0.5);
+    if (m_sysIdEnable) {
+      /* need to find these conversion factors */
+      m_encoder.setPositionConversionFactor(0);
+      m_encoder.setVelocityConversionFactor(0);
+      m_rightEncoder.setPositionConversionFactor(0);
+      m_rightEncoder.setVelocityConversionFactor(0);
+    } else {
+      m_elevatorLeftMaster.setOpenLoopRampRate(0.5);
+      m_elevatorRight.setOpenLoopRampRate(0.5);
+    }
 
     m_encoder.setPosition(0.0);
+    m_rightEncoder.setPosition(0.0);
+
+    m_elevatorLeftMaster.burnFlash();
+    m_elevatorRight.burnFlash();
   }
 
   @Override
   public void periodic() {
 
-    // calculate speed with pid
-    m_elevatorLeftMaster.set(m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
+    if (!m_sysIdEnable) {
+      // calculate speed with pid
+      m_elevatorLeftMaster.set(m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
 
-    // if the elevator touches the limit switch at the bottom of the rail set position to 0.0
-    if (!bottomlimitSwitch.get()) {
-      m_encoder.setPosition(0.0);
-      m_pid.reset();
-    }
+      // if the elevator touches the limit switch at the bottom of the rail set position to 0.0
+      if (!bottomlimitSwitch.get()) {
+        m_encoder.setPosition(0.0);
+        m_pid.reset();
+      }
 
-    if (DriverStation.isDisabled()) {
-      extendTheElevator(elevatorHeight.HIGH).cancel();
-      extendTheElevator(elevatorHeight.LOW).cancel();
-      extendTheElevator(elevatorHeight.INTAKE).cancel();
-      m_pid.reset();
-      m_elevatorTarget = 0.0;
+      if (DriverStation.isDisabled()) {
+        extendTheElevator(elevatorHeight.HIGH).cancel();
+        extendTheElevator(elevatorHeight.LOW).cancel();
+        extendTheElevator(elevatorHeight.INTAKE).cancel();
+        m_pid.reset();
+        m_elevatorTarget = 0.0;
+      }
+      SmartDashboard.putString("Elevator Target", height);
     }
-    SmartDashboard.putString("Elevator Target", height);
   }
 
   // switch case statement for configuring elevator height
@@ -139,6 +167,16 @@ public class Elevator extends SubsystemBase {
     return m_encoder.getPosition() >= this.m_elevatorTarget;
   }
 
+  /**
+   * Extend the elevator to a precise angle
+   *
+   * @param angle angle to set the elevator in radians
+   */
+  public void extendTheElevator(double angle) {
+    // TODO need to perform angle radians to absolute position conversion
+    this.m_elevatorTarget = 0.0;
+  }
+
   // extends the elevator to set target
   public Command extendTheElevator(elevatorHeight m_elevatorLevel) {
     return this.runOnce(() -> setElevator(m_elevatorLevel));
@@ -147,5 +185,59 @@ public class Elevator extends SubsystemBase {
   // returns current position (not used in anything YET)
   public double getCurrentPosition() {
     return m_encoder.getPosition();
+  }
+
+  // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
+  private final MutableMeasure<Voltage> m_appliedVoltage = mutable(Volts.of(0));
+  // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
+  private final MutableMeasure<Angle> m_angle = mutable(Rotations.of(0));
+  // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
+  private final MutableMeasure<Velocity<Angle>> m_angular_velocity =
+      mutable(RotationsPerSecond.of(0));
+
+  // Create a new SysId routine for characterizing the drive.
+  private final SysIdRoutine m_sysIdRoutine =
+      new SysIdRoutine(
+          // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
+          new SysIdRoutine.Config(null, null, null, null),
+          new SysIdRoutine.Mechanism(
+              // Tell SysId how to plumb the driving voltage to the motors.
+              (Measure<Voltage> volts) -> {
+                m_elevatorRight.setVoltage(volts.in(Volts));
+                m_elevatorLeftMaster.setVoltage(volts.in(Volts));
+              },
+              // Tell SysId how to record a frame of data for each motor on the mechanism being
+              // characterized.
+              log -> {
+                log.motor("elevator-left")
+                    .voltage(
+                        m_appliedVoltage.mut_replace(
+                            m_elevatorLeftMaster.getAppliedOutput()
+                                * m_elevatorLeftMaster.getBusVoltage(),
+                            Volts))
+                    .angularPosition(m_angle.mut_replace(m_encoder.getPosition(), Rotations))
+                    .angularVelocity(
+                        m_angular_velocity.mut_replace(
+                            m_encoder.getVelocity() / 60.0, RotationsPerSecond));
+                log.motor("elevator-right")
+                    .voltage(
+                        m_appliedVoltage.mut_replace(
+                            m_elevatorRight.getAppliedOutput() * m_elevatorRight.getBusVoltage(),
+                            Volts))
+                    .angularPosition(m_angle.mut_replace(m_rightEncoder.getPosition(), Rotations))
+                    .angularVelocity(
+                        m_angular_velocity.mut_replace(
+                            m_rightEncoder.getVelocity() / 60.0, RotationsPerSecond));
+              },
+              // Tell SysId to make generated commands require this subsystem, suffix test state in
+              // WPILog with this subsystem's name
+              this));
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.quasistatic(direction);
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.dynamic(direction);
   }
 }
