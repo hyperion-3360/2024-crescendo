@@ -167,6 +167,16 @@ public class Elevator extends SubsystemBase {
     return m_encoder.getPosition() >= this.m_elevatorTarget;
   }
 
+  /**
+   * Extend the elevator to a precise angle
+   *
+   * @param angle angle to set the elevator in radians
+   */
+  public void extendTheElevator(double angle) {
+    // TODO need to perform angle radians to absolute position conversion
+    this.m_elevatorTarget = 0.0;
+  }
+
   // extends the elevator to set target
   public Command extendTheElevator(elevatorHeight m_elevatorLevel) {
     return this.runOnce(() -> setElevator(m_elevatorLevel));

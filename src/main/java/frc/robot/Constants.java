@@ -187,6 +187,8 @@ public final class Constants {
     public static final int kShooterOutputIR = 5;
     public static final int kservoBlockerId = 5;
     public static final int kservoGearBlockerId = 4;
+    public static double kMaxShootingDistance =
+        4.0; // max shooting distance in meters allowed in AimLock
   }
 
   public static class ElevatorConstants {

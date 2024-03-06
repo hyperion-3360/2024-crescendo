@@ -46,3 +46,23 @@ ID: 16 X: 182.73, Y: 146.19, Z: 52.00, ROTATION:240°
 4NotesFarShot could replace previous, to test
 
 center field autos need modifs so that far shot is possible
+
+# Shooting in motion 
+The whole idea behind this feature is to give the pilot the ability to keep the aim using odometry and Apriltag detection while moving the robot to avoid obstacles.
+
+## Behavior description
+Once engaged by the pilot, and until explicitely released, the code will take the control or Pose of the robot wrt the target and the elevator angle will be modified to maintain an optimal shooting position. It is assumed the shooting speed will remain constant.  The LED subsystem will indicate the readiness of the system to shoot the note. The aim lock mechanism will remain in function even when the distance between the robot and the target is greater than what can be reached by the shooter. In the latter case, the LED subsystem will notify the pilot (alongside with a shoot ready display in shuffleboard) of that status.
+
+The aim locking mechanism will be engaged by the pilot controller right trigger and will remain in action as long as the trigger is pressed.
+
+The LED subsystem will indicate optimal shooting condition using steady BLUE illumination and the copilot controller will vibrate
+
+The LED subsystem will indicate an unreachable target (or not able to lock) using the FAST FLASH WHITE and the copilot controller will stop vibrate (assuming it was aim lock before)
+
+## Automatic target selection
+The AprilTag detection system will be used to automatically select the target to lock on. The alliance will also be considered to make sure we score in the appropriate module! In the unlikely even the vision system detects AprilTag of both the Amplifier and the Speaker, the priority will be given to the Speaker. Once locked on a target will remain valid until another target is visible by the vision system or until the system is disengaged.
+
+## Expectations wrt odometry precsion
+This aim lock command is using odometry to determine the distance between the robot and the target and calculate the angle of the elevator. It is also using the Pose2D to determine the angle between the robot and the target. Given the implicitely imprecise nature of odometry using a gyroscope, it is expected machine vision with AprilTag detection will vastly improve odometry accuracy.
+
+As long as an Apriltag is maintained in the camera field of view the odometry is corrected in real time providing the best possible angle and position accuracy. However as soon as the Apriltag is not detected, the regular (gyro based) odometry is used transparently by the aim locking command.
