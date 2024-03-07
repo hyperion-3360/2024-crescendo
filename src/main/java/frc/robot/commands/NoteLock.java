@@ -53,6 +53,11 @@ public class NoteLock extends Command {
 
   @Override
   public void execute() {
+    // TODO add a way to resolve the issue when two notes share the jetson space
+    // if (jetsonHasMoreThanOneNotes()) {
+
+    // }
+
     m_target = new Translation2d(getNoteXpos(), getNoteYpos());
 
     double translationVal =
