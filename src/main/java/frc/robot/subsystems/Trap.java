@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkLimitSwitch;
+import com.revrobotics.SparkRelativeEncoder.Type;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,13 +16,11 @@ import frc.robot.Constants;
 
 public class Trap extends SubsystemBase {
 
-  private CANSparkMax m_shoulder =
-      new CANSparkMax(Constants.TrapConstants.kShoulderId, MotorType.kBrushed);
-  private CANSparkMax m_elbow =
-      new CANSparkMax(Constants.TrapConstants.kElbowId, MotorType.kBrushed);
-  private RelativeEncoder m_shoulderEncoder = m_shoulder.getEncoder();
-  private RelativeEncoder m_elbowEncoder = m_elbow.getEncoder();
-
+  private final CANSparkMax m_shoulder = new CANSparkMax(15, MotorType.kBrushed);
+  private final RelativeEncoder m_shoulderEncoder =
+      m_shoulder.getEncoder(Type.kQuadrature, 2048 * 4);
+  private final SparkLimitSwitch limitSwitch =
+      m_shoulder.getReverseLimitSwitch(com.revrobotics.SparkLimitSwitch.Type.kNormallyOpen);
   private TimedServo m_servoWrist =
       new TimedServo(
           Constants.TrapConstants.kservoWristId, 260, Constants.TrapConstants.kangleWristsetZero);
@@ -29,35 +29,26 @@ public class Trap extends SubsystemBase {
           Constants.TrapConstants.kservoFingerId, 260, Constants.TrapConstants.kfingerOpened);
   DigitalInput m_limitSwitch = new DigitalInput(Constants.TrapConstants.kfingerlimitswitchId);
 
-  public boolean setZero = false;
-
+  private double target;
   private double m_shoulderSpeed = 0.0;
-  private double m_elbowSpeed = 0.0;
+  public boolean hasSetZero = false;
 
   public Trap() {
-    m_shoulder.restoreFactoryDefaults();
-    m_elbow.restoreFactoryDefaults();
+    m_shoulder.setInverted(true);
   }
 
   @Override
   public void periodic() {
-    System.out.println(m_shoulderEncoder.getPosition());
-    System.out.println(m_elbowEncoder.getPosition());
-
-    if (DriverStation.isDisabled()) {
-      setZero = false;
-    }
-
-    m_elbow.set(m_elbowSpeed);
     m_shoulder.set(m_shoulderSpeed);
+    if (DriverStation.isDisabled()) {
+      hasSetZero = false;
+    }
+    if (limitSwitch.isPressed()) {
+      m_shoulderEncoder.setPosition(0.0);
+    }
+    System.out.println(m_shoulderEncoder.getPosition() + " " + target + " " + m_shoulderSpeed);
   }
 
-  /**
-   * @param target: the desired position in positive numbers
-   * @param speed: the desired speed between 0 and 1 (the code converts the velocity in the first
-   *     runOnce())
-   * @return the movement of the motor to desired position with desired speed for the SHOULDER motor
-   */
   public Command shoulderMoveTo(double target, double speed) {
     return Commands.sequence(
         this.runOnce(
@@ -72,24 +63,12 @@ public class Trap extends SubsystemBase {
         this.runOnce(() -> m_shoulderSpeed = 0));
   }
 
-  /**
-   * @param target: the desired position in positive numbers
-   * @param speed: the desired speed between 0 and 1 (the code converts the velocity in the first
-   *     runOnce())
-   * @return the movement of the motor to desired position with desired speed for the ELBOW motor
-   */
-  public Command elbowMoveTo(double target, double speed) {
+  public Command setZero() {
     return Commands.sequence(
-        this.runOnce(
-            () -> {
-              if (target > m_elbowEncoder.getPosition()) {
-                m_elbowSpeed = speed;
-              } else if (target < m_elbowEncoder.getPosition()) {
-                m_elbowSpeed -= speed;
-              } else m_elbowSpeed = 0;
-            }),
-        new WaitUntilCommand(() -> Math.abs(m_elbowEncoder.getPosition() - target) <= 0.015),
-        this.runOnce(() -> m_elbowSpeed = 0));
+        this.runOnce(() -> m_shoulderSpeed = -0.3),
+        new WaitUntilCommand(() -> limitSwitch.isPressed()),
+        this.runOnce(() -> m_shoulderSpeed = 0),
+        this.runOnce(() -> hasSetZero = true));
   }
 
   // position throughout game
@@ -241,6 +220,19 @@ public class Trap extends SubsystemBase {
   //         m_jointArray[j.ordinal()].setAngle(lambda_angle);
   //       });
   // }
+  /**
+   * @param target: the desired position in positive numbers
+   * @param speed: the desired speed between 0 and 1 (the code converts the velocity in the first
+   *     runOnce())
+   * @return the movement of the motor to desired position with desired speed for the SHOULDER motor
+   */
+
+  /**
+   * @param target: the desired position in positive numbers
+   * @param speed: the desired speed between 0 and 1 (the code converts the velocity in the first
+   *     runOnce())
+   * @return the movement of the motor to desired position with desired speed for the ELBOW motor
+   */
 
   // used in trap shoot sequence to detect note in the arm
   public boolean trapHasNote() {
