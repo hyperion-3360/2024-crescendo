@@ -196,6 +196,10 @@ public class Shooter extends SubsystemBase {
     return this.runOnce(() -> m_targetLevel = level);
   }
 
+  public boolean reachedMaxSpeed() {
+    return m_speed == m_leftMaster.get();
+  }
+
   // set the speed according to the target
   public Command setSpeedWithTarget() {
     return this.runOnce(() -> this.setSpeedFor(m_targetLevel));
