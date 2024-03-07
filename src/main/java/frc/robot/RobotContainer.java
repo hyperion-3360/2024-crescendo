@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoCommands;
 import frc.robot.commands.Autos;
+import frc.robot.commands.NoteLock;
 import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
@@ -52,6 +53,8 @@ public class RobotContainer {
   public static final Elevator m_elevator = new Elevator();
   private static final Shooter m_shooter = new Shooter();
   private static final LEDs m_led = LEDs.getInstance();
+  // TODO add the right parameter values
+  private static final NoteLock m_noteLock = new NoteLock(null, null, null);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -210,7 +213,7 @@ public class RobotContainer {
 
     m_driverController
         .a()
-        .toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led, m_driverController));
+        .toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led, m_driverController, m_noteLock));
     m_driverController
         .start()
         .and(m_driverController.back())

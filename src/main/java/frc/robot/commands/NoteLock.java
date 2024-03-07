@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -10,6 +8,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.swerve.Swerve;
+import java.util.function.DoubleSupplier;
 
 public class NoteLock extends Command {
   private Swerve m_swerve;
@@ -18,7 +17,7 @@ public class NoteLock extends Command {
   private boolean m_lockedOnNote;
   private Translation2d m_target;
 
-   private DoubleArraySubscriber m_detection =
+  private DoubleArraySubscriber m_detection =
       NetworkTableInstance.getDefault()
           .getTable("SmartDashboard")
           .getDoubleArrayTopic("detection")
@@ -29,7 +28,8 @@ public class NoteLock extends Command {
     this.m_translationSup = translationSup;
     this.m_strafeSup = strafeSup;
   }
-// TODO change the x position
+
+  // TODO change the x position
   public double getNoteYpos() {
     final var pos = m_detection.get();
     double xPos = 0;
@@ -39,7 +39,8 @@ public class NoteLock extends Command {
     }
     return xPos;
   }
-// TODO change the y position
+
+  // TODO change the y position
   public double getNoteXpos() {
     final var pos = m_detection.get();
     double yPos = 0;
@@ -52,9 +53,13 @@ public class NoteLock extends Command {
 
   @Override
   public void execute() {
+    m_target = new Translation2d(getNoteXpos(), getNoteYpos());
+
     double translationVal =
         MathUtil.applyDeadband(m_translationSup.getAsDouble(), Constants.stickDeadband);
-    double strafeVal = MathUtil.applyDeadband(m_strafeSup.getAsDouble(), Constants.stickDeadband) * (getNoteXpos() + getNoteYpos());
+    double strafeVal =
+        MathUtil.applyDeadband(m_strafeSup.getAsDouble(), Constants.stickDeadband)
+            * (getNoteXpos() + getNoteYpos());
 
     double rotationVal = m_swerve.getRotation2d().getRadians();
 
@@ -63,10 +68,6 @@ public class NoteLock extends Command {
       Translation2d pointToFace = m_target;
       Rotation2d rotationNeeded = pointToFace.minus(m_swerve.getPose().getTranslation()).getAngle();
       rotationVal = rotationNeeded.getRadians();
-    }
-    // look at possible target from vision
-    else {
-
     }
 
     /* Drive */
@@ -77,4 +78,3 @@ public class NoteLock extends Command {
         true);
   }
 }
-

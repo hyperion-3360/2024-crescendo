@@ -84,9 +84,10 @@ public class Sequences {
 
   // intake sequence to set leds to the right state
   public static Command intakeSequence(
-      Shooter shooter, LEDs leds, CommandXboxController controller) {
+      Shooter shooter, LEDs leds, CommandXboxController controller, NoteLock lock) {
     return Commands.sequence(
             Commands.runOnce(() -> leds.setState(State.INTAKE_ROLLING)),
+            Commands.runOnce(() -> lock.execute()),
             intakeRumbleOn(controller, shooter).alongWith(shooter.intake()),
             leds.runOnce(() -> leds.setState(State.NOTE_INSIDE))
                 .andThen(new WaitCommand(2).andThen(() -> leds.setState(State.IDLE))))
