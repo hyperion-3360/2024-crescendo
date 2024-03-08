@@ -33,6 +33,7 @@ import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.LEDs.State;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Trap;
+import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -45,16 +46,17 @@ import frc.robot.subsystems.swerve.Swerve;
 public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
-
-  private final Swerve m_swerveDrive = new Swerve();
+  // TODO check if there's a reason of why the m_swerveDrive is static
+  private static final Swerve m_swerveDrive = new Swerve();
   private final Trap m_trap = new Trap();
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
   private final Climber m_climber = new Climber();
   public static final Elevator m_elevator = new Elevator();
   private static final Shooter m_shooter = new Shooter();
   private static final LEDs m_led = LEDs.getInstance();
+  private static final Vision m_vision = new Vision();
   // TODO add the right parameter values
-  private static final NoteLock m_noteLock = new NoteLock(null, null, null, null);
+  private static final NoteLock m_noteLock = new NoteLock(m_swerveDrive, m_vision, null, null);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =

@@ -30,18 +30,16 @@ public class NoteLock extends Command {
 
   @Override
   public void execute() {
+    // gives general robot positions and translation/strafe values
     var robotPosition = m_swerve.getPose().getTranslation();
     double translationVal =
         MathUtil.applyDeadband(m_translationSup.getAsDouble(), Constants.stickDeadband);
-    double strafeVal =
-        MathUtil.applyDeadband(m_strafeSup.getAsDouble(), Constants.stickDeadband)
-            * (m_vision.getNoteXpos() + m_vision.getNoteYpos());
+    double strafeVal = MathUtil.applyDeadband(m_strafeSup.getAsDouble(), Constants.stickDeadband);
+    double rotationVal = m_swerve.getRotation2d().getRadians();
 
     if (m_lockedOnNote) {
-      m_target = new Translation2d(m_vision.getNoteXpos(), m_vision.getNoteYpos());
 
-      double rotationVal = m_swerve.getRotation2d().getRadians();
-
+      // compute variables to feed the drive function of the swerves
       Translation2d pointToFace = m_target;
       Rotation2d rotationNeeded = pointToFace.minus(m_swerve.getPose().getTranslation()).getAngle();
       rotationVal = rotationNeeded.getRadians();
