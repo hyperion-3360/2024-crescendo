@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.lib.util.TimedServo;
 import frc.robot.Constants;
@@ -33,6 +34,7 @@ public class Trap extends SubsystemBase {
 
   private double m_shoulderSpeed = 0.0;
   private double m_elbowSpeed = 0.0;
+  private double m_desiredSpeed = 0.3;
 
   public Trap() {
     m_shoulder.restoreFactoryDefaults();
@@ -94,32 +96,25 @@ public class Trap extends SubsystemBase {
 
   // position throughout game
   // TODO this has to be modified accordingly to the new motors mostly with time stuff
-  // public Command setZero() {
-  //   return this.runOnce(() -> m_servoWrist.setZero())
-  //       .andThen(new WaitCommand(m_servoWrist.travelTime()))
-  //       .andThen(() -> m_elbow.setZero())
-  //       .andThen(new WaitCommand(m_servoElbow.travelTime()))
-  //       .andThen(
-  //           () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldersetZeroDelayed))
-  //       .andThen(new WaitCommand(0.2))
-  //       .andThen(() -> m_servoShoulder.setZero())
-  //       .andThen(new WaitCommand(m_servoShoulder.travelTime()))
-  //       .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened))
-  //       .andThen(new WaitCommand(m_servoFinger.travelTime()).andThen(() -> setZero = true));
-  // }
+  public Command setZero() {
+    return this.runOnce(() -> shoulderMoveTo(0.0, m_desiredSpeed))
+        .andThen(() -> elbowMoveTo(0.0, m_desiredSpeed))
+        .andThen(() -> m_servoWrist.setZero())
+        .andThen(new WaitCommand(m_servoWrist.travelTime()))
+        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerOpened))
+        .andThen(new WaitCommand(m_servoFinger.travelTime()).andThen(() -> setZero = true));
+  }
 
   // TODO this also has to be modified
   // position to store the note in the robot so robot can still pass under chain
-  // public Command storeNote() {
-  //   return this.runOnce(
-  //           () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderstoreNote))
-  //       .andThen(new WaitCommand(0.1))
-  //       .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowstoreNote))
-  //       .andThen(new WaitCommand(m_servoElbow.travelTime()))
-  //       .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWriststoreNote))
-  //       .andThen(new WaitCommand(m_servoWrist.travelTime()))
-  //       .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));
-  // }
+  public Command storeNote() {
+    return this.runOnce(
+            () -> shoulderMoveTo(Constants.TrapConstants.kShoulderStoreNote, m_desiredSpeed))
+        .andThen(() -> elbowMoveTo(Constants.TrapConstants.kElbowStoreNote, m_desiredSpeed))
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristStoreNote))
+        .andThen(new WaitCommand(m_servoWrist.travelTime()))
+        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerClosed));
+  }
 
   // // position to grab note from intake.
   // public Command grabPosition() {
