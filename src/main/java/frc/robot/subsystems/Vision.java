@@ -47,11 +47,11 @@ public class Vision extends SubsystemBase {
           .getIntegerArrayTopic("note")
           .subscribe(new long[] {});
 
-  private DoubleArraySubscriber m_detection =
-      NetworkTableInstance.getDefault()
-          .getTable("SmartDashboard")
-          .getDoubleArrayTopic("detection")
-          .subscribe(new double[] {});
+  // private DoubleArraySubscriber m_detection =
+  //     NetworkTableInstance.getDefault()
+  //         .getTable("SmartDashboard")
+  //         .getDoubleArrayTopic("detection")
+  //         .subscribe(new double[] {});
 
   private VisionMeasurement m_currentPos;
   private long[] m_visibleTags;
@@ -108,7 +108,25 @@ public class Vision extends SubsystemBase {
     return m_visibleNotes;
   }
 
-  public boolean moreThanTwoNotes() {
-    return m_visibleNotes[2] != 0;
+  // TODO change the x position
+  public double getNoteYpos() {
+    final var pos = getVisibleNotes();
+    double xPos = 0;
+    if (pos.length == 4) {
+      xPos = pos[2];
+      xPos = 0.0023 * xPos - 0.6187;
+    }
+    return xPos;
+  }
+
+  // TODO change the y position
+  public double getNoteXpos() {
+    final var pos = getVisibleNotes();
+    double yPos = 0;
+    if (pos.length == 4) {
+      yPos = pos[3];
+      yPos = -0.0058 * yPos + 2.782;
+    }
+    return yPos;
   }
 }

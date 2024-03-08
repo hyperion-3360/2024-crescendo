@@ -7,15 +7,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.swerve.Swerve;
+import java.util.ArrayList;
 import java.util.function.DoubleSupplier;
 
 public class NoteLock extends Command {
+
   private Swerve m_swerve;
   private DoubleSupplier m_translationSup;
   private DoubleSupplier m_strafeSup;
   private boolean m_lockedOnNote;
   private Translation2d m_target;
   private Vision m_vision;
+  private ArrayList<Translation2d> everynote = new ArrayList<>();
 
   public NoteLock(
       Swerve s_swerve, Vision s_vision, DoubleSupplier translationSup, DoubleSupplier strafeSup) {
@@ -25,57 +28,58 @@ public class NoteLock extends Command {
     this.m_strafeSup = strafeSup;
   }
 
-  // TODO change the x position
-  public double getNoteYpos() {
-    final var pos = m_vision.getVisibleNotes();
-    double xPos = 0;
-    if (pos.length == 4) {
-      xPos = pos[2];
-      xPos = 0.0023 * xPos - 0.6187;
-    }
-    return xPos;
-  }
-
-  // TODO change the y position
-  public double getNoteXpos() {
-    final var pos = m_vision.getVisibleNotes();
-    double yPos = 0;
-    if (pos.length == 4) {
-      yPos = pos[3];
-      yPos = -0.0058 * yPos + 2.782;
-    }
-    return yPos;
-  }
-
   @Override
   public void execute() {
-    // TODO add a way to resolve the issue when two notes share the jetson camera space
-    // // if (m_vision.moreThanTwoNotes()) {
-
-    // }
-
-    m_target = new Translation2d(getNoteXpos(), getNoteYpos());
-
+    var robotPosition = m_swerve.getPose().getTranslation();
     double translationVal =
         MathUtil.applyDeadband(m_translationSup.getAsDouble(), Constants.stickDeadband);
     double strafeVal =
         MathUtil.applyDeadband(m_strafeSup.getAsDouble(), Constants.stickDeadband)
-            * (getNoteXpos() + getNoteYpos());
-
-    double rotationVal = m_swerve.getRotation2d().getRadians();
+            * (m_vision.getNoteXpos() + m_vision.getNoteYpos());
 
     if (m_lockedOnNote) {
-      // compute rotation to apply to face the target
+      m_target = new Translation2d(m_vision.getNoteXpos(), m_vision.getNoteYpos());
+
+      double rotationVal = m_swerve.getRotation2d().getRadians();
+
       Translation2d pointToFace = m_target;
       Rotation2d rotationNeeded = pointToFace.minus(m_swerve.getPose().getTranslation()).getAngle();
       rotationVal = rotationNeeded.getRadians();
-    }
 
-    /* Drive */
-    m_swerve.drive(
-        new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
-        rotationVal * Constants.Swerve.maxAngularVelocity,
-        false,
-        true);
+      /* Drive */
+      m_swerve.drive(
+          new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
+          rotationVal * Constants.Swerve.maxAngularVelocity,
+          false,
+          true);
+    } else {
+      // checks if the detected note is stale
+      if (m_vision.isValidPos()) {
+        var note = m_vision.getVisibleNotes();
+        var selectedNote = new Translation2d();
+
+        if (note.length == 1) {
+          m_lockedOnNote = true;
+        }
+        // if there's more than one note find the closest one
+        else {
+          // clears every note from the arraylist upon init
+          everynote.clear();
+          // instead of a forEach I used a forI to have id info
+          for (int i = 0; i < note.length; i++) {
+            // adds every translation 2d of every index
+            everynote.add(i, new Translation2d(m_vision.getNoteXpos(), m_vision.getNoteYpos()));
+            var nearestNote = robotPosition.nearest(everynote);
+            selectedNote = nearestNote; // select the nearest note
+          }
+        }
+        var selectedTarget = new Translation2d(m_vision.getNoteXpos(), m_vision.getNoteYpos());
+
+        if (selectedTarget != null) {
+          var newTarget = selectedNote;
+          m_target = new Translation2d(newTarget.getX(), newTarget.getY());
+        }
+      }
+    }
   }
 }

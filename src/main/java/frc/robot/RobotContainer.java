@@ -54,7 +54,7 @@ public class RobotContainer {
   private static final Shooter m_shooter = new Shooter();
   private static final LEDs m_led = LEDs.getInstance();
   // TODO add the right parameter values
-  private static final NoteLock m_noteLock = new NoteLock(null, null, null);
+  private static final NoteLock m_noteLock = new NoteLock(null, null, null, null);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
