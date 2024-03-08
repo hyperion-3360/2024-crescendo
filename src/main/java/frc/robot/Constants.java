@@ -275,4 +275,6 @@ public final class Constants {
                     + (Swerve.wheelBase / 2.0 * Swerve.wheelBase / 2.0)),
             new ReplanningConfig());
   }
+
+  public static long kVisionPositionCoalescingTime = 100 * 1000; // 100 ms in microseconds
 }
