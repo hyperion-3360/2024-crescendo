@@ -16,7 +16,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import java.io.IOException;
 import java.util.function.DoubleSupplier;
 
-public class SpeakerLock extends Command {
+public class AmpLock extends Command {
   private Swerve m_swerve;
   private Elevator m_elevator;
   private DoubleSupplier m_translationSup;
@@ -31,7 +31,7 @@ public class SpeakerLock extends Command {
   private int m_alliance_index;
 
   /**
-   * Command to keep the aiming at the speaker while keeping the robot in motion
+   * Command to drive the robot towards the AMP automatically
    *
    * @param s_swerve swerve submodule instance
    * @param s_elevator elevator submodule instance
@@ -40,7 +40,7 @@ public class SpeakerLock extends Command {
    * @param translationSup translation forward or backward
    * @param strafeSup moving laterally
    */
-  public SpeakerLock(
+  public AmpLock(
       Swerve s_swerve,
       Elevator s_elevator,
       LEDs s_led,
@@ -53,7 +53,6 @@ public class SpeakerLock extends Command {
     this.m_led = s_led;
     this.m_vision = s_vision;
 
-    // load the list of april tags from the field
     try {
       m_aprilTagFieldLayout =
           AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
@@ -61,10 +60,9 @@ public class SpeakerLock extends Command {
       m_aprilTagFieldLayout = null;
     }
 
-    // only allocate enough space for both speakers (1 per alliance side)
     m_aprilTags = new Translation2d[Constants.VisionConstants.kSpeakerIndex.length];
 
-    // convert translation3d to translation2d for speakers position
+    // initialize translation2d objects for each AprilTag on the field
     int i = 0;
     for (var tagId : Constants.VisionConstants.kSpeakerIndex) {
       var tagPose = m_aprilTagFieldLayout.getTagPose(tagId).get();
@@ -73,7 +71,7 @@ public class SpeakerLock extends Command {
       i++;
     }
 
-    // find out the current alliance with fail safe
+    // fail safe
     m_alliance_index = 0;
     var alliance = DriverStation.getAlliance();
     if (alliance.isPresent()) m_alliance_index = alliance.get() == Alliance.Red ? 0 : 1;
@@ -90,7 +88,6 @@ public class SpeakerLock extends Command {
 
   @Override
   public void initialize() {
-    // good idea to unlock when the command is first scheduled! :)
     m_isLocked = false;
   }
 
@@ -98,7 +95,6 @@ public class SpeakerLock extends Command {
   public void execute() {
     double translationVal =
         MathUtil.applyDeadband(m_translationSup.getAsDouble(), Constants.stickDeadband);
-
     double strafeVal = MathUtil.applyDeadband(m_strafeSup.getAsDouble(), Constants.stickDeadband);
 
     double rotationVal = m_swerve.getRotation2d().getRadians();
@@ -129,7 +125,6 @@ public class SpeakerLock extends Command {
             break;
           }
 
-        // still possible that the visible ids are not the ones we're interested in
         if (selecteg_tag != -1) {
           m_target = m_aprilTags[selecteg_tag];
           m_isLocked = true;

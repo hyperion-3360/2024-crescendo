@@ -72,11 +72,14 @@ public class Vision extends SubsystemBase {
           RobotController.getFPGATime() + Constants.VisionConstants.kPositionCoalescingTime;
       measurement.m_pose = new Pose2d(new Translation2d(position[0], position[1]), robotRotation);
       m_visibleTags = m_tagsDetected.get();
-    } else { // the detection is not going to be meaningfull forever... the coalescing time added at
-      // detection is checked here and the entire measurement is invalidated if too old
-      if ((m_currentPos.m_bestBefore != -1)
-          && (m_currentPos.m_bestBefore > RobotController.getFPGATime()))
-        m_currentPos.m_bestBefore = -1;
+    } else if ((m_currentPos.m_bestBefore != -1)
+        && (m_currentPos.m_bestBefore > RobotController.getFPGATime())) {
+      // the detection is not going to be meaningfull forever... the coalescing time
+      // added at
+      // detection is checked here and the entire measurement is invalidated if too
+      // old
+      m_currentPos.m_bestBefore = -1;
+      m_visibleTags = null;
     }
   }
 
