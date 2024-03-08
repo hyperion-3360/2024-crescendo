@@ -268,5 +268,10 @@ public final class Constants {
             new ReplanningConfig());
   }
 
-  public static long kVisionPositionCoalescingTime = 100 * 1000; // 100 ms in microseconds
+  public static class VisionConstants {
+    public static long kPositionCoalescingTime = 100 * 1000; // 100 ms in microseconds
+    public static int kRedSpeakerTag = 4;
+    public static int kBlueSpeakerTag = 7;
+    public static int kSpeakerIndex[] = {kRedSpeakerTag, kBlueSpeakerTag};
+  }
 }
