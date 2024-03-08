@@ -59,6 +59,7 @@ public class Vision extends SubsystemBase {
 
   /** Creates a new Vision. */
   public Vision() {
+    m_currentPos = new VisionMeasurement();
     m_currentPos.m_bestBefore = -1;
   }
 
@@ -75,7 +76,7 @@ public class Vision extends SubsystemBase {
       var measurement = new VisionMeasurement();
 
       measurement.m_bestBefore =
-          RobotController.getFPGATime() + Constants.kVisionPositionCoalescingTime;
+          RobotController.getFPGATime() + Constants.VisionConstants.kPositionCoalescingTime;
       measurement.m_pose = new Pose2d(new Translation2d(position[0], position[1]), robotRotation);
       m_visibleTags = m_tagsDetected.get();
       m_visibleNotes = m_notesDetected.get();

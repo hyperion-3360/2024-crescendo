@@ -5,6 +5,8 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Elevator;
@@ -14,7 +16,7 @@ import frc.robot.subsystems.swerve.Swerve;
 import java.io.IOException;
 import java.util.function.DoubleSupplier;
 
-public class AimLock extends Command {
+public class SpeakerLock extends Command {
   private Swerve m_swerve;
   private Elevator m_elevator;
   private DoubleSupplier m_translationSup;
@@ -25,6 +27,8 @@ public class AimLock extends Command {
   private LEDs m_led;
   private Vision m_vision;
   private AprilTagFieldLayout m_aprilTagFieldLayout;
+  private Translation2d m_aprilTags[];
+  private int m_alliance_index;
 
   /**
    * Command to keep the aim of a target while keeping the robot in motion
@@ -36,7 +40,7 @@ public class AimLock extends Command {
    * @param translationSup translation forward or backward
    * @param strafeSup moving laterally
    */
-  public AimLock(
+  public SpeakerLock(
       Swerve s_swerve,
       Elevator s_elevator,
       LEDs s_led,
@@ -56,6 +60,22 @@ public class AimLock extends Command {
       m_aprilTagFieldLayout = null;
     }
 
+    m_aprilTags = new Translation2d[Constants.VisionConstants.kSpeakerIndex.length];
+
+    // initialize translation2d objects for each AprilTag on the field
+    int i = 0;
+    for (var tagId : Constants.VisionConstants.kSpeakerIndex) {
+      var tagPose = m_aprilTagFieldLayout.getTagPose(tagId).get();
+      // no need for Z
+      m_aprilTags[i] = new Translation2d(tagPose.getX(), tagPose.getY());
+      i++;
+    }
+
+    // fail safe
+    m_alliance_index = 0;
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) m_alliance_index = alliance.get() == Alliance.Red ? 0 : 1;
+
     addRequirements(s_swerve);
     addRequirements(s_elevator);
     addRequirements(s_led);
@@ -64,6 +84,11 @@ public class AimLock extends Command {
     this.m_translationSup = translationSup;
     this.m_strafeSup = strafeSup;
     this.m_isLocked = false;
+  }
+
+  @Override
+  public void initialize() {
+    m_isLocked = false;
   }
 
   @Override
@@ -94,32 +119,17 @@ public class AimLock extends Command {
     }
     // look at possible target from vision
     else {
+      int selecteg_tag = -1;
       if (m_vision.isValidPos()) {
-
-        var tags = m_vision.getVisibleTagIds();
-        int selecteg_tag = -1;
-
-        if (tags.length == 1) { // well that's the only tag we have
-          selecteg_tag = (int) tags[0];
-        } else { // find the closest one
-          double closerDistance = Double.MAX_VALUE;
-          for (var tagId : m_vision.getVisibleTagIds()) {
-            var tagPose = m_aprilTagFieldLayout.getTagPose((int) tagId).get();
-            // no need for Z
-            var xyTagPose = new Translation2d(tagPose.getX(), tagPose.getY());
-            var distance2Tag = xyTagPose.getDistance(cur_pos);
-            if (distance2Tag < closerDistance) {
-              closerDistance = distance2Tag;
-              selecteg_tag = (int) tagId;
-            }
+        for (var t : m_vision.getVisibleTagIds())
+          if (t == Constants.VisionConstants.kSpeakerIndex[m_alliance_index]) {
+            selecteg_tag = Constants.VisionConstants.kSpeakerIndex[m_alliance_index];
+            break;
           }
-        }
-        // selected_tag is necessary different than -1 but better safe than sorry
-        var selectedTarget = m_aprilTagFieldLayout.getTagPose(selecteg_tag);
-        if (selectedTarget.isPresent()) {
-          // get rid of Z
-          var newTarget = m_aprilTagFieldLayout.getTagPose(selecteg_tag).get();
-          m_target = new Translation2d(newTarget.getX(), newTarget.getY());
+
+        if (selecteg_tag != -1) {
+          m_target = m_aprilTags[selecteg_tag];
+          m_isLocked = true;
         }
       }
     }
