@@ -24,11 +24,11 @@ public class Trap extends SubsystemBase {
 
   private TimedServo m_servoWrist =
       new TimedServo(
-          Constants.TrapConstants.kservoWristId, 260, Constants.TrapConstants.kangleWristsetZero);
+          Constants.TrapConstants.kServoWristId, 260, Constants.TrapConstants.kWristSetZero);
   private TimedServo m_servoFinger =
       new TimedServo(
-          Constants.TrapConstants.kservoFingerId, 260, Constants.TrapConstants.kfingerOpened);
-  DigitalInput m_limitSwitch = new DigitalInput(Constants.TrapConstants.kfingerlimitswitchId);
+          Constants.TrapConstants.kServoFingerId, 260, Constants.TrapConstants.kFingerOpened);
+  DigitalInput m_limitSwitch = new DigitalInput(Constants.TrapConstants.kLimitSwitchId);
 
   public boolean setZero = false;
 
