@@ -41,14 +41,21 @@ public class Vision extends SubsystemBase {
           .getIntegerArrayTopic("tagIds")
           .subscribe(new long[] {});
 
-  // private DoubleArraySubscriber m_detection =
-  //    NetworkTableInstance.getDefault()
-  //        .getTable("SmartDashboard")
-  //        .getDoubleArrayTopic("detection")
-  //        .subscribe(new double[] {});
+  private IntegerArraySubscriber m_notesDetected =
+      NetworkTableInstance.getDefault()
+          .getTable("SmartDashboard")
+          .getIntegerArrayTopic("note")
+          .subscribe(new long[] {});
+
+  private DoubleArraySubscriber m_detection =
+      NetworkTableInstance.getDefault()
+          .getTable("SmartDashboard")
+          .getDoubleArrayTopic("detection")
+          .subscribe(new double[] {});
 
   private VisionMeasurement m_currentPos;
   private long[] m_visibleTags;
+  private long[] m_visibleNotes;
 
   /** Creates a new Vision. */
   public Vision() {
@@ -71,6 +78,7 @@ public class Vision extends SubsystemBase {
           RobotController.getFPGATime() + Constants.kVisionPositionCoalescingTime;
       measurement.m_pose = new Pose2d(new Translation2d(position[0], position[1]), robotRotation);
       m_visibleTags = m_tagsDetected.get();
+      m_visibleNotes = m_notesDetected.get();
     } else { // the detection is not going to be meaningfull forever... the coalescing time added at
       // detection is checked here and the entire measurement is invalidated if too old
       if ((m_currentPos.m_bestBefore != -1)
@@ -94,5 +102,13 @@ public class Vision extends SubsystemBase {
 
   public boolean isValidPos() {
     return m_currentPos.m_bestBefore != -1;
+  }
+
+  public long[] getVisibleNotes() {
+    return m_visibleNotes;
+  }
+
+  public boolean moreThanTwoNotes() {
+    return m_visibleNotes[2] != 0;
   }
 }

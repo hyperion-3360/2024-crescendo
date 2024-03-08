@@ -3,10 +3,9 @@ package frc.robot.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.networktables.DoubleArraySubscriber;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.swerve.Swerve;
 import java.util.function.DoubleSupplier;
 
@@ -16,22 +15,19 @@ public class NoteLock extends Command {
   private DoubleSupplier m_strafeSup;
   private boolean m_lockedOnNote;
   private Translation2d m_target;
+  private Vision m_vision;
 
-  private DoubleArraySubscriber m_detection =
-      NetworkTableInstance.getDefault()
-          .getTable("SmartDashboard")
-          .getDoubleArrayTopic("detection")
-          .subscribe(new double[] {});
-
-  public NoteLock(Swerve s_swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup) {
+  public NoteLock(
+      Swerve s_swerve, Vision s_vision, DoubleSupplier translationSup, DoubleSupplier strafeSup) {
     this.m_swerve = s_swerve;
+    this.m_vision = s_vision;
     this.m_translationSup = translationSup;
     this.m_strafeSup = strafeSup;
   }
 
   // TODO change the x position
   public double getNoteYpos() {
-    final var pos = m_detection.get();
+    final var pos = m_vision.getVisibleNotes();
     double xPos = 0;
     if (pos.length == 4) {
       xPos = pos[2];
@@ -42,7 +38,7 @@ public class NoteLock extends Command {
 
   // TODO change the y position
   public double getNoteXpos() {
-    final var pos = m_detection.get();
+    final var pos = m_vision.getVisibleNotes();
     double yPos = 0;
     if (pos.length == 4) {
       yPos = pos[3];
@@ -53,8 +49,8 @@ public class NoteLock extends Command {
 
   @Override
   public void execute() {
-    // TODO add a way to resolve the issue when two notes share the jetson space
-    // if (jetsonHasMoreThanOneNotes()) {
+    // TODO add a way to resolve the issue when two notes share the jetson camera space
+    // // if (m_vision.moreThanTwoNotes()) {
 
     // }
 
