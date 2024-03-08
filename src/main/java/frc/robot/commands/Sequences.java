@@ -17,42 +17,46 @@ public class Sequences {
 
   public static Command elevatorHigh(Elevator elevator, Shooter shooter, LEDs leds) {
     return Commands.sequence(
-            leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
-            elevator.extendTheElevator(elevatorHeight.HIGH),
-            shooter
-                .holdSpeed(levelSpeed.HIGH)
-                .alongWith(
-                    new WaitUntilCommand(() -> shooter.reachedMaxSpeed()).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
+        leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
+        elevator.extendTheElevator(elevatorHeight.HIGH),
+        shooter
+            .holdSpeed(levelSpeed.HIGH)
+            .alongWith(
+                new WaitUntilCommand(() -> shooter.reachedMaxSpeed())
+                    .andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
   public static Command elevatorFarHighFromClimb(Elevator elevator, Shooter shooter, LEDs leds) {
     return Commands.sequence(
-            leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
-            elevator.extendTheElevator(elevatorHeight.FAR_HIGH_CLIMB),
-            shooter
-                .holdSpeed(levelSpeed.FAR_HIGH)
-                .alongWith(
-                    new WaitUntilCommand(() -> shooter.reachedMaxSpeed()).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
+        leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
+        elevator.extendTheElevator(elevatorHeight.FAR_HIGH_CLIMB),
+        shooter
+            .holdSpeed(levelSpeed.FAR_HIGH)
+            .alongWith(
+                new WaitUntilCommand(() -> shooter.reachedMaxSpeed())
+                    .andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
   public static Command elevatorFarHighFromAmp(Elevator elevator, Shooter shooter, LEDs leds) {
     return Commands.sequence(
-            leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
-            elevator.extendTheElevator(elevatorHeight.FAR_HIGH_AMP),
-            shooter
-                .holdSpeed(levelSpeed.FAR_HIGH)
-                .alongWith(
-                    new WaitUntilCommand(() -> shooter.reachedMaxSpeed()).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
+        leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
+        elevator.extendTheElevator(elevatorHeight.FAR_HIGH_AMP),
+        shooter
+            .holdSpeed(levelSpeed.FAR_HIGH)
+            .alongWith(
+                new WaitUntilCommand(() -> shooter.reachedMaxSpeed())
+                    .andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
   public static Command elevatorLow(Elevator elevator, Shooter shooter, LEDs leds) {
     return Commands.sequence(
-            leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
-            elevator.extendTheElevator(elevatorHeight.LOW),
-            shooter
-                .holdSpeed(levelSpeed.LOW)
-                .alongWith(
-                    new WaitUntilCommand(() -> shooter.reachedMaxSpeed()).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
+        leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
+        elevator.extendTheElevator(elevatorHeight.LOW),
+        shooter
+            .holdSpeed(levelSpeed.LOW)
+            .alongWith(
+                new WaitUntilCommand(() -> shooter.reachedMaxSpeed())
+                    .andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
   public static Command shoot(Shooter shooter, Elevator elevator, LEDs leds) {
@@ -149,7 +153,7 @@ public class Sequences {
             climbRumble(controller), (leds.runOnce(() -> leds.setState(State.GEAR_BLOCKED)))));
   }
 
-  public static Command rumble(CommandXboxController controller,double rumbleLevel, boolean on) {
+  public static Command rumble(CommandXboxController controller, double rumbleLevel, boolean on) {
     if (on) {
       return Commands.run(() -> controller.getHID().setRumble(RumbleType.kBothRumble, rumbleLevel));
     } else {
