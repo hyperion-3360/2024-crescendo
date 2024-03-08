@@ -116,90 +116,67 @@ public class Trap extends SubsystemBase {
         .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerClosed));
   }
 
-  // // position to grab note from intake.
-  // public Command grabPosition() {
-  //   return this.runOnce(
-  //           () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShouldergrabPosition))
-  //       .andThen(new WaitCommand(0.1))
-  //       .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowgrabPosition))
-  //       .andThen(new WaitCommand(0.3))
-  //       .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristgrabPosition))
-  //       .andThen(new WaitCommand(m_servoWrist.travelTime()))
-  //       .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened));
-  // }
+  // test commands to test each motor one by one
+  public Command testShoulder() {
+    return this.runOnce(() -> shoulderMoveTo(0.0, m_desiredSpeed));
+  }
 
-  // public Command pushNote() {
-  //   return this.runOnce(
-  //           () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderpushNote))
-  //       .andThen(new WaitCommand(0.1))
-  //       .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowpushNote))
-  //       .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristpushNote));
-  // }
+  public Command testElbow() {
+    return this.runOnce(() -> elbowMoveTo(0.0, m_desiredSpeed));
+  }
 
-  // // weird command don't delete because it works in trap shoot sequence. it doesn't pick up on
-  // limit
-  // // switch for some reason but it is placed after the has note in the sequence. it is basically
-  // // just a command to close the finger.
-  // public Command closeFinger() {
-  //   return this.runOnce(() -> new WaitUntilCommand(() -> !m_limitSwitch.get()))
-  //       .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed));
-  // }
+  public Command testWrist() {
+    return this.runOnce(() -> m_servoWrist.setAngle(0.0));
+  }
 
-  // // position to lift arm up BEFORE elevator so it doesn't hit leds (with a lot of delayed things
-  // so
-  // // it doesn't hit too much (to be fine tuned before competition so it doesn't hit anywhere))
-  // public Command prepareToClimb() {
-  //   return this.runOnce(
-  //           () ->
-  // m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowprepareToClimbdelayed1))
-  //       .andThen(
-  //           () ->
-  //               m_servoShoulder.setAngle(
-  //                   Constants.TrapConstants.kangleShoulderprepareToClimbdelayed1))
-  //       .andThen(new WaitCommand(0.1))
-  //       .andThen(
-  //           () ->
-  // m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowprepareToClimbdelayed2))
-  //       .andThen(
-  //           () ->
-  //               m_servoShoulder.setAngle(
-  //                   Constants.TrapConstants.kangleShoulderprepareToClimbdelayed2))
-  //       .andThen(new WaitCommand(0.1))
-  //       .andThen(
-  //           () ->
-  // m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowprepareToClimbdelayed3))
-  //       .andThen(
-  //           () ->
-  //               m_servoShoulder.setAngle(
-  //                   Constants.TrapConstants.kangleShoulderprepareToClimbdelayed3))
-  //       .andThen(new WaitCommand(0.1))
-  //       .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowprepareToClimb))
-  //       .andThen(
-  //           () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderprepareToClimb))
-  //       .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerClosed))
-  //       .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristprepareToClimb));
-  // }
+  public Command testFinger() {
+    return this.runOnce(() -> m_servoFinger.setAngle(0.0));
+  }
+
+  // position to grab note from intake.
+  public Command grabPosition() {
+    return this.runOnce(
+            () -> shoulderMoveTo(Constants.TrapConstants.kShoulderGrabPosition, m_desiredSpeed))
+        .andThen(() -> shoulderMoveTo(Constants.TrapConstants.kElbowGrabPosition, m_desiredSpeed))
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristGrabPosition))
+        .andThen(new WaitCommand(m_servoWrist.travelTime()))
+        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerOpened));
+  }
+
+  public Command pushNote() {
+    return this.runOnce(
+            () -> shoulderMoveTo(Constants.TrapConstants.kShoulderPushNote, m_desiredSpeed))
+        .andThen(() -> elbowMoveTo(Constants.TrapConstants.kElbowPushNote, m_desiredSpeed))
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristPushNote));
+  }
+
+  // command to close the finger in the sequence trapshoot if deleted finger will never close and
+  // the note won't stay in.
+  public Command closeFinger() {
+    return this.runOnce(() -> new WaitUntilCommand(() -> !m_limitSwitch.get()))
+        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerClosed));
+  }
+
+  // WARNING: this may need some delayed positions be carefull when testing to not destroy
+  // everything :D
+  public Command prepareToClimb() {
+    return this.runOnce(
+            () -> shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb, m_desiredSpeed))
+        .andThen(() -> elbowMoveTo(Constants.TrapConstants.kElbowPrepareToClimb, m_desiredSpeed))
+        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerClosed))
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristPrepareToClimb));
+  }
 
   // // position to dunk the note in the trap
-  // public Command dunkNote() {
-  //   return this.runOnce(
-  //           () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderdunkNote))
-  //       .andThen(new WaitCommand(m_servoShoulder.travelTime()))
-  //       .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowdunkNote))
-  //       .andThen(new WaitCommand(0.32))
-  //       .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristdunkNote))
-  //       .andThen(new WaitCommand(0.5))
-  //       // Note should now be stuck in the trap at an angle
-  //       // Trying to push it through the trap. Moving the wrist up a bit and the elbow down
-  //       .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleWristFinalPush))
-  //       .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowFinalPush))
-  //       .andThen(new WaitCommand(0.2))
-  //       // Opening up the finger
-  //       .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kfingerOpened))
-  //       .andThen(new WaitCommand(0.1))
-  //       .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristprepareToClimb))
-  //       .andThen(new WaitCommand(0.1));
-  // }
+  public Command dunkNote() {
+    return this.runOnce(
+            () -> shoulderMoveTo(Constants.TrapConstants.kShoulderDunkNote, m_desiredSpeed))
+        .andThen(() -> elbowMoveTo(Constants.TrapConstants.kElbowDunkNote, m_desiredSpeed))
+        // Opening up the finger
+        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerOpened))
+        .andThen(new WaitCommand(0.1))
+        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristDunkNote));
+  }
 
   // // position arm is in after dunking the note so it is ready to disable and doesn't hit
   // anywhere.
