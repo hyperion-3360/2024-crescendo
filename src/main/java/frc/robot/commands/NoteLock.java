@@ -22,6 +22,10 @@ public class NoteLock extends Command {
 
   public NoteLock(
       Swerve s_swerve, Vision s_vision, DoubleSupplier translationSup, DoubleSupplier strafeSup) {
+
+    addRequirements(s_swerve);
+    addRequirements(s_vision);
+
     this.m_swerve = s_swerve;
     this.m_vision = s_vision;
     this.m_translationSup = translationSup;

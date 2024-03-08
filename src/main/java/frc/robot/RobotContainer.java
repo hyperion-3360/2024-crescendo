@@ -46,8 +46,8 @@ import frc.robot.subsystems.swerve.Swerve;
 public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
-  // TODO check if there's a reason of why the m_swerveDrive is static
-  private static final Swerve m_swerveDrive = new Swerve();
+
+  private final Swerve m_swerveDrive = new Swerve();
   private final Trap m_trap = new Trap();
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
   private final Climber m_climber = new Climber();
@@ -55,8 +55,6 @@ public class RobotContainer {
   private static final Shooter m_shooter = new Shooter();
   private static final LEDs m_led = LEDs.getInstance();
   private static final Vision m_vision = new Vision();
-  // TODO add the right parameter values
-  private static final NoteLock m_noteLock = new NoteLock(m_swerveDrive, m_vision, null, null);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -67,6 +65,9 @@ public class RobotContainer {
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
+
+  private final NoteLock m_noteLock =
+      new NoteLock(m_swerveDrive, m_vision, () -> translationAxis, () -> strafeAxis);
 
   // Slew Rate Limiters to limit acceleration of joystick inputs
   private final SlewRateLimiter translationLimiter = new SlewRateLimiter(3);
