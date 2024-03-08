@@ -20,6 +20,14 @@ public class NoteLock extends Command {
   private Vision m_vision;
   private ArrayList<Translation2d> everynote = new ArrayList<>();
 
+  /**
+   * constructor of the notelock class needs the subsystems and the axis required
+   *
+   * @param s_swerve the swerve subsystem
+   * @param s_vision the vision subsystem
+   * @param translationSup the translation axis required
+   * @param strafeSup the strafe axis required
+   */
   public NoteLock(
       Swerve s_swerve, Vision s_vision, DoubleSupplier translationSup, DoubleSupplier strafeSup) {
 
