@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.DoubleArraySubscriber;
+import edu.wpi.first.networktables.FloatArraySubscriber;
 import edu.wpi.first.networktables.IntegerArraySubscriber;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotController;
@@ -41,11 +42,11 @@ public class Vision extends SubsystemBase {
           .getIntegerArrayTopic("tagIds")
           .subscribe(new long[] {});
 
-  private IntegerArraySubscriber m_notesDetected =
+  private FloatArraySubscriber m_notesDetected =
       NetworkTableInstance.getDefault()
           .getTable("SmartDashboard")
-          .getIntegerArrayTopic("note")
-          .subscribe(new long[] {});
+          .getFloatArrayTopic("note")
+          .subscribe(new float[] {});
 
   // private DoubleArraySubscriber m_detection =
   //     NetworkTableInstance.getDefault()
@@ -55,7 +56,7 @@ public class Vision extends SubsystemBase {
 
   private VisionMeasurement m_currentPos;
   private long[] m_visibleTags;
-  private long[] m_visibleNotes;
+  private float[] m_visibleNotes;
 
   /** Creates a new Vision. */
   public Vision() {
@@ -105,7 +106,7 @@ public class Vision extends SubsystemBase {
     return m_currentPos.m_bestBefore != -1;
   }
 
-  public long[] getVisibleNotes() {
+  public float[] getVisibleNotes() {
     return m_visibleNotes;
   }
 
@@ -129,5 +130,13 @@ public class Vision extends SubsystemBase {
       yPos = -0.0058 * yPos + 2.782;
     }
     return yPos;
+  }
+
+  public Translation2d getNoteBoundingBox() {
+    final var pos = getVisibleNotes();
+    double xpos = pos[2];
+    double ypos = pos[3];
+    var boundingBoxCoordinate = new Translation2d(xpos, ypos);
+    return boundingBoxCoordinate;
   }
 }
