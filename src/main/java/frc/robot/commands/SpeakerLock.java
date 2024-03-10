@@ -61,22 +61,25 @@ public class SpeakerLock extends Command {
       m_aprilTagFieldLayout = null;
     }
 
-    // only allocate enough space for both speakers (1 per alliance side)
-    m_aprilTags = new Translation2d[Constants.VisionConstants.kSpeakerIndex.length];
+    if (m_aprilTagFieldLayout != null) {
 
-    // convert translation3d to translation2d for speakers position
-    int i = 0;
-    for (var tagId : Constants.VisionConstants.kSpeakerIndex) {
-      var tagPose = m_aprilTagFieldLayout.getTagPose(tagId).get();
-      // no need for Z
-      m_aprilTags[i] = new Translation2d(tagPose.getX(), tagPose.getY());
-      i++;
+      // only allocate enough space for both speakers (1 per alliance side)
+      m_aprilTags = new Translation2d[Constants.VisionConstants.kSpeakerIndex.length];
+
+      // convert translation3d to translation2d for speakers position
+      int i = 0;
+      for (var tagId : Constants.VisionConstants.kSpeakerIndex) {
+        var tagPose = m_aprilTagFieldLayout.getTagPose(tagId).get();
+        // no need for Z
+        m_aprilTags[i] = new Translation2d(tagPose.getX(), tagPose.getY());
+        i++;
+      }
+
+      // find out the current alliance with fail safe
+      m_alliance_index = 0;
+      var alliance = DriverStation.getAlliance();
+      if (alliance.isPresent()) m_alliance_index = alliance.get() == Alliance.Red ? 0 : 1;
     }
-
-    // find out the current alliance with fail safe
-    m_alliance_index = 0;
-    var alliance = DriverStation.getAlliance();
-    if (alliance.isPresent()) m_alliance_index = alliance.get() == Alliance.Red ? 0 : 1;
 
     addRequirements(s_swerve);
     addRequirements(s_elevator);
@@ -105,43 +108,47 @@ public class SpeakerLock extends Command {
 
     var cur_pos = m_swerve.getPose().getTranslation();
 
-    if (m_isLocked) {
-      // compute rotation to apply to face the target
-      Translation2d pointToFace = m_target;
-      Rotation2d rotationNeeded = pointToFace.minus(m_swerve.getPose().getTranslation()).getAngle();
-      rotationVal = rotationNeeded.getRadians();
+    if (m_aprilTagFieldLayout != null) {
 
-      // compute elevator angle to shoot in target, assuming straightline not parabol
-      double distance2Target = cur_pos.getDistance(pointToFace);
-      if (distance2Target > Constants.ShooterConstants.kMaxShootingDistance)
-        m_led.setState(LEDs.State.PREPARE_SHOT_SPEAKER);
-      else {
-        double elevatorAngle = Math.atan2(m_targetHeight, distance2Target);
-        m_elevator.extendTheElevator(elevatorAngle);
-        m_led.setState(LEDs.State.SHOOT_READY_SPEAKER);
-      }
-    } else { // don't have a lock yet so look at possible target from vision
-      int selecteg_tag = -1;
-      if (m_vision.isValidPos()) {
-        for (var t : m_vision.getVisibleTagIds())
-          if (t == Constants.VisionConstants.kSpeakerIndex[m_alliance_index]) {
-            selecteg_tag = Constants.VisionConstants.kSpeakerIndex[m_alliance_index];
-            break;
-          }
+      if (m_isLocked) {
+        // compute rotation to apply to face the target
+        Translation2d pointToFace = m_target;
+        Rotation2d rotationNeeded =
+            pointToFace.minus(m_swerve.getPose().getTranslation()).getAngle();
+        rotationVal = rotationNeeded.getRadians();
 
-        // still possible that the visible ids are not the ones we're interested in
-        if (selecteg_tag != -1) {
-          m_target = m_aprilTags[selecteg_tag];
-          m_isLocked = true;
-        } else m_led.setState(LEDs.State.PREPARE_SHOT_SPEAKER);
+        // compute elevator angle to shoot in target, assuming straightline not parabol
+        double distance2Target = cur_pos.getDistance(pointToFace);
+        if (distance2Target > Constants.ShooterConstants.kMaxShootingDistance)
+          m_led.setState(LEDs.State.PREPARE_SHOT_SPEAKER);
+        else {
+          double elevatorAngle = Math.atan2(m_targetHeight, distance2Target);
+          m_elevator.extendTheElevator(elevatorAngle);
+          m_led.setState(LEDs.State.SHOOT_READY_SPEAKER);
+        }
+      } else { // don't have a lock yet so look at possible target from vision
+        int selecteg_tag = -1;
+        if (m_vision.isValidPos()) {
+          for (var t : m_vision.getVisibleTagIds())
+            if (t == Constants.VisionConstants.kSpeakerIndex[m_alliance_index]) {
+              selecteg_tag = Constants.VisionConstants.kSpeakerIndex[m_alliance_index];
+              break;
+            }
+
+          // still possible that the visible ids are not the ones we're interested in
+          if (selecteg_tag != -1) {
+            m_target = m_aprilTags[selecteg_tag];
+            m_isLocked = true;
+          } else m_led.setState(LEDs.State.PREPARE_SHOT_SPEAKER);
+        }
       }
+
+      /* Drive */
+      m_swerve.drive(
+          new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
+          rotationVal * Constants.Swerve.maxAngularVelocity,
+          false,
+          true);
     }
-
-    /* Drive */
-    m_swerve.drive(
-        new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
-        rotationVal * Constants.Swerve.maxAngularVelocity,
-        false,
-        true);
   }
 }

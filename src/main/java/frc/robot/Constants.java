@@ -273,5 +273,10 @@ public final class Constants {
     public static int kRedSpeakerTag = 4;
     public static int kBlueSpeakerTag = 7;
     public static int kSpeakerIndex[] = {kRedSpeakerTag, kBlueSpeakerTag};
+    public static int kRedAmpTag = 5;
+    public static int kBlueAmpTag = 6;
+    public static int kAmpIndex[] = {kRedAmpTag, kBlueAmpTag};
+    public static double kAmpRiseElevatorDistance = 0.5;
+    public static double kAmpShootingDistance = 0.1;
   }
 }
