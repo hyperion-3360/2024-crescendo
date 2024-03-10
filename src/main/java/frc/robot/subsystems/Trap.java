@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkRelativeEncoder.Type;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,8 +20,9 @@ public class Trap extends SubsystemBase {
       new CANSparkMax(Constants.TrapConstants.kShoulderId, MotorType.kBrushed);
   private CANSparkMax m_elbow =
       new CANSparkMax(Constants.TrapConstants.kElbowId, MotorType.kBrushed);
-  private RelativeEncoder m_shoulderEncoder = m_shoulder.getEncoder();
-  private RelativeEncoder m_elbowEncoder = m_elbow.getEncoder();
+  private final RelativeEncoder m_shoulderEncoder =
+      m_shoulder.getEncoder(Type.kQuadrature, 2048 * 4);
+  private final RelativeEncoder m_elbowEncoder = m_elbow.getEncoder(Type.kQuadrature, 2048 * 4);
 
   private TimedServo m_servoWrist =
       new TimedServo(
