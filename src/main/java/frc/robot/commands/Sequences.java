@@ -61,7 +61,10 @@ public class Sequences {
 
   public static Command shoot(Shooter shooter, Elevator elevator, LEDs leds) {
     return Commands.sequence(
-            new WaitUntilCommand(() -> shooter.hasShot()).alongWith(shooter.hookRelease()),
+            new WaitUntilCommand(() -> shooter.hasShot())
+                .alongWith(shooter.hookRelease())
+                .andThen(
+                    () -> leds.setState(State.SHOT_DONE)), // safety feature if the upper ir is dead
             leds.runOnce(() -> leds.setState(State.SHOT_DONE)),
             shooter.stop(),
             elevator.extendTheElevator(elevatorHeight.INTAKE),
