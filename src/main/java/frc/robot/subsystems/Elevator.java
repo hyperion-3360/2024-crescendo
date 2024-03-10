@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
@@ -55,14 +56,21 @@ public class Elevator extends SubsystemBase {
 
   // creating the pid constants + pid member
   private double kP = 0.0075;
-  private double kI = 0.00083;
+  private double kI = 0.0008;
   private double kD = 0;
 
-  private String height = "no data";
+  // these values come from the SysId routine (modified)
+  private double kS = 0.0008201;
+  private double kV = 0.0067509;
+  private double kA = 0.0057103;
+  private double kG = 0.010439;
+
+  private String height = "intake";
 
   private PIDController m_pid = new PIDController(kP, kI, kD);
+  private ElevatorFeedforward m_feedforward = new ElevatorFeedforward(kS, kG, kV, kA);
 
-  private boolean m_sysIdEnable = true;
+  private boolean m_sysIdEnable = false;
 
   // creating an elevator
   public Elevator() {
@@ -77,13 +85,7 @@ public class Elevator extends SubsystemBase {
     m_elevatorLeftMaster.setIdleMode(IdleMode.kBrake);
     m_elevatorRight.setIdleMode(IdleMode.kBrake);
 
-    if (m_sysIdEnable) {
-      /* need to find these conversion factors */
-      m_encoder.setPositionConversionFactor(0);
-      m_encoder.setVelocityConversionFactor(0);
-      m_rightEncoder.setPositionConversionFactor(0);
-      m_rightEncoder.setVelocityConversionFactor(0);
-    } else {
+    if (!m_sysIdEnable) {
       m_elevatorLeftMaster.setOpenLoopRampRate(0.5);
       m_elevatorRight.setOpenLoopRampRate(0.5);
     }
@@ -100,7 +102,9 @@ public class Elevator extends SubsystemBase {
 
     if (!m_sysIdEnable) {
       // calculate speed with pid
-      m_elevatorLeftMaster.set(m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
+      m_elevatorLeftMaster.set(
+          m_feedforward.calculate(0.8)
+              + m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
 
       // if the elevator touches the limit switch at the bottom of the rail set position to 0.0
       if (!bottomlimitSwitch.get()) {
