@@ -110,28 +110,6 @@ public class Vision extends SubsystemBase {
     return m_visibleNotes;
   }
 
-  // TODO change the x position
-  public double getNoteYpos() {
-    final var pos = getVisibleNotes();
-    double xPos = 0;
-    if (pos.length == 4) {
-      xPos = pos[2];
-      xPos = 0.0023 * xPos - 0.6187;
-    }
-    return xPos;
-  }
-
-  // TODO change the y position
-  public double getNoteXpos() {
-    final var pos = getVisibleNotes();
-    double yPos = 0;
-    if (pos.length == 4) {
-      yPos = pos[3];
-      yPos = -0.0058 * yPos + 2.782;
-    }
-    return yPos;
-  }
-
   public Translation2d getNoteBoundingBox() {
     final var pos = getVisibleNotes();
     double xpos = pos[2];
