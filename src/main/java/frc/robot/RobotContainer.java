@@ -32,7 +32,7 @@ import frc.robot.subsystems.Elevator.elevatorHeight;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.LEDs.State;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Trap;
+// import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
@@ -48,7 +48,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final Swerve m_swerveDrive = new Swerve();
-  private final Trap m_trap = new Trap();
+  // private final Trap m_trap = new Trap();
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
   private final Climber m_climber = new Climber();
   public static final Elevator m_elevator = new Elevator();
@@ -214,9 +214,11 @@ public class RobotContainer {
 
     m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
 
-    m_driverController
-        .a()
-        .toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led, m_driverController, m_noteLock));
+    // m_driverController
+    //     .a()
+    //     .toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led, m_driverController,
+    // m_noteLock));
+    m_driverController.rightTrigger().whileTrue(m_noteLock);
     m_driverController
         .start()
         .and(m_driverController.back())

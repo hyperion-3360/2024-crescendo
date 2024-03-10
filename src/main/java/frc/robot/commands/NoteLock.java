@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -18,6 +19,7 @@ public class NoteLock extends Command {
   private boolean m_lockedOnNote;
   private Translation2d m_target;
   private Vision m_vision;
+  private boolean debugging;
 
   /**
    * constructor of the notelock class needs the subsystems and the axis required
@@ -37,6 +39,7 @@ public class NoteLock extends Command {
     this.m_vision = s_vision;
     this.m_translationSup = translationSup;
     this.m_strafeSup = strafeSup;
+    debugging = debug(true);
   }
 
   @Override
@@ -49,23 +52,22 @@ public class NoteLock extends Command {
     double rotationVal = m_swerve.getRotation2d().getRadians();
 
     if (m_lockedOnNote) {
-      double neededAngle =
-          getSinOfY(m_vision.getNoteBoundingBox().getX(), m_vision.getNoteBoundingBox().getY());
+      double neededAngle = getSinOfY(m_target.getX(), m_target.getY());
 
       // compute variables to feed the drive function of the swerves
       Translation2d pointToFace = m_target;
       Rotation2d rotationNeeded = pointToFace.minus(m_swerve.getPose().getTranslation()).getAngle();
-      rotationVal = rotationNeeded.getRadians() + neededAngle;
+      rotationVal = rotationNeeded.getRadians();
 
       /* Drive */
       m_swerve.drive(
           new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
-          rotationVal + neededAngle * Constants.Swerve.maxAngularVelocity,
+          (rotationVal + neededAngle) * Constants.Swerve.maxAngularVelocity,
           false,
           true);
     } else {
       // checks if the detected note is stale
-      if (m_vision.isValidPos()) {
+      if (m_vision.isValidPos() && debugging == false) {
         m_target = m_vision.getNoteBoundingBox();
         m_lockedOnNote = true;
       }
@@ -88,5 +90,11 @@ public class NoteLock extends Command {
     var AS = 1 - y;
     var OS = 0.5 - x;
     return Math.atan2(OS, AS);
+  }
+
+  private boolean debug(boolean on) {
+    m_lockedOnNote = true;
+    m_target = new Pose2d(0.735276, 0.556089, null).getTranslation();
+    return on;
   }
 }
