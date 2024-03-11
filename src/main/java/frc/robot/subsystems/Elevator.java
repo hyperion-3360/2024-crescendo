@@ -43,20 +43,23 @@ public class Elevator extends SubsystemBase {
   DigitalInput bottomlimitSwitch = new DigitalInput(7);
 
   // instancing the motor controllers m_elevatorLeft is the master motor
-  private CANSparkMax m_elevatorRight =
+  private CANSparkMax m_elevatorRightMaster =
       new CANSparkMax(Constants.SubsystemConstants.kelevatorRightId, MotorType.kBrushless);
-  private CANSparkMax m_elevatorLeftMaster =
+  private CANSparkMax m_elevatorLeft =
       new CANSparkMax(Constants.SubsystemConstants.kelevatorLeftId, MotorType.kBrushless);
 
-  private RelativeEncoder m_encoder = m_elevatorLeftMaster.getEncoder();
-  private RelativeEncoder m_rightEncoder = m_elevatorRight.getEncoder();
+  private RelativeEncoder m_encoder = m_elevatorLeft.getEncoder();
+  private RelativeEncoder m_rightEncoder = m_elevatorRightMaster.getEncoder();
 
   // creating a target
   private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
 
   // creating the pid constants + pid member
-  private double kP = 0.09;
-  private double kI = 0.01;
+  // private double kP = 0.09;
+  // private double kI = 0.01;
+  // private double kD = 0;
+  private double kP = 0.12108;
+  private double kI = 0.013;
   private double kD = 0;
 
   // these values come from the SysId routine (modified for set())
@@ -66,10 +69,15 @@ public class Elevator extends SubsystemBase {
   // private double kG = 0.010439;
 
   // feedforward values for setVoltage()
-  private double kS = 0.05201;
-  private double kV = 0.063509;
-  private double kA = 0.0057103;
-  private double kG = 0.20439;
+  // private double kS = 0.05201;
+  // private double kV = 0.063509;
+  // private double kA = 0.0057103;
+  // private double kG = 0.15439;
+
+  private double kS = 0.3738;
+  private double kV = 0.060294;
+  private double kA = 0.0081298;
+  private double kG = -0.36551;
 
   private String height = "intake";
 
@@ -81,38 +89,44 @@ public class Elevator extends SubsystemBase {
   // creating an elevator
   public Elevator() {
     // configures the CANSparkMax controllers
-    m_elevatorLeftMaster.restoreFactoryDefaults();
-    m_elevatorRight.restoreFactoryDefaults();
+    m_elevatorLeft.restoreFactoryDefaults();
+    m_elevatorRightMaster.restoreFactoryDefaults();
 
-    m_elevatorLeftMaster.setInverted(true);
+    m_elevatorLeft.setInverted(true);
 
-    m_elevatorRight.follow(m_elevatorLeftMaster, true);
+    m_elevatorLeft.follow(m_elevatorRightMaster, true);
 
-    m_elevatorLeftMaster.setIdleMode(IdleMode.kBrake);
-    m_elevatorRight.setIdleMode(IdleMode.kBrake);
+    m_elevatorLeft.setIdleMode(IdleMode.kBrake);
+    m_elevatorRightMaster.setIdleMode(IdleMode.kBrake);
 
     if (!m_sysIdEnable) {
-      m_elevatorLeftMaster.setOpenLoopRampRate(0.6);
-      m_elevatorRight.setOpenLoopRampRate(0.6);
+      m_elevatorLeft.setOpenLoopRampRate(0.6);
+      m_elevatorRightMaster.setOpenLoopRampRate(0.6);
     }
 
     m_encoder.setPosition(0.0);
     m_rightEncoder.setPosition(0.0);
 
-    m_elevatorLeftMaster.burnFlash();
-    m_elevatorRight.burnFlash();
+    m_elevatorLeft.burnFlash();
+    m_elevatorRightMaster.burnFlash();
   }
 
   @Override
   public void periodic() {
 
-    System.out.println(m_elevatorTarget + " pos " + m_encoder.getPosition());
+    System.out.println(
+        m_elevatorTarget
+            + " pos left "
+            + m_encoder.getPosition()
+            + " pos right "
+            + m_rightEncoder.getPosition());
     // System.out.println(
     //     m_feedforward.calculate(1) + m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
     if (!m_sysIdEnable) {
       // calculate speed with pid
-      m_elevatorLeftMaster.setVoltage(
-          m_feedforward.calculate(1) + m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
+      m_elevatorRightMaster.setVoltage(
+          m_feedforward.calculate(1)
+              + m_pid.calculate(m_rightEncoder.getPosition(), m_elevatorTarget));
       // m_elevatorLeftMaster.set(
       //     m_feedforward.calculate(1) + m_pid.calculate(m_encoder.getPosition(),
       // m_elevatorTarget));
@@ -120,6 +134,7 @@ public class Elevator extends SubsystemBase {
       // if the elevator touches the limit switch at the bottom of the rail set position to 0.0
       if (!bottomlimitSwitch.get()) {
         m_encoder.setPosition(0.0);
+        m_rightEncoder.setPosition(0.0);
         m_pid.reset();
       }
 
@@ -174,12 +189,13 @@ public class Elevator extends SubsystemBase {
 
   // stops the motors
   public void stop() {
-    m_elevatorLeftMaster.stopMotor();
+    m_elevatorLeft.stopMotor();
+    m_elevatorRightMaster.stopMotor();
   }
 
   // this is used for the leds in the sequences
   public boolean onTarget() {
-    return m_encoder.getPosition() >= this.m_elevatorTarget;
+    return m_rightEncoder.getPosition() >= this.m_elevatorTarget;
   }
 
   /**
@@ -218,8 +234,8 @@ public class Elevator extends SubsystemBase {
           new SysIdRoutine.Mechanism(
               // Tell SysId how to plumb the driving voltage to the motors.
               (Measure<Voltage> volts) -> {
-                m_elevatorRight.setVoltage(volts.in(Volts));
-                m_elevatorLeftMaster.setVoltage(volts.in(Volts));
+                m_elevatorRightMaster.setVoltage(volts.in(Volts));
+                m_elevatorLeft.setVoltage(volts.in(Volts));
               },
               // Tell SysId how to record a frame of data for each motor on the mechanism being
               // characterized.
@@ -227,8 +243,7 @@ public class Elevator extends SubsystemBase {
                 log.motor("elevator-left")
                     .voltage(
                         m_appliedVoltage.mut_replace(
-                            m_elevatorLeftMaster.getAppliedOutput()
-                                * m_elevatorLeftMaster.getBusVoltage(),
+                            m_elevatorLeft.getAppliedOutput() * m_elevatorLeft.getBusVoltage(),
                             Volts))
                     .angularPosition(m_angle.mut_replace(m_encoder.getPosition(), Rotations))
                     .angularVelocity(
@@ -237,7 +252,8 @@ public class Elevator extends SubsystemBase {
                 log.motor("elevator-right")
                     .voltage(
                         m_appliedVoltage.mut_replace(
-                            m_elevatorRight.getAppliedOutput() * m_elevatorRight.getBusVoltage(),
+                            m_elevatorRightMaster.getAppliedOutput()
+                                * m_elevatorRightMaster.getBusVoltage(),
                             Volts))
                     .angularPosition(m_angle.mut_replace(m_rightEncoder.getPosition(), Rotations))
                     .angularVelocity(
