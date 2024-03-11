@@ -223,10 +223,8 @@ public class RobotContainer {
 
     // m_driverController.x().onTrue(changeCameraPerspective());
 
-    m_driverController
-        .y()
-        .whileTrue(m_elevator.extendTheElevator(elevatorHeight.FAR_HIGH_CLIMB))
-        .whileFalse(m_elevator.run(() -> m_elevator.stop()));
+    m_driverController.y().onTrue(m_elevator.extendTheElevator(elevatorHeight.HIGH));
+    m_driverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
   }
 
   public Command changeCameraPerspective() {

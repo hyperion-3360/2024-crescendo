@@ -55,15 +55,21 @@ public class Elevator extends SubsystemBase {
   private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
 
   // creating the pid constants + pid member
-  private double kP = 0.0075;
-  private double kI = 0.0008;
+  private double kP = 0.08;
+  private double kI = 0.003;
   private double kD = 0;
 
-  // these values come from the SysId routine (modified)
-  private double kS = 0.0008201;
-  private double kV = 0.0067509;
+  // these values come from the SysId routine (modified for set())
+  // private double kS = 0.0008201;
+  // private double kV = 0.0063509;
+  // private double kA = 0.005103;
+  // private double kG = 0.010439;
+
+  // feedforward values for setVoltage()
+  private double kS = 0.05201;
+  private double kV = 0.063509;
   private double kA = 0.0057103;
-  private double kG = 0.010439;
+  private double kG = 0.20439;
 
   private String height = "intake";
 
@@ -86,8 +92,8 @@ public class Elevator extends SubsystemBase {
     m_elevatorRight.setIdleMode(IdleMode.kBrake);
 
     if (!m_sysIdEnable) {
-      m_elevatorLeftMaster.setOpenLoopRampRate(0.5);
-      m_elevatorRight.setOpenLoopRampRate(0.5);
+      m_elevatorLeftMaster.setOpenLoopRampRate(0.3);
+      m_elevatorRight.setOpenLoopRampRate(0.3);
     }
 
     m_encoder.setPosition(0.0);
@@ -100,11 +106,15 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
 
+    System.out.println(
+        m_feedforward.calculate(1) + m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
     if (!m_sysIdEnable) {
       // calculate speed with pid
-      m_elevatorLeftMaster.set(
-          m_feedforward.calculate(0.8)
-              + m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
+      m_elevatorLeftMaster.setVoltage(
+          m_feedforward.calculate(1) + m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
+      // m_elevatorLeftMaster.set(
+      //     m_feedforward.calculate(1) + m_pid.calculate(m_encoder.getPosition(),
+      // m_elevatorTarget));
 
       // if the elevator touches the limit switch at the bottom of the rail set position to 0.0
       if (!bottomlimitSwitch.get()) {
