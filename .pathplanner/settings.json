@@ -10,9 +10,9 @@
     "center field"
   ],
   "autoFolders": [
-    "other",
     "center autos",
-    "mid autos"
+    "close autos",
+    "other"
   ],
   "defaultMaxVel": 2.5,
   "defaultMaxAccel": 2.5,
