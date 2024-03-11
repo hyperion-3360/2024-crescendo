@@ -55,8 +55,8 @@ public class Elevator extends SubsystemBase {
   private double m_elevatorTarget = ElevatorConstants.kIntakeTarget;
 
   // creating the pid constants + pid member
-  private double kP = 0.08;
-  private double kI = 0.003;
+  private double kP = 0.09;
+  private double kI = 0.009;
   private double kD = 0;
 
   // these values come from the SysId routine (modified for set())
@@ -92,8 +92,8 @@ public class Elevator extends SubsystemBase {
     m_elevatorRight.setIdleMode(IdleMode.kBrake);
 
     if (!m_sysIdEnable) {
-      m_elevatorLeftMaster.setOpenLoopRampRate(0.3);
-      m_elevatorRight.setOpenLoopRampRate(0.3);
+      m_elevatorLeftMaster.setOpenLoopRampRate(0.6);
+      m_elevatorRight.setOpenLoopRampRate(0.6);
     }
 
     m_encoder.setPosition(0.0);
@@ -107,7 +107,12 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
 
     System.out.println(
-        m_feedforward.calculate(1) + m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
+        "left "
+            + m_elevatorLeftMaster.getMotorTemperature()
+            + " right "
+            + m_elevatorRight.getMotorTemperature());
+    // System.out.println(
+    //     m_feedforward.calculate(1) + m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
     if (!m_sysIdEnable) {
       // calculate speed with pid
       m_elevatorLeftMaster.setVoltage(
