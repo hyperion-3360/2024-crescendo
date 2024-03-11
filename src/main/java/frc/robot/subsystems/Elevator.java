@@ -56,7 +56,7 @@ public class Elevator extends SubsystemBase {
 
   // creating the pid constants + pid member
   private double kP = 0.09;
-  private double kI = 0.009;
+  private double kI = 0.01;
   private double kD = 0;
 
   // these values come from the SysId routine (modified for set())
@@ -106,11 +106,7 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
 
-    System.out.println(
-        "left "
-            + m_elevatorLeftMaster.getMotorTemperature()
-            + " right "
-            + m_elevatorRight.getMotorTemperature());
+    System.out.println(m_elevatorTarget + " pos " + m_encoder.getPosition());
     // System.out.println(
     //     m_feedforward.calculate(1) + m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
     if (!m_sysIdEnable) {
