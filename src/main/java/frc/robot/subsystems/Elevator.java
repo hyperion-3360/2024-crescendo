@@ -173,16 +173,16 @@ public class Elevator extends SubsystemBase {
         height = "Intake";
         break;
       case AUTOFAR1:
-        this.m_elevatorTarget = 65;
+        this.m_elevatorTarget = 56; // 65
         break;
       case AUTOFAR2:
-        this.m_elevatorTarget = 67.5;
+        this.m_elevatorTarget = 58.5; // 67.5
         break;
       case AUTOFAR3:
-        this.m_elevatorTarget = 39.5;
+        this.m_elevatorTarget = 53.5; // 62.5
         break;
       case AUTOFAR4:
-        this.m_elevatorTarget = 60;
+        this.m_elevatorTarget = 50; // 60
         break;
     }
   }

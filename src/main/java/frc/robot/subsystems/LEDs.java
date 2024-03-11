@@ -105,12 +105,6 @@ public class LEDs extends SubsystemBase {
     m_greenLED = new PWM(greenPort);
     m_blueLED = new PWM(bluePort);
     m_whiteLED = new PWM(whitePort);
-
-    // TODO: is this needed?
-    // redLED.enableDeadbandElimination(true);
-    // greenLED.enableDeadbandElimination(true);
-    // blueLED.enableDeadbandElimination(true);
-    // whiteLED.enableDeadbandElimination(true);
     setState(State.IDLE);
   }
 
