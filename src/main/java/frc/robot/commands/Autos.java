@@ -16,6 +16,10 @@ public final class Autos {
     TwoNotesCenterField("2NotesCenterField"),
     ThreeNotesCenterField("3NotesCenterField"),
     FourNotesCenterField("4NotesCenterField"),
+    TwoNotesCorridor1("2NotesCorridor1"),
+    TwoNotesCorridor2("2NotesCorridor2"),
+    TwoNotesCorridor3("2NotesCorridor3"),
+    ThreeNotesCorridor1("3NotesCorridor1"),
     ShootCrossRobotZone("shootCrossRobotZone"),
     Nothing("nothing"),
     StraightLine("straightLine");
@@ -42,9 +46,13 @@ public final class Autos {
   public static void setShuffleboardOptions() {
     autoChooser.setDefaultOption("score 2 notes mid field", Mode.TwoNotesMidField);
 
-    autoChooser.addOption("score 2 notes mid field", Mode.TwoNotesMidField);
-    autoChooser.addOption("score 3 notes mid field", Mode.ThreeNotesMidField);
-    autoChooser.addOption("score 4 notes mid field", Mode.FourNotesMidField);
+    autoChooser.addOption("score 2 notes close", Mode.TwoNotesMidField);
+    autoChooser.addOption("score 3 notes close", Mode.ThreeNotesMidField);
+    autoChooser.addOption("score 4 notes close", Mode.FourNotesMidField);
+    autoChooser.addOption("score 2 notes corridor 1", Mode.TwoNotesCorridor1);
+    autoChooser.addOption("score 2 notes corridor 2", Mode.TwoNotesCorridor2);
+    autoChooser.addOption("score 2 notes corridor 3", Mode.TwoNotesCorridor3);
+    autoChooser.addOption("score 3 notes corridor 1", Mode.ThreeNotesCorridor1);
     autoChooser.addOption("score 2 notes center field", Mode.TwoNotesCenterField);
     autoChooser.addOption("score 3 notes center field", Mode.ThreeNotesCenterField);
     autoChooser.addOption("score 4 notes center field", Mode.FourNotesCenterField);

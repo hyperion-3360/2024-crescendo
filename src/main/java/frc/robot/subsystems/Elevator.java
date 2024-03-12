@@ -113,23 +113,11 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-
-    System.out.println(
-        m_elevatorTarget
-            + " pos left "
-            + m_encoder.getPosition()
-            + " pos right "
-            + m_rightEncoder.getPosition());
-    // System.out.println(
-    //     m_feedforward.calculate(1) + m_pid.calculate(m_encoder.getPosition(), m_elevatorTarget));
     if (!m_sysIdEnable) {
       // calculate speed with pid
       m_elevatorRightMaster.setVoltage(
           m_feedforward.calculate(1)
               + m_pid.calculate(m_rightEncoder.getPosition(), m_elevatorTarget));
-      // m_elevatorLeftMaster.set(
-      //     m_feedforward.calculate(1) + m_pid.calculate(m_encoder.getPosition(),
-      // m_elevatorTarget));
 
       // if the elevator touches the limit switch at the bottom of the rail set position to 0.0
       if (!bottomlimitSwitch.get()) {
