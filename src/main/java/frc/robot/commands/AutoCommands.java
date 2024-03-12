@@ -63,7 +63,7 @@ public class AutoCommands {
         shooter.setTargetLevel(levelSpeed.FAR_HIGH),
         shooter.setSpeedWithTarget(),
         new WaitCommand(1),
-        shooter.hookRelease().withTimeout(0.3),
+        shooter.hookRelease().withTimeout(0.5),
         new WaitCommand(0.5),
         shooter.stop(),
         elevator.extendTheElevator(elevatorHeight.INTAKE));
