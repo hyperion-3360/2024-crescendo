@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.41,
-      "y": 4.02
+      "x": 1.4281277925729068,
+      "y": 6.516430172598337
     },
     "rotation": 0
   },
@@ -18,7 +18,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "0b"
+                  "pathName": "corridor1"
                 }
               },
               {
@@ -26,6 +26,12 @@
                 "data": {
                   "name": "farShootA"
                 }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.0
+                }
               }
             ]
           }
@@ -37,47 +43,16 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "1b"
+                  "pathName": "corridor1Back"
                 }
               },
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 2.0
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "intake"
-                      }
-                    }
-                  ]
+                  "name": "intake"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "2b"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "3b"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4b"
           }
         },
         {
@@ -87,7 +62,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2b"
+                  "pathName": "6f"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "farShootD"
                 }
               }
             ]
@@ -96,6 +77,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "corridor autos",
   "choreoAuto": false
 }

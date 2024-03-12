@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.41,
-      "y": 4.02
+      "x": 1.402499552633749,
+      "y": 3.995833994215295
     },
     "rotation": 0
   },
@@ -18,7 +18,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "0b"
+                  "pathName": "corridor3"
                 }
               },
               {
@@ -37,47 +37,16 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "1b"
+                  "pathName": "corridor3Back"
                 }
               },
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 2.0
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "intake"
-                      }
-                    }
-                  ]
+                  "name": "intake"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "2b"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "3b"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4b"
           }
         },
         {
@@ -87,7 +56,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2b"
+                  "pathName": "2f"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "farShootA"
                 }
               }
             ]
@@ -96,6 +71,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "corridor autos",
   "choreoAuto": false
 }

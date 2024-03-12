@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4062614961110564,
-      "y": 4.0246598861101655
+      "x": 1.4281277925729068,
+      "y": 6.516430172598337
     },
-    "rotation": 0.6386346373546427
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -18,19 +18,19 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "0c"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 2.7
+                  "pathName": "corridor1"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "farShootB"
+                  "name": "farShootA"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.0
                 }
               }
             ]
@@ -43,7 +43,45 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "1c"
+                  "pathName": "corridor1Back"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "6f"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "farShootD"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "corridor1Center"
                 }
               },
               {
@@ -53,7 +91,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 1.0
                       }
                     },
                     {
@@ -67,48 +105,10 @@
               }
             ]
           }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "2c"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 2.0
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "farShootA"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "wait"
-          }
         }
       ]
     }
   },
-  "folder": "center autos",
+  "folder": "corridor autos",
   "choreoAuto": false
 }

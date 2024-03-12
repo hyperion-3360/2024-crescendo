@@ -10,9 +10,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 public final class Autos {
 
   public enum Mode {
-    TwoNotesMidField("2NotesMidField"),
-    ThreeNotesMidField("3NotesMidField"),
-    FourNotesMidField("4NotesMidField"),
+    TwoNotesMidField("2NotesClose"),
+    ThreeNotesMidField("3NotesClose"),
+    FourNotesMidField("4NotesClose"),
     TwoNotesCenterField("2NotesCenterField"),
     ThreeNotesCenterField("3NotesCenterField"),
     FourNotesCenterField("4NotesCenterField"),

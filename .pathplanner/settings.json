@@ -5,11 +5,12 @@
   "pathFolders": [
     "wee",
     "other",
-    "mid field",
+    "close field",
     "center field backup",
     "center field"
   ],
   "autoFolders": [
+    "corridor autos",
     "center autos",
     "close autos",
     "other"
