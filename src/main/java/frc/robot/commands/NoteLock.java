@@ -49,7 +49,6 @@ public class NoteLock extends Command {
     this.m_strafeSup = strafeSup;
 
     // debug calling
-    // debug();
     debugging = false;
   }
 
@@ -63,34 +62,33 @@ public class NoteLock extends Command {
     double strafeVal = MathUtil.applyDeadband(m_strafeSup.getAsDouble(), Constants.stickDeadband);
     double rotationVal = m_swerve.getRotation2d().getRadians();
 
-    if (m_lockedOnNote == true) {
+    // #region "debug mini test unit"
 
-      // #region "debug mini test unit"
+    if (debugging == true) {
+      debug();
 
-      if (debugging == true) {
-        debug();
+      neededAngle =
+          getDebugTanOfY(
+              m_target.getX(), m_target.getY(), robotPosition.getX(), robotPosition.getY());
 
-        neededAngle =
-            getDebugTanOfY(
-                m_target.getX(), m_target.getY(), robotPosition.getX(), robotPosition.getY());
+      var m_trajectory =
+          TrajectoryGenerator.generateTrajectory(
+              new Pose2d(robotPosition, Rotation2d.fromRadians(rotationVal)),
+              List.of(
+                  robotPosition.plus(new Translation2d(1, 1)),
+                  m_target.minus(new Translation2d(1, 1))),
+              new Pose2d(m_target, Rotation2d.fromRadians(rotationVal)),
+              new TrajectoryConfig(Units.feetToMeters(3.0), Units.feetToMeters(3.0)));
+      m_debugField2d.getObject("center point").setPose(new Pose2d(m_target, new Rotation2d(0)));
+      m_debugField2d.getObject("trajectory").setTrajectory(m_trajectory);
 
-        var m_trajectory =
-            TrajectoryGenerator.generateTrajectory(
-                new Pose2d(robotPosition, Rotation2d.fromRadians(rotationVal)),
-                List.of(
-                    robotPosition.plus(new Translation2d(1, 1)),
-                    m_target.minus(new Translation2d(1, 1))),
-                new Pose2d(m_target, Rotation2d.fromRadians(rotationVal)),
-                new TrajectoryConfig(Units.feetToMeters(3.0), Units.feetToMeters(3.0)));
-        m_debugField2d.getObject("center point").setPose(new Pose2d(m_target, new Rotation2d(0)));
-        m_debugField2d.getObject("trajectory").setTrajectory(m_trajectory);
-
-        SmartDashboard.putData(m_debugField2d);
-        SmartDashboard.putNumber("needed angle", neededAngle);
-      }
-      // #endregion
+      SmartDashboard.putData(m_debugField2d);
+    } else
+    // #endregion
+    if (m_lockedOnNote) {
 
       neededAngle = getTanOfY(m_target.getX(), m_target.getY());
+      SmartDashboard.putNumber("needed angle", neededAngle);
 
       // compute variables to feed the drive function of the swerves
       Translation2d pointToFace = m_target;
