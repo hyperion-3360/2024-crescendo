@@ -23,7 +23,7 @@ public class NoteLock extends Command {
   private DoubleSupplier m_translationSup;
   private DoubleSupplier m_strafeSup;
   private boolean m_lockedOnNote;
-  private Translation2d m_target = null;
+  private Translation2d m_target;
   private Vision m_vision;
   // debug variables
   private boolean debugging;
@@ -106,8 +106,11 @@ public class NoteLock extends Command {
       // checks if the detected note is stale
       if (m_vision.isValidPos() == true && debugging == false) {
         m_target = m_vision.getNoteBoundingBox();
-        // checks if the vision has a note targeted before setting m_locked on note to true
-        m_lockedOnNote = (m_lockedOnNote == false) ? (m_target != null) ? true : false : true;
+        // checks if the vision has a note targeted before setting m_lockedOnNote to true
+        m_lockedOnNote =
+            (m_lockedOnNote == false)
+                ? (!m_target.equals(new Translation2d(-1, -1))) ? true : false
+                : true;
       }
       if (DriverStation.isAutonomous()) {
         if (m_vision.getVisibleNotes() == null) {
@@ -138,7 +141,7 @@ public class NoteLock extends Command {
   }
 
   private void debug() {
-    m_lockedOnNote = true;
+    m_lockedOnNote = false;
     m_target = new Translation2d(11, 12);
   }
 }
