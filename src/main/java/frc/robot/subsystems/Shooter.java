@@ -45,8 +45,8 @@ public class Shooter extends SubsystemBase {
   private levelSpeed m_targetLevel = levelSpeed.STOP;
 
   // blocker constants
-  private final double kIntakeHookAngleOpen = 0.0;
-  private final double kIntakeHookAngleClose = 31;
+  private final double kIntakeHookAngleOpen = 100.0;
+  private final double kIntakeHookAngleClose = 155;
 
   // gear blocker constants
   private final double kGearBlocked = 0.0;
