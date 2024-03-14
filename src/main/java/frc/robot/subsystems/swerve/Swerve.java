@@ -2,7 +2,8 @@ package frc.robot.subsystems.swerve;
 
 import static edu.wpi.first.units.Units.*;
 
-import com.kauailabs.navx.frc.AHRS;
+import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,7 +16,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,16 +27,16 @@ import frc.robot.Constants;
 public class Swerve extends SubsystemBase {
   public SwerveModule[] mSwerveMods;
   public SwerveModulePosition[] positions;
-  private final AHRS m_gyro;
+  private final WPI_PigeonIMU m_gyro;
   private final Field2d m_field2d;
   public SwerveDriveOdometry m_odometry;
   private boolean m_debug = false;
 
   public Swerve() {
-    // TODO get good port
-    m_gyro = new AHRS(SPI.Port.kMXP);
+    m_gyro = new WPI_PigeonIMU(0);
     m_field2d = new Field2d();
     m_gyro.reset();
+    m_gyro.enterCalibrationMode(CalibrationMode.Temperature);
     mSwerveMods =
         new SwerveModule[] {
           new SwerveModule(0, Constants.Swerve.Mod0.constants),
