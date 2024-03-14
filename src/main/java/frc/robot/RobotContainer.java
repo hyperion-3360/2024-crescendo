@@ -51,6 +51,7 @@ public class RobotContainer {
   public static final Elevator m_elevator = new Elevator();
   private static final Shooter m_shooter = new Shooter();
   private static final LEDs m_led = LEDs.getInstance();
+  private final Sequences m_sequences = new Sequences();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -193,27 +194,27 @@ public class RobotContainer {
     // m_coDriverController
     //     .povLeft()
     //     .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
-    m_coDriverController.povRight().onTrue(Sequences.climbElevator(m_elevator, m_shooter));
-    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
-    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
+    m_coDriverController.povRight().onTrue(m_sequences.climbElevator(m_elevator, m_shooter));
+    m_coDriverController.y().onTrue(m_sequences.elevatorHigh(m_elevator, m_shooter, m_led));
+    m_coDriverController.a().onTrue(m_sequences.elevatorLow(m_elevator, m_shooter, m_led));
     m_coDriverController
         .leftBumper()
-        .onTrue(Sequences.elevatorFarHighFromClimb(m_elevator, m_shooter, m_led));
+        .onTrue(m_sequences.elevatorFarHighFromClimb(m_elevator, m_shooter, m_led));
     m_coDriverController
         .rightBumper()
-        .onTrue(Sequences.elevatorFarHighFromAmp(m_elevator, m_shooter, m_led));
+        .onTrue(m_sequences.elevatorFarHighFromAmp(m_elevator, m_shooter, m_led));
 
-    m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
+    m_coDriverController.b().onTrue(m_sequences.shoot(m_shooter, m_elevator, m_led));
 
     m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
 
     m_driverController
         .a()
-        .toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led, m_driverController));
+        .toggleOnTrue(m_sequences.intakeSequence(m_shooter, m_led, m_driverController));
     m_driverController
         .start()
         .and(m_driverController.back())
-        .onTrue(Sequences.blockShooterGears(m_shooter, m_led, m_driverController));
+        .onTrue(m_sequences.blockShooterGears(m_shooter, m_led, m_driverController));
 
     m_driverController
         .b()

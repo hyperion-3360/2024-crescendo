@@ -12,9 +12,13 @@ import frc.robot.subsystems.LEDs.State;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Shooter.levelSpeed;
 
-public class Sequences {
+public class Sequences extends Command {
+  public Sequences() {}
 
-  public static Command elevatorHigh(Elevator elevator, Shooter shooter, LEDs leds) {
+  public Command elevatorHigh(Elevator elevator, Shooter shooter, LEDs leds) {
+    addRequirements(elevator);
+    addRequirements(shooter);
+    addRequirements(leds);
     return Commands.sequence(
             leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
             elevator.extendTheElevator(elevatorHeight.HIGH),
@@ -26,7 +30,10 @@ public class Sequences {
                     new WaitCommand(1).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
-  public static Command elevatorFarHighFromClimb(Elevator elevator, Shooter shooter, LEDs leds) {
+  public Command elevatorFarHighFromClimb(Elevator elevator, Shooter shooter, LEDs leds) {
+    addRequirements(elevator);
+    addRequirements(shooter);
+    addRequirements(leds);
     return Commands.sequence(
             leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
             elevator.extendTheElevator(elevatorHeight.FAR_HIGH_CLIMB),
@@ -38,7 +45,10 @@ public class Sequences {
                     new WaitCommand(1).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
-  public static Command elevatorFarHighFromAmp(Elevator elevator, Shooter shooter, LEDs leds) {
+  public Command elevatorFarHighFromAmp(Elevator elevator, Shooter shooter, LEDs leds) {
+    addRequirements(elevator);
+    addRequirements(shooter);
+    addRequirements(leds);
     return Commands.sequence(
             leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
             elevator.extendTheElevator(elevatorHeight.FAR_HIGH_AMP),
@@ -50,7 +60,10 @@ public class Sequences {
                     new WaitCommand(1).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
-  public static Command elevatorLow(Elevator elevator, Shooter shooter, LEDs leds) {
+  public Command elevatorLow(Elevator elevator, Shooter shooter, LEDs leds) {
+    addRequirements(elevator);
+    addRequirements(shooter);
+    addRequirements(leds);
     return Commands.sequence(
             leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
             elevator.extendTheElevator(elevatorHeight.LOW),
@@ -62,7 +75,10 @@ public class Sequences {
                     new WaitCommand(1).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
-  public static Command shoot(Shooter shooter, Elevator elevator, LEDs leds) {
+  public Command shoot(Shooter shooter, Elevator elevator, LEDs leds) {
+    addRequirements(elevator);
+    addRequirements(shooter);
+    addRequirements(leds);
     return Commands.sequence(
             shooter.hookRelease(),
             new WaitCommand(0.7),
@@ -83,8 +99,9 @@ public class Sequences {
   }
 
   // intake sequence to set leds to the right state
-  public static Command intakeSequence(
-      Shooter shooter, LEDs leds, CommandXboxController controller) {
+  public Command intakeSequence(Shooter shooter, LEDs leds, CommandXboxController controller) {
+    addRequirements(shooter);
+    addRequirements(leds);
     return Commands.sequence(
             Commands.runOnce(() -> leds.setState(State.INTAKE_ROLLING)),
             intakeRumbleOn(controller, shooter).alongWith(shooter.intake()),
@@ -139,7 +156,9 @@ public class Sequences {
   // }
 
   // climb without the arm
-  public static Command climbElevator(Elevator elevator, Shooter shooter) {
+  public Command climbElevator(Elevator elevator, Shooter shooter) {
+    addRequirements(elevator);
+    addRequirements(shooter);
     return Commands.sequence(
         elevator.extendTheElevator(elevatorHeight.HIGH),
         new WaitCommand(1),
@@ -148,8 +167,9 @@ public class Sequences {
         shooter.stop());
   }
 
-  public static Command blockShooterGears(
-      Shooter shooter, LEDs leds, CommandXboxController controller) {
+  public Command blockShooterGears(Shooter shooter, LEDs leds, CommandXboxController controller) {
+    addRequirements(shooter);
+    addRequirements(leds);
     return Commands.sequence(
         shooter.stop(),
         shooter.gearBlockMode(),
