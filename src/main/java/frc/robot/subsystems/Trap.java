@@ -2,8 +2,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkRelativeEncoder.Type;
+import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,9 +20,9 @@ public class Trap extends SubsystemBase {
       new CANSparkMax(Constants.TrapConstants.kShoulderId, MotorType.kBrushed);
   private CANSparkMax m_elbow =
       new CANSparkMax(Constants.TrapConstants.kElbowId, MotorType.kBrushed);
-  private final RelativeEncoder m_shoulderEncoder =
-      m_shoulder.getEncoder(Type.kQuadrature, 2048 * 4);
-  private final RelativeEncoder m_elbowEncoder = m_elbow.getEncoder(Type.kQuadrature, 2048 * 4);
+  private final SparkAbsoluteEncoder m_shoulderEncoder =
+      m_shoulder.getAbsoluteEncoder(Type.kDutyCycle);
+  private final SparkAbsoluteEncoder m_elbowEncoder = m_elbow.getAbsoluteEncoder(Type.kDutyCycle);
 
   private TimedServo m_servoWrist =
       new TimedServo(
@@ -39,14 +39,18 @@ public class Trap extends SubsystemBase {
   private double m_desiredSpeed = 0.3;
 
   public Trap() {
+    m_shoulderEncoder.setInverted(false);
+    m_shoulder.setInverted(false);
+    m_elbow.setInverted(false);
+    m_elbowEncoder.setInverted(true);
     m_shoulder.restoreFactoryDefaults();
     m_elbow.restoreFactoryDefaults();
   }
 
   @Override
   public void periodic() {
-    System.out.println(m_shoulderEncoder.getPosition());
-    System.out.println(m_elbowEncoder.getPosition());
+    System.out.println(
+        "shoulder " + m_shoulderEncoder.getPosition() + " elbow " + m_elbowEncoder.getPosition());
 
     if (DriverStation.isDisabled()) {
       setZero = false;
@@ -92,7 +96,7 @@ public class Trap extends SubsystemBase {
                 m_elbowSpeed -= speed;
               } else m_elbowSpeed = 0;
             }),
-        new WaitUntilCommand(() -> Math.abs(m_elbowEncoder.getPosition() - target) <= 0.015),
+        new WaitUntilCommand(() -> Math.abs(m_elbowEncoder.getPosition() - target) <= 0.005),
         this.runOnce(() -> m_elbowSpeed = 0));
   }
 

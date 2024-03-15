@@ -205,8 +205,8 @@ public final class Constants {
   }
 
   public static class TrapConstants {
-    public static final int kShoulderId = 9; // servo ports + limit switch
-    public static final int kElbowId = 8;
+    public static final int kShoulderId = 18; // servo ports + limit switch
+    public static final int kElbowId = 17;
     public static final int kServoWristId = 7;
     public static final int kServoFingerId = 6;
     public static final int kLimitSwitchId = 6;
