@@ -192,9 +192,8 @@ public class RobotContainer {
     //     .povLeft()
     //     .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
 
-    m_coDriverController.a().onTrue(m_trap.shoulderMoveTo(0.5, 0.3));
-    m_coDriverController.b().onTrue(m_trap.elbowMoveTo(0.2, 0.15));
-    m_coDriverController.x().onTrue(m_trap.elbowMoveTo(0.4, 0.15));
+    m_coDriverController.a().onTrue(m_trap.increase());
+    m_coDriverController.b().onTrue(m_trap.decrease());
 
     // m_coDriverController.povRight().onTrue(Sequences.climbElevator(m_elevator, m_shooter));
     // m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));

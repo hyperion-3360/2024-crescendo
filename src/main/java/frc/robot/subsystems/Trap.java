@@ -39,7 +39,7 @@ public class Trap extends SubsystemBase {
   private double m_desiredSpeed = 0.3;
 
   public Trap() {
-    m_shoulderEncoder.setInverted(false);
+    m_shoulderEncoder.setInverted(true);
     m_shoulder.setInverted(false);
     m_elbow.setInverted(false);
     m_elbowEncoder.setInverted(true);
@@ -49,8 +49,7 @@ public class Trap extends SubsystemBase {
 
   @Override
   public void periodic() {
-    System.out.println(
-        "shoulder " + m_shoulderEncoder.getPosition() + " elbow " + m_elbowEncoder.getPosition());
+    System.out.println("shoulder " + m_shoulderEncoder.getPosition() + " speed " + m_shoulderSpeed);
 
     if (DriverStation.isDisabled()) {
       setZero = false;
@@ -58,6 +57,14 @@ public class Trap extends SubsystemBase {
 
     m_elbow.set(m_elbowSpeed);
     m_shoulder.set(m_shoulderSpeed);
+  }
+
+  public Command increase() {
+    return this.shoulderMoveTo(m_shoulderEncoder.getPosition() + 0.1, 0.15);
+  }
+
+  public Command decrease() {
+    return this.shoulderMoveTo(m_shoulderEncoder.getPosition() - 0.1, 0.15);
   }
 
   /**
@@ -76,7 +83,7 @@ public class Trap extends SubsystemBase {
                 m_shoulderSpeed -= speed;
               } else m_shoulderSpeed = 0;
             }),
-        new WaitUntilCommand(() -> Math.abs(m_shoulderEncoder.getPosition() - target) <= 0.015),
+        new WaitUntilCommand(() -> Math.abs(m_shoulderEncoder.getPosition() - target) <= 0.025),
         this.runOnce(() -> m_shoulderSpeed = 0));
   }
 
