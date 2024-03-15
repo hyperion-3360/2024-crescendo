@@ -18,9 +18,9 @@ import frc.robot.Constants;
 public class Trap extends SubsystemBase {
 
   private final double kshoulderDeadZoneBegin = 0.1;
-  private final double kshoulderDeadZoneEnd = 0.9;
+  private final double kshoulderDeadZoneEnd = 0.40;
   private final double kelbowDeadZoneBegin = 0.1;
-  private final double kelbowDeadZoneEnd = 0.9;
+  private final double kelbowDeadZoneEnd = 0.50;
   private final double kmotorAcceptablePosError = 0.01;
 
   private CANSparkMax m_shoulder =
@@ -50,54 +50,63 @@ public class Trap extends SubsystemBase {
 
   // both shoulder and elbow are assumed to have their absolute 0 in the mechanical dead zone
   // this deadzone is expected to be at least 0.2 rotation wide (from 0.9 to 0.1)
-  private double m_shoulderPos = kshoulderDeadZoneBegin;
+  private double m_shoulderPos = 0.35;
   private double m_elbowPos = kelbowDeadZoneBegin;
 
   public Trap() {
-    m_shoulderEncoder.setInverted(true);
-    m_shoulder.setInverted(false);
-    m_elbow.setInverted(false);
-    m_elbowEncoder.setInverted(true);
     m_shoulder.restoreFactoryDefaults();
     m_elbow.restoreFactoryDefaults();
+
+    m_shoulder.setInverted(true);
+    m_elbow.setInverted(true);
   }
 
   @Override
   public void periodic() {
     if (DriverStation.isDisabled()) {
       setZero = false;
+    } else {
+
+      var voltage =
+          Math.abs(m_shoulderPos - m_shoulderEncoder.getPosition()) < kmotorAcceptablePosError
+              ? 0.0
+              : m_shoulderPid.calculate(m_shoulderEncoder.getPosition(), m_shoulderPos);
+
+      m_shoulder.setVoltage(voltage);
+
+      voltage =
+          Math.abs(m_elbowPos - m_elbowEncoder.getPosition()) < kmotorAcceptablePosError
+              ? 0.0
+              : m_elbowPid.calculate(m_elbowEncoder.getPosition(), m_elbowPos);
+
+      m_elbow.setVoltage(voltage);
     }
-
-    var voltage =
-        Math.abs(m_shoulderPos - m_shoulderEncoder.getPosition()) < kmotorAcceptablePosError
-            ? 0.0
-            : m_shoulderPid.calculate(m_shoulderEncoder.getPosition(), m_shoulderPos);
-
-    m_shoulder.setVoltage(voltage);
-
-    voltage =
-        Math.abs(m_elbowPos - m_elbowEncoder.getPosition()) < kmotorAcceptablePosError
-            ? 0.0
-            : m_elbowPid.calculate(m_elbowEncoder.getPosition(), m_elbowPos);
-
-    m_elbow.setVoltage(voltage);
   }
 
-  public Command increase() {
-    return this.shoulderMoveTo(m_shoulderEncoder.getPosition() + 0.1);
+  public Command elbowIncrease() {
+    return this.elbowMoveTo(0.05);
   }
 
-  public Command decrease() {
-    return this.shoulderMoveTo(m_shoulderEncoder.getPosition() - 0.1);
+  public Command elbowDecrease() {
+    return this.elbowMoveTo(-0.05);
+  }
+
+  public Command shoulderIncrease() {
+    return this.shoulderMoveTo(0.05);
+  }
+
+  public Command shoulderDecrease() {
+    return this.shoulderMoveTo(-0.05);
   }
 
   /**
    * @param target: the desired position in positive numbers
    * @return the movement of the motor to desired position with desired speed for the SHOULDER motor
    */
-  public Command shoulderMoveTo(double target) {
+  public Command shoulderMoveTo(double delta) {
     return this.runOnce(
         () -> {
+          var target = m_shoulderPos + delta;
           m_shoulderPos =
               ((target < kshoulderDeadZoneBegin) || (target > kshoulderDeadZoneEnd))
                   ? m_shoulderPos
@@ -109,9 +118,10 @@ public class Trap extends SubsystemBase {
    * @param target: the desired position in positive numbers
    * @return the movement of the motor to desired position with desired speed for the ELBOW motor
    */
-  public Command elbowMoveTo(double target) {
+  public Command elbowMoveTo(double delta) {
     return this.runOnce(
         () -> {
+          var target = m_elbowPos + delta;
           m_elbowPos =
               ((target < kelbowDeadZoneBegin) || (target > kelbowDeadZoneEnd))
                   ? m_elbowPos
@@ -242,7 +252,9 @@ public class Trap extends SubsystemBase {
   @Override
   public void initSendable(SendableBuilder builder) {
     builder.setSmartDashboardType("Big Arm");
-    builder.addDoubleProperty("Shoulder pos", () -> m_shoulderPos, null);
-    builder.addDoubleProperty("Elbow pos", () -> m_elbowPos, null);
+    builder.addDoubleProperty("Shoulder pos", () -> m_shoulderEncoder.getPosition(), null);
+    builder.addDoubleProperty("Elbow pos", () -> m_elbowEncoder.getPosition(), null);
+    builder.addDoubleProperty("Shoulder target", () -> m_shoulderPos, null);
+    builder.addDoubleProperty("Elbow target", () -> m_elbowPos, null);
   }
 }

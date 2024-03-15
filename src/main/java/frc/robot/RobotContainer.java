@@ -15,6 +15,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.util.PixelFormat;
 // import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -192,8 +193,11 @@ public class RobotContainer {
     //     .povLeft()
     //     .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
 
-    m_coDriverController.a().onTrue(m_trap.increase());
-    m_coDriverController.b().onTrue(m_trap.decrease());
+    SmartDashboard.putData(m_trap);
+    m_coDriverController.a().onTrue(m_trap.shoulderIncrease());
+    m_coDriverController.b().onTrue(m_trap.shoulderDecrease());
+    m_coDriverController.x().onTrue(m_trap.elbowIncrease());
+    m_coDriverController.y().onTrue(m_trap.elbowDecrease());
 
     // m_coDriverController.povRight().onTrue(Sequences.climbElevator(m_elevator, m_shooter));
     // m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
