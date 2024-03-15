@@ -84,26 +84,26 @@ public class Trap extends SubsystemBase {
   }
 
   public Command elbowIncrease() {
-    return this.elbowMoveTo(0.05);
+    return this.elbowMoveRel(0.05);
   }
 
   public Command elbowDecrease() {
-    return this.elbowMoveTo(-0.05);
+    return this.elbowMoveRel(-0.05);
   }
 
   public Command shoulderIncrease() {
-    return this.shoulderMoveTo(0.05);
+    return this.shoulderMoveRel(0.05);
   }
 
   public Command shoulderDecrease() {
-    return this.shoulderMoveTo(-0.05);
+    return this.shoulderMoveRel(-0.05);
   }
 
   /**
    * @param target: the desired position in positive numbers
    * @return the movement of the motor to desired position with desired speed for the SHOULDER motor
    */
-  public Command shoulderMoveTo(double delta) {
+  public Command shoulderMoveRel(double delta) {
     return this.runOnce(
         () -> {
           var target = m_shoulderPos + delta;
@@ -118,10 +118,40 @@ public class Trap extends SubsystemBase {
    * @param target: the desired position in positive numbers
    * @return the movement of the motor to desired position with desired speed for the ELBOW motor
    */
-  public Command elbowMoveTo(double delta) {
+  public Command elbowMoveRel(double delta) {
     return this.runOnce(
         () -> {
           var target = m_elbowPos + delta;
+          m_elbowPos =
+              ((target < kelbowDeadZoneBegin) || (target > kelbowDeadZoneEnd))
+                  ? m_elbowPos
+                  : target;
+        });
+  }
+
+  /**
+   * @param target: the desired position in positive numbers
+   * @return the movement of the motor to desired position with desired speed for the SHOULDER motor
+   */
+  public Command shoulderMoveTo(double absolute) {
+    return this.runOnce(
+        () -> {
+          var target = absolute;
+          m_shoulderPos =
+              ((target < kshoulderDeadZoneBegin) || (target > kshoulderDeadZoneEnd))
+                  ? m_shoulderPos
+                  : target;
+        });
+  }
+
+  /**
+   * @param target: the desired position in positive numbers
+   * @return the movement of the motor to desired position with desired speed for the ELBOW motor
+   */
+  public Command elbowMoveTo(double absolute) {
+    return this.runOnce(
+        () -> {
+          var target = absolute;
           m_elbowPos =
               ((target < kelbowDeadZoneBegin) || (target > kelbowDeadZoneEnd))
                   ? m_elbowPos
