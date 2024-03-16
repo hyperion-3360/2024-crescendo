@@ -55,8 +55,8 @@ public class Trap extends SubsystemBase {
 
   // both shoulder and elbow are assumed to have their absolute 0 in the mechanical dead zone
   // this deadzone is expected to be at least 0.2 rotation wide (from 0.9 to 0.1)
-  private double m_shoulderPos = 0.35;
-  private double m_elbowPos = kelbowDeadZoneBegin;
+  private double m_shoulderPos = m_shoulderEncoder.getPosition();
+  private double m_elbowPos = m_elbowEncoder.getPosition();
 
   public Trap() {
     m_shoulder.restoreFactoryDefaults();

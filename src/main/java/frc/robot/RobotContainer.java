@@ -194,50 +194,46 @@ public class RobotContainer {
     //     .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
 
     SmartDashboard.putData(m_trap);
-    m_coDriverController.a().onTrue(m_trap.shoulderDecrease());
+    m_coDriverController.y().onTrue(m_trap.grabPosition());
+    m_coDriverController.b().onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
+    m_coDriverController.x().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
+    m_coDriverController.povRight().onTrue(m_trap.dunkNote());
+    m_coDriverController.b().onTrue(m_trap.storeNote());
+    m_driverController.a().onTrue(m_trap.temporaryCommand());
     m_coDriverController.b().onTrue(m_trap.shoulderIncrease());
     m_coDriverController.x().onTrue(m_trap.elbowIncrease());
-    m_coDriverController.y().onTrue(m_trap.elbowDecrease());
-    // m_coDriverController.y().onTrue(m_trap.grabPosition());
-    // m_coDriverController.b().onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
-    // m_coDriverController.x().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
-    // m_coDriverController.povRight().onTrue(m_trap.dunkNote());
-    // m_coDriverController.b().onTrue(m_trap.storeNote());
-    // m_driverController.a().onTrue(m_trap.temporaryCommand());
-    // m_coDriverController.b().onTrue(m_trap.shoulderIncrease());
-    // m_coDriverController.x().onTrue(m_trap.elbowIncrease());
 
-    // m_coDriverController.povRight().onTrue(Sequences.climbElevator(m_elevator, m_shooter));
-    // m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
-    // m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
-    // m_coDriverController
-    //     .leftBumper()
-    //     .onTrue(Sequences.elevatorFarHighFromClimb(m_elevator, m_shooter, m_led));
-    // m_coDriverController
-    //     .rightBumper()
-    //     .onTrue(Sequences.elevatorFarHighFromAmp(m_elevator, m_shooter, m_led));
+    m_coDriverController.povRight().onTrue(Sequences.climbElevator(m_elevator, m_shooter));
+    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
+    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
+    m_coDriverController
+        .leftBumper()
+        .onTrue(Sequences.elevatorFarHighFromClimb(m_elevator, m_shooter, m_led));
+    m_coDriverController
+        .rightBumper()
+        .onTrue(Sequences.elevatorFarHighFromAmp(m_elevator, m_shooter, m_led));
 
-    // m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
+    m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
 
-    // m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
+    m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
 
-    // m_coDriverController
-    //     .a()
-    //     .toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led, m_driverController));
-    // m_driverController
-    //     .start()
-    //     .and(m_driverController.back())
-    //     .onTrue(Sequences.blockShooterGears(m_shooter, m_led, m_driverController));
+    m_coDriverController
+        .a()
+        .toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led, m_driverController));
+    m_driverController
+        .start()
+        .and(m_driverController.back())
+        .onTrue(Sequences.blockShooterGears(m_shooter, m_led, m_driverController));
 
-    // m_driverController
-    //     .b()
-    //     .toggleOnTrue(m_shooter.vomit().finallyDo(() -> m_led.setState(State.IDLE)));
+    m_driverController
+        .b()
+        .toggleOnTrue(m_shooter.vomit().finallyDo(() -> m_led.setState(State.IDLE)));
 
-    // m_driverController
-    //     .y()
-    //     .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
+    m_driverController
+        .y()
+        .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
 
-    // m_driverController.x().onTrue(changeCameraPerspective());
+    m_driverController.x().onTrue(changeCameraPerspective());
   }
 
   public Command changeCameraPerspective() {
