@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoCommands;
 import frc.robot.commands.Autos;
-import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
@@ -195,12 +194,14 @@ public class RobotContainer {
     //     .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
 
     SmartDashboard.putData(m_trap);
-    // m_coDriverController.a().onTrue(m_trap.shoulderDecrease());
-    // m_coDriverController.b().onTrue(m_trap.shoulderIncrease());
-    // m_coDriverController.x().onTrue(m_trap.elbowIncrease());
-    // m_coDriverController.y().onTrue(m_trap.elbowDecrease());
-    m_coDriverController.y().onTrue(m_trap.grabPosition());
-    m_coDriverController.x().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
+    m_coDriverController.a().onTrue(m_trap.shoulderDecrease());
+    m_coDriverController.b().onTrue(m_trap.shoulderIncrease());
+    m_coDriverController.x().onTrue(m_trap.elbowIncrease());
+    m_coDriverController.y().onTrue(m_trap.elbowDecrease());
+    // m_coDriverController.y().onTrue(m_trap.grabPosition());
+    // m_coDriverController.b().onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
+    // m_coDriverController.x().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
+    // m_coDriverController.povRight().onTrue(m_trap.dunkNote());
     // m_coDriverController.b().onTrue(m_trap.storeNote());
     // m_driverController.a().onTrue(m_trap.temporaryCommand());
     // m_coDriverController.b().onTrue(m_trap.shoulderIncrease());
@@ -220,7 +221,7 @@ public class RobotContainer {
 
     // m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
 
-    // m_driverController
+    // m_coDriverController
     //     .a()
     //     .toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led, m_driverController));
     // m_driverController

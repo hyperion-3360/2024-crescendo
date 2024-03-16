@@ -248,20 +248,35 @@ public class Trap extends SubsystemBase {
   // WARNING: this may need some delayed positions be carefull when testing to not destroy
   // everything :D
   public Command prepareToClimb() {
-    return this.runOnce(() -> shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb))
-        .andThen(() -> elbowMoveTo(Constants.TrapConstants.kElbowPrepareToClimb))
-        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerClosed))
-        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristPrepareToClimb));
+    return Commands.sequence(
+        this.runOnce(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerClosed)),
+        shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb1),
+        elbowMoveTo(Constants.TrapConstants.kElbowPrepareToClimb1),
+        new WaitCommand(.2),
+        shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb2),
+        elbowMoveTo(Constants.TrapConstants.kElbowPrepareToClimb2),
+        new WaitCommand(.2),
+        shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb3),
+        elbowMoveTo(Constants.TrapConstants.kElbowPrepareToClimb3),
+        new WaitCommand(.2),
+        shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb4),
+        elbowMoveTo(Constants.TrapConstants.kElbowPrepareToClimb4),
+        new WaitCommand(.2),
+        shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb5),
+        elbowMoveTo(Constants.TrapConstants.kElbowPrepareToClimb5),
+        new WaitCommand(.2),
+        shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb6),
+        new WaitCommand(.2),
+        this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristPrepareToClimb)));
   }
 
   // // position to dunk the note in the trap
   public Command dunkNote() {
-    return this.runOnce(() -> shoulderMoveTo(Constants.TrapConstants.kShoulderDunkNote))
-        .andThen(() -> elbowMoveTo(Constants.TrapConstants.kElbowDunkNote))
-        // Opening up the finger
-        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerOpened))
-        .andThen(new WaitCommand(0.1))
-        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristDunkNote));
+    return Commands.sequence(
+        shoulderMoveTo(Constants.TrapConstants.kShoulderDunkNote),
+        elbowMoveTo(Constants.TrapConstants.kElbowDunkNote),
+        this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristDunkNote)),
+        this.runOnce(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerOpened)));
   }
 
   // // position arm is in after dunking the note so it is ready to disable and doesn't hit

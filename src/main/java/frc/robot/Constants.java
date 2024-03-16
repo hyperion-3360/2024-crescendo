@@ -225,17 +225,16 @@ public final class Constants {
     // good
     public static final double kShoulderStoreNote = 0.41; // STORENOTE
     public static final double kElbowStoreNote = 0.05;
-    public static final double kWristStoreNote = 155.0;
+    public static final double kWristStoreNote = 160.0;
 
     public static final double kShoulderPushNote = 0.0; // PUSHNOTE
     public static final double kElbowPushNote = 0.0;
     public static final double kWristPushNote = 100.0;
 
     // Shoulder moves first to its most vertical position  // DUNKNOTE + PUSH
-    public static final double kShoulderDunkNote = 0.0;
-    // Elbow and wrist initial positions to stuck the note at an angle
-    public static final double kElbowDunkNote = 0.0;
-    public static final double kWristDunkNote = 50.0;
+    public static final double kShoulderDunkNote = 0.10;
+    public static final double kElbowDunkNote = 30.0;
+    public static final double kWristDunkNote = 200.0;
     // Try to drop the note into the trap by pushing down and moving up the wrist a bit
     public static final double kWristFinalPush = 5.0;
     public static final double kElbowFinalPush = 0.0;
@@ -252,8 +251,17 @@ public final class Constants {
     // sorry for all the delayed in prepare to climb but they are needed to avoid the arm from
     // hitting everywhere and they also make it less hard for servos to get from one position to
     // the other
-    public static final double kShoulderPrepareToClimb = 0.0;
-    public static final double kElbowPrepareToClimb = 0.0;
+    public static final double kShoulderPrepareToClimb1 = 0.35;
+    public static final double kShoulderPrepareToClimb2 = 0.28;
+    public static final double kShoulderPrepareToClimb3 = 0.23;
+    public static final double kShoulderPrepareToClimb4 = 0.19;
+    public static final double kShoulderPrepareToClimb5 = 0.14;
+    public static final double kShoulderPrepareToClimb6 = 0.10;
+    public static final double kElbowPrepareToClimb1 = 0.15;
+    public static final double kElbowPrepareToClimb2 = 0.20;
+    public static final double kElbowPrepareToClimb3 = 0.25;
+    public static final double kElbowPrepareToClimb4 = 0.30;
+    public static final double kElbowPrepareToClimb5 = 0.45;
     public static final double kWristPrepareToClimb = 155.0;
   }
 

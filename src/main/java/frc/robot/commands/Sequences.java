@@ -108,8 +108,9 @@ public class Sequences {
         m_shooter.setSpeedWithTarget(),
         new WaitUntilCommand(m_trap::trapHasNote),
         m_trap.closeFinger(),
+        new WaitCommand(0.1),
         m_shooter.stop(),
-        new WaitCommand(0.2),
+        new WaitCommand(0.4),
         m_trap.storeNote());
   }
 
@@ -127,18 +128,19 @@ public class Sequences {
   //       m_trap.prepareToDisable2());
   // }
 
-  // // sequence lift elevator and start wheels to climb !! wait will have to be modified !!
-  // // climb with the arm
-  // public static Command climbElevatorNote(Elevator elevator, Shooter shooter, Trap trap) {
-  //   return Commands.sequence(
-  //       trap.prepareToClimb(),
-  //       new WaitCommand(0.5),
-  //       elevator.extendTheElevator(elevatorHeight.HIGH),
-  //       new WaitCommand(1),
-  //       shooter.holdSpeed(levelSpeed.CLIMB),
-  //       new WaitCommand(5),
-  //       shooter.stop());
-  // }
+  // sequence lift elevator and start wheels to climb !! wait will have to be modified !!
+  // climb with the arm
+  public static Command climbElevatorNote(Elevator elevator, Shooter shooter, Trap trap) {
+    return Commands.sequence(
+        trap.prepareToClimb(),
+        new WaitCommand(1),
+        elevator.extendTheElevator(elevatorHeight.HIGH),
+        new WaitCommand(1));
+  }
+
+  // shooter.holdSpeed(levelSpeed.CLIMB),
+  // new WaitCommand(5),
+  // shooter.stop());
 
   // climb without the arm
   public static Command climbElevator(Elevator elevator, Shooter shooter) {
