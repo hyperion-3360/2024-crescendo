@@ -9,6 +9,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -18,8 +19,8 @@ import frc.robot.Constants;
 public class Trap extends SubsystemBase {
 
   private final double kshoulderDeadZoneBegin = 0.1;
-  private final double kshoulderDeadZoneEnd = 0.40;
-  private final double kelbowDeadZoneBegin = 0.1;
+  private final double kshoulderDeadZoneEnd = 0.42;
+  private final double kelbowDeadZoneBegin = 0.05;
   private final double kelbowDeadZoneEnd = 0.50;
   private final double kmotorAcceptablePosError = 0.01;
 
@@ -41,12 +42,16 @@ public class Trap extends SubsystemBase {
 
   public boolean setZero = false;
 
-  private final double kP = 25;
-  private final double kI = 5;
-  private final double kD = 0;
+  private final double skP = 70;
+  private final double skI = 30;
+  private final double skD = 0;
 
-  private PIDController m_shoulderPid = new PIDController(kP, kI, kD);
-  private PIDController m_elbowPid = new PIDController(kP, kI, kD);
+  private final double ekP = 40;
+  private final double ekI = 30;
+  private final double ekD = 2;
+
+  private PIDController m_shoulderPid = new PIDController(skP, skI, skD);
+  private PIDController m_elbowPid = new PIDController(ekP, ekI, ekD);
 
   // both shoulder and elbow are assumed to have their absolute 0 in the mechanical dead zone
   // this deadzone is expected to be at least 0.2 rotation wide (from 0.9 to 0.1)
@@ -63,6 +68,8 @@ public class Trap extends SubsystemBase {
 
   @Override
   public void periodic() {
+    System.out.println(
+        "elbow " + m_elbowEncoder.getPosition() + " shoulder " + m_shoulderEncoder.getPosition());
     if (DriverStation.isDisabled()) {
       setZero = false;
     } else {
@@ -137,6 +144,7 @@ public class Trap extends SubsystemBase {
     return this.runOnce(
         () -> {
           var target = absolute;
+          System.out.println("shoulder " + target);
           m_shoulderPos =
               ((target < kshoulderDeadZoneBegin) || (target > kshoulderDeadZoneEnd))
                   ? m_shoulderPos
@@ -152,6 +160,7 @@ public class Trap extends SubsystemBase {
     return this.runOnce(
         () -> {
           var target = absolute;
+          System.out.println("elbow " + target);
           m_elbowPos =
               ((target < kelbowDeadZoneBegin) || (target > kelbowDeadZoneEnd))
                   ? m_elbowPos
@@ -160,25 +169,42 @@ public class Trap extends SubsystemBase {
   }
 
   // position throughout game
-  // TODO this has to be modified accordingly to the new motors mostly with time stuff
+
   public Command setZero() {
-    return this.runOnce(() -> shoulderMoveTo(0.1))
-        .andThen(() -> elbowMoveTo(0.1))
-        .andThen(() -> m_servoWrist.setZero())
-        .andThen(new WaitCommand(m_servoWrist.travelTime()))
-        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerOpened))
-        .andThen(new WaitCommand(m_servoFinger.travelTime()).andThen(() -> setZero = true));
+    return Commands.sequence(
+        shoulderMoveTo(Constants.TrapConstants.kShoulderSetZero),
+        elbowMoveTo(Constants.TrapConstants.kElbowSetZero),
+        this.runOnce(() -> elbowMoveTo(Constants.TrapConstants.kElbowSetZero)),
+        this.runOnce(() -> m_servoWrist.setZero()),
+        new WaitCommand(m_servoWrist.travelTime()),
+        this.runOnce(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerOpened)),
+        new WaitCommand(m_servoFinger.travelTime()),
+        this.runOnce(() -> setZero = true));
+  }
+
+  public Command grabPosition() {
+    return Commands.sequence(
+        shoulderMoveTo(Constants.TrapConstants.kShoulderGrabPosition),
+        elbowMoveTo(Constants.TrapConstants.kElbowGrabPosition),
+        this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristGrabPosition)));
+  }
+
+  public Command storeNote() {
+    return Commands.sequence(
+        shoulderMoveTo(Constants.TrapConstants.kShoulderStoreNote),
+        elbowMoveTo(Constants.TrapConstants.kElbowStoreNote),
+        this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kShoulderStoreNote)));
   }
 
   // TODO this also has to be modified
   // position to store the note in the robot so robot can still pass under chain
-  public Command storeNote() {
-    return this.runOnce(() -> shoulderMoveTo(Constants.TrapConstants.kShoulderStoreNote))
-        .andThen(() -> elbowMoveTo(Constants.TrapConstants.kElbowStoreNote))
-        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristStoreNote))
-        .andThen(new WaitCommand(m_servoWrist.travelTime()))
-        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerClosed));
-  }
+  // public Command storeNote() {
+  //   return this.runOnce(() -> shoulderMoveTo(Constants.TrapConstants.kShoulderStoreNote))
+  //       .andThen(() -> elbowMoveTo(Constants.TrapConstants.kElbowStoreNote))
+  //       .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristStoreNote))
+  //       .andThen(new WaitCommand(m_servoWrist.travelTime()))
+  //       .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerClosed));
+  // }
 
   // test commands to test each motor one by one
   public Command testShoulder() {
@@ -197,14 +223,14 @@ public class Trap extends SubsystemBase {
     return this.runOnce(() -> m_servoFinger.setAngle(0.0));
   }
 
-  // position to grab note from intake.
-  public Command grabPosition() {
-    return this.runOnce(() -> shoulderMoveTo(Constants.TrapConstants.kShoulderGrabPosition))
-        .andThen(() -> shoulderMoveTo(Constants.TrapConstants.kElbowGrabPosition))
-        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristGrabPosition))
-        .andThen(new WaitCommand(m_servoWrist.travelTime()))
-        .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerOpened));
-  }
+  // // position to grab note from intake.
+  // public Command grabPosition() {
+  //   return this.runOnce(() -> shoulderMoveTo(Constants.TrapConstants.kShoulderGrabPosition))
+  //       .andThen(() -> shoulderMoveTo(Constants.TrapConstants.kElbowGrabPosition))
+  //       .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristGrabPosition))
+  //       .andThen(new WaitCommand(m_servoWrist.travelTime()))
+  //       .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerOpened));
+  // }
 
   public Command pushNote() {
     return this.runOnce(() -> shoulderMoveTo(Constants.TrapConstants.kShoulderPushNote))

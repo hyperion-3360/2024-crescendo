@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoCommands;
 import frc.robot.commands.Autos;
+import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
@@ -124,7 +125,7 @@ public class RobotContainer {
 
     m_climber.setDefaultCommand(m_climber.run(() -> m_climber.setSpeed()));
     m_shooter.setDefaultCommand(m_shooter.stop());
-    // m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
+    m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
     NamedCommands.registerCommand("shootHigh", AutoCommands.autoShoot(m_elevator, m_shooter));
     NamedCommands.registerCommand("intake", m_shooter.intake().withTimeout(3));
@@ -194,10 +195,16 @@ public class RobotContainer {
     //     .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
 
     SmartDashboard.putData(m_trap);
-    m_coDriverController.a().onTrue(m_trap.shoulderIncrease());
-    m_coDriverController.b().onTrue(m_trap.shoulderDecrease());
-    m_coDriverController.x().onTrue(m_trap.elbowIncrease());
-    m_coDriverController.y().onTrue(m_trap.elbowDecrease());
+    // m_coDriverController.a().onTrue(m_trap.shoulderDecrease());
+    // m_coDriverController.b().onTrue(m_trap.shoulderIncrease());
+    // m_coDriverController.x().onTrue(m_trap.elbowIncrease());
+    // m_coDriverController.y().onTrue(m_trap.elbowDecrease());
+    m_coDriverController.y().onTrue(m_trap.grabPosition());
+    m_coDriverController.x().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
+    // m_coDriverController.b().onTrue(m_trap.storeNote());
+    // m_driverController.a().onTrue(m_trap.temporaryCommand());
+    // m_coDriverController.b().onTrue(m_trap.shoulderIncrease());
+    // m_coDriverController.x().onTrue(m_trap.elbowIncrease());
 
     // m_coDriverController.povRight().onTrue(Sequences.climbElevator(m_elevator, m_shooter));
     // m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));

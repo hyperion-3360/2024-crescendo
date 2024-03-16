@@ -207,20 +207,25 @@ public final class Constants {
   public static class TrapConstants {
     public static final int kShoulderId = 18; // servo ports + limit switch
     public static final int kElbowId = 17;
-    public static final int kServoWristId = 7;
-    public static final int kServoFingerId = 6;
+    public static final int kServoWristId = 8;
+    public static final int kServoFingerId = 9;
     public static final int kLimitSwitchId = 6;
 
     public static final double kFingerClosed = 180.0; // angle of finger servo when closed/opened
     public static final double kFingerOpened = 90.0;
     // good
-    public static final double kShoulderSetZero = 0.0; // SETZERO
-    public static final double kElbowSetZero = 0.0;
+    public static final double kShoulderSetZero = 0.41; // 0.41 SETZERO
+    public static final double kElbowSetZero = 0.05;
     public static final double kWristSetZero = 155.0; // higher number = higher
     // good
-    public static final double kShoulderGrabPosition = 0.0; // GRABPOSITION
-    public static final double kElbowGrabPosition = 0.0;
-    public static final double kWristGrabPosition = 110.0;
+    public static final double kShoulderGrabPosition = 0.16; // GRABPOSITION
+    public static final double kElbowGrabPosition = 0.23;
+    public static final double kWristGrabPosition = 200.0;
+
+    // good
+    public static final double kShoulderStoreNote = 0.41; // STORENOTE
+    public static final double kElbowStoreNote = 0.05;
+    public static final double kWristStoreNote = 155.0;
 
     public static final double kShoulderPushNote = 0.0; // PUSHNOTE
     public static final double kElbowPushNote = 0.0;
@@ -243,10 +248,7 @@ public final class Constants {
     public static final double kShoulderDisable2 = 70.0; // PREPARETODISABLE2
     public static final double kElbowDisable2 = 60.0;
     public static final double kWristDisable2 = 0.0;
-    // good
-    public static final double kShoulderStoreNote = 0.0; // STORENOTE
-    public static final double kElbowStoreNote = 0.0;
-    public static final double kWristStoreNote = 155.0;
+
     // sorry for all the delayed in prepare to climb but they are needed to avoid the arm from
     // hitting everywhere and they also make it less hard for servos to get from one position to
     // the other
