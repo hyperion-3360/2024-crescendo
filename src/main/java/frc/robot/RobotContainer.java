@@ -24,12 +24,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoCommands;
 import frc.robot.commands.Autos;
+import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Elevator.elevatorHeight;
 import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.LEDs.State;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -44,7 +46,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final Swerve m_swerveDrive = new Swerve();
-  private final Trap m_trap = new Trap();
+  // private final Trap m_trap = new Trap();
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
   private final Climber m_climber = new Climber();
   public static final Elevator m_elevator = new Elevator();
@@ -124,7 +126,7 @@ public class RobotContainer {
 
     m_climber.setDefaultCommand(m_climber.run(() -> m_climber.setSpeed()));
     m_shooter.setDefaultCommand(m_shooter.stop());
-    m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
+    // m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
     NamedCommands.registerCommand("shootHigh", AutoCommands.autoShoot(m_elevator, m_shooter));
     NamedCommands.registerCommand("intake", m_shooter.intake().withTimeout(3));
@@ -202,16 +204,25 @@ public class RobotContainer {
     m_driverController.a().onTrue(m_trap.temporaryCommand());
     m_coDriverController.b().onTrue(m_trap.shoulderIncrease());
     m_coDriverController.x().onTrue(m_trap.elbowIncrease());
+    m_coDriverController.y().onTrue(m_trap.elbowDecrease());
+    // m_coDriverController.y().onTrue(m_trap.grabPosition());
+    // m_coDriverController.b().onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
+    // m_coDriverController.x().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
+    // m_coDriverController.povRight().onTrue(m_trap.dunkNote());
+    // m_coDriverController.b().onTrue(m_trap.storeNote());
+    // m_driverController.a().onTrue(m_trap.temporaryCommand());
+    // m_coDriverController.b().onTrue(m_trap.shoulderIncrease());
+    // m_coDriverController.x().onTrue(m_trap.elbowIncrease());
 
-    m_coDriverController.povRight().onTrue(Sequences.climbElevator(m_elevator, m_shooter));
-    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
-    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
-    m_coDriverController
-        .leftBumper()
-        .onTrue(Sequences.elevatorFarHighFromClimb(m_elevator, m_shooter, m_led));
-    m_coDriverController
-        .rightBumper()
-        .onTrue(Sequences.elevatorFarHighFromAmp(m_elevator, m_shooter, m_led));
+    // m_coDriverController.povRight().onTrue(Sequences.climbElevator(m_elevator, m_shooter));
+    // m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
+    // m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
+    // m_coDriverController
+    //     .leftBumper()
+    //     .onTrue(Sequences.elevatorFarHighFromClimb(m_elevator, m_shooter, m_led));
+    // m_coDriverController
+    //     .rightBumper()
+    //     .onTrue(Sequences.elevatorFarHighFromAmp(m_elevator, m_shooter, m_led));
 
     m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
 

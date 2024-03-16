@@ -19,7 +19,8 @@ public class Vision extends SubsystemBase {
   // some local constants
   private final int kAprilTagPosStartIndex = 0;
   private final int kAprilTagRotStartIndex = 3;
-  private final int kAprilTagIdsStartIndex = 6;
+  private final int kAprilTagAnglesStartIndex = 6;
+  private final int kAprilTagIdsStartIndex = 9;
 
   final AtomicReference<double[]> m_tagValue = new AtomicReference<double[]>();
   final AtomicReference<double[]> m_detectionValue = new AtomicReference<double[]>();
@@ -85,11 +86,12 @@ public class Vision extends SubsystemBase {
 
       // for convenience just copy slice of the bigger array into smaller ones
       var position = Arrays.copyOfRange(info, kAprilTagPosStartIndex, kAprilTagRotStartIndex);
-      var rotation = Arrays.copyOfRange(info, kAprilTagRotStartIndex, kAprilTagIdsStartIndex);
+      var rotation = Arrays.copyOfRange(info, kAprilTagRotStartIndex, kAprilTagAnglesStartIndex);
       var numTags = info.length - kAprilTagIdsStartIndex;
+      var angles = Arrays.copyOfRange(info, kAprilTagAnglesStartIndex, kAprilTagIdsStartIndex);
 
-      var tagRotation = Rotation2d.fromDegrees(rotation[1]);
-      var robotRotation = tagRotation;
+      var tagRotation = Rotation2d.fromDegrees(angles[1]);
+      var robotRotation =  Rotation2d.fromDegrees(rotation[1]);;
 
       m_currentPos = new Pose2d(new Translation2d(position[0], position[1]), robotRotation);
       m_visibleTags = new long[numTags];
