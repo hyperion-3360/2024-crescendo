@@ -15,7 +15,6 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.util.PixelFormat;
 // import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -189,40 +188,15 @@ public class RobotContainer {
 
     // configureTrapDebugBindings();
 
-    // m_coDriverController.povDown().onTrue(Sequences.trapShoot(m_shooter, m_trap));
-    // m_coDriverController.povUp().onTrue(Sequences.trapScore(m_trap));
-    // m_coDriverController
-    //     .povLeft()
-    //     .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
-
-    SmartDashboard.putData(m_trap);
-    m_coDriverController.y().onTrue(m_trap.grabPosition());
-    m_coDriverController.b().onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
-    m_coDriverController.x().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
-    m_coDriverController.povRight().onTrue(m_trap.dunkNote());
-    m_coDriverController.b().onTrue(m_trap.storeNote());
-    m_driverController.a().onTrue(m_trap.temporaryCommand());
-    m_coDriverController.b().onTrue(m_trap.shoulderIncrease());
-    m_coDriverController.x().onTrue(m_trap.elbowIncrease());
-    m_coDriverController.y().onTrue(m_trap.elbowDecrease());
-    // m_coDriverController.y().onTrue(m_trap.grabPosition());
-    // m_coDriverController.b().onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
-    // m_coDriverController.x().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
-    // m_coDriverController.povRight().onTrue(m_trap.dunkNote());
-    // m_coDriverController.b().onTrue(m_trap.storeNote());
-    // m_driverController.a().onTrue(m_trap.temporaryCommand());
-    // m_coDriverController.b().onTrue(m_trap.shoulderIncrease());
-    // m_coDriverController.x().onTrue(m_trap.elbowIncrease());
-
-    // m_coDriverController.povRight().onTrue(Sequences.climbElevator(m_elevator, m_shooter));
-    // m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
-    // m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
-    // m_coDriverController
-    //     .leftBumper()
-    //     .onTrue(Sequences.elevatorFarHighFromClimb(m_elevator, m_shooter, m_led));
-    // m_coDriverController
-    //     .rightBumper()
-    //     .onTrue(Sequences.elevatorFarHighFromAmp(m_elevator, m_shooter, m_led));
+    m_coDriverController.povRight().onTrue(Sequences.climbElevator(m_elevator, m_shooter));
+    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
+    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
+    m_coDriverController
+        .leftBumper()
+        .onTrue(Sequences.elevatorFarHighFromClimb(m_elevator, m_shooter, m_led));
+    m_coDriverController
+        .rightBumper()
+        .onTrue(Sequences.elevatorFarHighFromAmp(m_elevator, m_shooter, m_led));
 
     m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
 
