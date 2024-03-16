@@ -113,11 +113,11 @@ public class NoteLock extends Command {
                 : true;
       }
       if (DriverStation.isAutonomous()) {
-        if (m_vision.getVisibleNotes() == null) {
+        if (m_target.getX() == 0.5) {
           m_swerve.drive(
               new Translation2d(translationVal, strafeVal)
                   .times(Constants.Swerve.maxSpeed)
-                  .plus(new Translation2d(0, robotPosition.getDistance(m_target))),
+                  .plus(new Translation2d(robotPosition.plus(new Translation2d(5, 0)).getX(), 0)),
               rotationVal * Constants.Swerve.maxAngularVelocity,
               false,
               true);
