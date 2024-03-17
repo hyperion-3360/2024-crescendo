@@ -158,11 +158,10 @@ public class Trap extends SubsystemBase {
   public Command shoulderMoveTo(double absolute) {
     return this.runOnce(
         () -> {
-          var temp = absolute;
           m_shoulderGoal.position =
-              ((temp < kshoulderDeadZoneBegin) || (temp > kshoulderDeadZoneEnd))
+              ((absolute < kshoulderDeadZoneBegin) || (absolute > kshoulderDeadZoneEnd))
                   ? m_shoulderGoal.position
-                  : temp;
+                  : absolute;
         });
   }
 
@@ -173,11 +172,10 @@ public class Trap extends SubsystemBase {
   public Command elbowMoveTo(double absolute) {
     return this.runOnce(
         () -> {
-          var temp = absolute;
           m_elbowGoal.position =
-              ((temp < kelbowDeadZoneBegin) || (temp > kelbowDeadZoneEnd))
+              ((absolute < kelbowDeadZoneBegin) || (absolute > kelbowDeadZoneEnd))
                   ? m_elbowGoal.position
-                  : temp;
+                  : absolute;
         });
   }
 
