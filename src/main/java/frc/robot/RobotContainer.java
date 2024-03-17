@@ -15,6 +15,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.util.PixelFormat;
 // import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -31,6 +32,7 @@ import frc.robot.subsystems.Elevator.elevatorHeight;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.LEDs.State;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -51,6 +53,7 @@ public class RobotContainer {
   public static final Elevator m_elevator = new Elevator();
   private static final Shooter m_shooter = new Shooter();
   private static final LEDs m_led = LEDs.getInstance();
+  private static final Vision m_vision = new Vision();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -90,6 +93,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    SmartDashboard.putData(m_vision);
 
     m_camera1 = CameraServer.startAutomaticCapture(Constants.Camera.kCameraIntake);
     m_camera1.setVideoMode(
@@ -219,6 +223,9 @@ public class RobotContainer {
         .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
 
     m_driverController.x().onTrue(changeCameraPerspective());
+
+    /** AMP LOCK -- TODO: map amp lock to a button * */
+    // m_driverController.x().onTrue(new AmpLock(m_swerveDrive, m_elevator, m_led, m_vision));
   }
 
   public Command changeCameraPerspective() {

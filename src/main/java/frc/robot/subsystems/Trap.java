@@ -4,7 +4,9 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -18,49 +20,69 @@ import frc.robot.Constants;
 
 public class Trap extends SubsystemBase {
 
-  private final double kshoulderDeadZoneBegin = 0.1;
-  private final double kshoulderDeadZoneEnd = 0.42;
-  private final double kelbowDeadZoneBegin = 0.05;
-  private final double kelbowDeadZoneEnd = 0.50;
-  private final double kmotorAcceptablePosError = 0.01;
+  private static final double kDt = 0.02;
+
+  // shoulder joint control
+  private final double kshoulderDeadZoneEnd = 0.40;
+  private final double kshoulderDeadZoneBegin = 0.07;
+
+  private final double kP = 110;
+  private final double kI = 50;
+  private final double kD = 2.6;
 
   private CANSparkMax m_shoulder =
       new CANSparkMax(Constants.TrapConstants.kShoulderId, MotorType.kBrushed);
-  private CANSparkMax m_elbow =
-      new CANSparkMax(Constants.TrapConstants.kElbowId, MotorType.kBrushed);
+
   private final SparkAbsoluteEncoder m_shoulderEncoder =
       m_shoulder.getAbsoluteEncoder(Type.kDutyCycle);
+
+  private final TrapezoidProfile m_shoulderProfile =
+      new TrapezoidProfile(new TrapezoidProfile.Constraints(0.4, 0.1));
+
+  private TrapezoidProfile.State m_shoulderGoal;
+  private TrapezoidProfile.State m_shoulderSetpoint;
+  private PIDController m_shoulderPid = new PIDController(kP, kI, kD);
+  private double m_shoulderVoltage;
+
+  // elbow joint control
+  private final double kelbowDeadZoneBegin = 0.05;
+  private final double kelbowDeadZoneEnd = 0.50;
+
+  private CANSparkMax m_elbow =
+      new CANSparkMax(Constants.TrapConstants.kElbowId, MotorType.kBrushed);
+
   private final SparkAbsoluteEncoder m_elbowEncoder = m_elbow.getAbsoluteEncoder(Type.kDutyCycle);
 
+  private final TrapezoidProfile m_elbowProfile =
+      new TrapezoidProfile(new TrapezoidProfile.Constraints(0.3, 0.1));
+
+  private TrapezoidProfile.State m_elbowGoal;
+  private TrapezoidProfile.State m_elbowSetpoint;
+  private PIDController m_elbowPid = new PIDController(kP, kI, kD);
+  private double m_elbowVoltage;
+
+  // Wrist
   private TimedServo m_servoWrist =
       new TimedServo(
           Constants.TrapConstants.kServoWristId, 260, Constants.TrapConstants.kWristSetZero);
+
+  // Finger
   private TimedServo m_servoFinger =
       new TimedServo(
           Constants.TrapConstants.kServoFingerId, 260, Constants.TrapConstants.kFingerOpened);
+
   DigitalInput m_limitSwitch = new DigitalInput(Constants.TrapConstants.kLimitSwitchId);
 
   public boolean setZero = false;
 
-  private final double skP = 70;
-  private final double skI = 30;
-  private final double skD = 0;
-
-  private final double ekP = 40;
-  private final double ekI = 30;
-  private final double ekD = 2;
-
-  private PIDController m_shoulderPid = new PIDController(skP, skI, skD);
-  private PIDController m_elbowPid = new PIDController(ekP, ekI, ekD);
-
-  // both shoulder and elbow are assumed to have their absolute 0 in the mechanical dead zone
-  // this deadzone is expected to be at least 0.2 rotation wide (from 0.9 to 0.1)
-  private double m_shoulderPos = m_shoulderEncoder.getPosition();
-  private double m_elbowPos = m_elbowEncoder.getPosition();
-
   public Trap() {
     m_shoulder.restoreFactoryDefaults();
+    m_shoulderSetpoint = new TrapezoidProfile.State(m_shoulderEncoder.getPosition(), 0);
+    m_shoulderGoal = new TrapezoidProfile.State(m_shoulderEncoder.getPosition(), 0);
+
     m_elbow.restoreFactoryDefaults();
+    m_elbowSetpoint = new TrapezoidProfile.State(m_elbowEncoder.getPosition(), 0);
+    m_elbowGoal = new TrapezoidProfile.State(m_elbowEncoder.getPosition(), 0);
 
     m_shoulder.setInverted(true);
     m_elbow.setInverted(true);
@@ -68,26 +90,20 @@ public class Trap extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // System.out.println(
-    //     "elbow " + m_elbowEncoder.getPosition() + " shoulder " +
-    // m_shoulderEncoder.getPosition());
     if (DriverStation.isDisabled()) {
       setZero = false;
     } else {
 
-      var voltage =
-          Math.abs(m_shoulderPos - m_shoulderEncoder.getPosition()) < kmotorAcceptablePosError
-              ? 0.0
-              : m_shoulderPid.calculate(m_shoulderEncoder.getPosition(), m_shoulderPos);
+      m_shoulderSetpoint = m_shoulderProfile.calculate(kDt, m_shoulderSetpoint, m_shoulderGoal);
+      m_shoulderVoltage =
+          m_shoulderPid.calculate(m_shoulderEncoder.getPosition(), m_shoulderSetpoint.position);
+      m_shoulderVoltage = MathUtil.clamp(m_shoulderVoltage, -8, 8);
+      m_shoulder.setVoltage(m_shoulderVoltage);
 
-      m_shoulder.setVoltage(voltage);
-
-      voltage =
-          Math.abs(m_elbowPos - m_elbowEncoder.getPosition()) < kmotorAcceptablePosError
-              ? 0.0
-              : m_elbowPid.calculate(m_elbowEncoder.getPosition(), m_elbowPos);
-
-      m_elbow.setVoltage(voltage);
+      m_elbowSetpoint = m_elbowProfile.calculate(kDt, m_elbowSetpoint, m_elbowGoal);
+      m_elbowVoltage = m_elbowPid.calculate(m_elbowEncoder.getPosition(), m_elbowSetpoint.position);
+      m_elbowVoltage = MathUtil.clamp(m_elbowVoltage, -8, 8);
+      m_elbow.setVoltage(m_elbowVoltage);
     }
   }
 
@@ -114,11 +130,10 @@ public class Trap extends SubsystemBase {
   public Command shoulderMoveRel(double delta) {
     return this.runOnce(
         () -> {
-          var target = m_shoulderPos + delta;
-          m_shoulderPos =
-              ((target < kshoulderDeadZoneBegin) || (target > kshoulderDeadZoneEnd))
-                  ? m_shoulderPos
-                  : target;
+          var target = m_shoulderGoal.position + delta;
+          if (target < kshoulderDeadZoneBegin) m_shoulderGoal.position = kshoulderDeadZoneBegin;
+          else if (target > kshoulderDeadZoneEnd) m_shoulderGoal.position = kshoulderDeadZoneEnd;
+          else m_shoulderGoal.position = target;
         });
   }
 
@@ -129,11 +144,10 @@ public class Trap extends SubsystemBase {
   public Command elbowMoveRel(double delta) {
     return this.runOnce(
         () -> {
-          var target = m_elbowPos + delta;
-          m_elbowPos =
-              ((target < kelbowDeadZoneBegin) || (target > kelbowDeadZoneEnd))
-                  ? m_elbowPos
-                  : target;
+          var target = m_elbowGoal.position + delta;
+          if (target < kelbowDeadZoneBegin) m_elbowGoal.position = kelbowDeadZoneBegin;
+          else if (target > kelbowDeadZoneEnd) m_elbowGoal.position = kelbowDeadZoneEnd;
+          else m_elbowGoal.position = target;
         });
   }
 
@@ -144,12 +158,10 @@ public class Trap extends SubsystemBase {
   public Command shoulderMoveTo(double absolute) {
     return this.runOnce(
         () -> {
-          var target = absolute;
-          System.out.println("shoulder " + target);
-          m_shoulderPos =
-              ((target < kshoulderDeadZoneBegin) || (target > kshoulderDeadZoneEnd))
-                  ? m_shoulderPos
-                  : target;
+          m_shoulderGoal.position =
+              ((absolute < kshoulderDeadZoneBegin) || (absolute > kshoulderDeadZoneEnd))
+                  ? m_shoulderGoal.position
+                  : absolute;
         });
   }
 
@@ -160,12 +172,10 @@ public class Trap extends SubsystemBase {
   public Command elbowMoveTo(double absolute) {
     return this.runOnce(
         () -> {
-          var target = absolute;
-          System.out.println("elbow " + target);
-          m_elbowPos =
-              ((target < kelbowDeadZoneBegin) || (target > kelbowDeadZoneEnd))
-                  ? m_elbowPos
-                  : target;
+          m_elbowGoal.position =
+              ((absolute < kelbowDeadZoneBegin) || (absolute > kelbowDeadZoneEnd))
+                  ? m_elbowGoal.position
+                  : absolute;
         });
   }
 
@@ -323,10 +333,11 @@ public class Trap extends SubsystemBase {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.setSmartDashboardType("Big Arm");
     builder.addDoubleProperty("Shoulder pos", () -> m_shoulderEncoder.getPosition(), null);
     builder.addDoubleProperty("Elbow pos", () -> m_elbowEncoder.getPosition(), null);
-    builder.addDoubleProperty("Shoulder target", () -> m_shoulderPos, null);
-    builder.addDoubleProperty("Elbow target", () -> m_elbowPos, null);
+    builder.addDoubleProperty("Shoulder target", () -> m_shoulderGoal.position, null);
+    builder.addDoubleProperty("Elbow target", () -> m_elbowGoal.position, null);
+    builder.addDoubleProperty("Shoulder voltage", () -> m_shoulderVoltage, null);
+    builder.addDoubleProperty("Elbow voltage", () -> m_elbowVoltage, null);
   }
 }
