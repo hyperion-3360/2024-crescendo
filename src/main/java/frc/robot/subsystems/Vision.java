@@ -91,7 +91,7 @@ public class Vision extends SubsystemBase {
       var angles = Arrays.copyOfRange(info, kAprilTagAnglesStartIndex, kAprilTagIdsStartIndex);
 
       var tagRotation = Rotation2d.fromDegrees(angles[1]);
-      var robotRotation =  Rotation2d.fromDegrees(rotation[1]);;
+      var robotRotation = Rotation2d.fromDegrees(rotation[1]);
 
       m_currentPos = new Pose2d(new Translation2d(position[0], position[1]), robotRotation);
       m_visibleTags = new long[numTags];

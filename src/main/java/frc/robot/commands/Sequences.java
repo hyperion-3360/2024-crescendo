@@ -90,8 +90,8 @@ public class Sequences {
     return Commands.sequence(
             Commands.runOnce(() -> leds.setState(State.INTAKE_ROLLING)),
             intakeRumbleOn(controller, shooter).alongWith(shooter.intake()),
-            leds.runOnce(() -> leds.setState(State.NOTE_INSIDE))
-                .andThen(new WaitCommand(2).andThen(() -> leds.setState(State.IDLE))))
+            leds.runOnce(() -> leds.setState(State.NOTE_INSIDE)))
+        .andThen(new WaitCommand(2).andThen(() -> leds.setState(State.IDLE)))
         .handleInterrupt(
             () -> {
               leds.setState(State.IDLE);

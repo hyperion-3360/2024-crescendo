@@ -202,7 +202,7 @@ public class RobotContainer {
 
     m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
 
-    m_coDriverController
+    m_driverController
         .a()
         .toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led, m_driverController));
     m_driverController

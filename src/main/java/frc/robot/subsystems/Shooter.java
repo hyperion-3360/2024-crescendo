@@ -46,7 +46,7 @@ public class Shooter extends SubsystemBase {
 
   // blocker constants
   private final double kIntakeHookAngleOpen = 100.0;
-  private final double kIntakeHookAngleClose = 155;
+  private final double kIntakeHookAngleClose = 150;
 
   // gear blocker constants
   private final double kGearBlocked = 0.0;

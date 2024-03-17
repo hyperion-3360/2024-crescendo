@@ -62,13 +62,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "6f"
+                  "pathName": "corridor1Shoot"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "farShootD"
+                  "name": "farShootA"
                 }
               }
             ]
@@ -92,6 +92,70 @@
                       "type": "wait",
                       "data": {
                         "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intake"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "corridor1Shoot2"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.1
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "farShootA"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "corridor1Intake2"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
                       }
                     },
                     {

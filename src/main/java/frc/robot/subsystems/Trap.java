@@ -68,8 +68,9 @@ public class Trap extends SubsystemBase {
 
   @Override
   public void periodic() {
-    System.out.println(
-        "elbow " + m_elbowEncoder.getPosition() + " shoulder " + m_shoulderEncoder.getPosition());
+    // System.out.println(
+    //     "elbow " + m_elbowEncoder.getPosition() + " shoulder " +
+    // m_shoulderEncoder.getPosition());
     if (DriverStation.isDisabled()) {
       setZero = false;
     } else {
