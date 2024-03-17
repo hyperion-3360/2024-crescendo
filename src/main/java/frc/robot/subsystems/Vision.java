@@ -28,7 +28,6 @@ public class Vision extends SubsystemBase {
   private double m_taglastUpdate = 0;
 
   final AtomicReference<double[]> m_tagValue = new AtomicReference<double[]>();
-  final AtomicReference<double[]> m_detectionValue = new AtomicReference<double[]>();
 
   private DoubleArraySubscriber m_aprilTagInfo =
       NetworkTableInstance.getDefault()
@@ -36,15 +35,8 @@ public class Vision extends SubsystemBase {
           .getDoubleArrayTopic("position")
           .subscribe(new double[] {});
 
-  private DoubleArraySubscriber m_detectionInfo =
-      NetworkTableInstance.getDefault()
-          .getTable("SmartDashboard")
-          .getDoubleArrayTopic("detection")
-          .subscribe(new double[] {});
-
   private Pose2d m_currentPos;
   private long[] m_visibleTags;
-  private Translation2d m_detection;
 
   /** Creates a new Vision. */
   public Vision() {
@@ -66,17 +58,6 @@ public class Vision extends SubsystemBase {
         event -> {
           m_tagValue.set(event.valueData.value.getDoubleArray());
         });
-
-    // subscribe to the topic in "datatable" called "AprilTags"
-    m_detectionInfo = visionTable.getDoubleArrayTopic("Note").subscribe(new double[] {});
-
-    // add a listener to get notified only when AprilTags changes
-    inst.addListener(
-        m_detectionInfo,
-        EnumSet.of(NetworkTableEvent.Kind.kValueAll),
-        event -> {
-          m_detectionValue.set(event.valueData.value.getDoubleArray());
-        });
   }
 
   @Override
@@ -91,7 +72,6 @@ public class Vision extends SubsystemBase {
 
       // for convenience just copy slice of the bigger array into smaller ones
       var position = Arrays.copyOfRange(info, kAprilTagPosStartIndex, kAprilTagRotStartIndex);
-      var rotation = Arrays.copyOfRange(info, kAprilTagRotStartIndex, kAprilTagAnglesStartIndex);
       var numTags = info.length - kAprilTagIdsStartIndex;
       var angles = Arrays.copyOfRange(info, kAprilTagAnglesStartIndex, kAprilTagIdsStartIndex);
 
@@ -103,7 +83,6 @@ public class Vision extends SubsystemBase {
 
       // TODO: rotation calculated by jetson script doesn't seem valid..
       // Can't rely on it for now. using tagRotation instead. tbd
-      var robotRotation = Rotation2d.fromDegrees(rotation[2]);
 
       m_currentPos = new Pose2d(new Translation2d(position[0], position[1]), tagRotation);
       m_visibleTags = new long[numTags];
@@ -113,14 +92,6 @@ public class Vision extends SubsystemBase {
       m_taglastUpdate = Timer.getFPGATimestamp();
     } else if (Timer.getFPGATimestamp() - m_taglastUpdate > kCoalescingTime) {
       m_currentPos = null;
-    }
-
-    // check if we have a note detected using the AI system
-    value = m_detectionValue.getAndSet(null);
-    if (value != null) {
-      m_detection = new Translation2d(value[0], value[1]);
-    } else {
-      m_detection = null;
     }
   }
 
@@ -154,16 +125,8 @@ public class Vision extends SubsystemBase {
     }
   }
 
-  public Translation2d getNoteCoord() {
-    return m_detection;
-  }
-
   public long[] getVisibleTagIds() {
     return m_visibleTags;
-  }
-
-  public boolean isNoteDetected() {
-    return m_detection != null;
   }
 
   public boolean isValidPos() {
@@ -180,10 +143,5 @@ public class Vision extends SubsystemBase {
       builder.addDoubleProperty("Pose Y", () -> getPosition().getY(), null);
       builder.addIntegerArrayProperty("Tag IDs", this::getVisibleTagIds, null);
     }
-    // builder.addBooleanProperty("Valid Note detection", this::isNoteDetected, null);
-    // if(getNoteCoord() != null){
-    //   builder.addDoubleProperty("Note detection X", () -> getNoteCoord().getX(), null);
-    //   builder.addDoubleProperty("Note detection Y", () -> getNoteCoord().getY(), null);
-    // }
   }
 }

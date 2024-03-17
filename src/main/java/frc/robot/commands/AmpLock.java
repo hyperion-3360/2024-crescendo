@@ -105,7 +105,7 @@ public class AmpLock extends Command {
 
         // distance from camera to tag -- get distance from robot
         final var dx = camTranslation.getX() - pointToFace.getX();
-        final var dy = camTranslation.getX() - pointToFace.getX();
+        final var dy = camTranslation.getY() - pointToFace.getY();
         final var hyp = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
         final var distanceFromTag = Math.sin(Constants.VisionConstants.kShooterCameraPitch) * hyp;
 
