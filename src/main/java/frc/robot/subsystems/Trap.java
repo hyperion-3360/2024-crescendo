@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.lib.util.TimedServo;
 import frc.robot.Constants;
+import frc.robot.Constants.TrapConstants;
 
 public class Trap extends SubsystemBase {
 
@@ -181,6 +182,14 @@ public class Trap extends SubsystemBase {
         });
   }
 
+  public Boolean shoulderReachedPos() {
+    return Math.abs(m_shoulderEncoder.getPosition() - m_shoulderGoal.position) > 0.05;
+  }
+
+  public Boolean elbowReachedPos() {
+    return Math.abs(m_elbowEncoder.getPosition() - m_elbowGoal.position) > 0.05;
+  }
+
   // position throughout game
 
   public Command setZero() {
@@ -199,25 +208,17 @@ public class Trap extends SubsystemBase {
     return Commands.sequence(
         shoulderMoveTo(Constants.TrapConstants.kShoulderGrabPosition),
         elbowMoveTo(Constants.TrapConstants.kElbowGrabPosition),
-        this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristGrabPosition)));
+        this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristGrabPosition)),
+        new WaitCommand(m_servoWrist.travelTime()),
+        this.runOnce(() -> m_servoFinger.setAngle(TrapConstants.kFingerOpened)));
   }
 
   public Command storeNote() {
     return Commands.sequence(
         shoulderMoveTo(Constants.TrapConstants.kShoulderStoreNote),
         elbowMoveTo(Constants.TrapConstants.kElbowStoreNote),
-        this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kShoulderStoreNote)));
+        this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristStoreNote)));
   }
-
-  // TODO this also has to be modified
-  // position to store the note in the robot so robot can still pass under chain
-  // public Command storeNote() {
-  //   return this.runOnce(() -> shoulderMoveTo(Constants.TrapConstants.kShoulderStoreNote))
-  //       .andThen(() -> elbowMoveTo(Constants.TrapConstants.kElbowStoreNote))
-  //       .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristStoreNote))
-  //       .andThen(new WaitCommand(m_servoWrist.travelTime()))
-  //       .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerClosed));
-  // }
 
   // test commands to test each motor one by one
   public Command testShoulder() {
@@ -265,21 +266,21 @@ public class Trap extends SubsystemBase {
         this.runOnce(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerClosed)),
         shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb1),
         elbowMoveTo(Constants.TrapConstants.kElbowPrepareToClimb1),
-        new WaitCommand(.2),
+        new WaitUntilCommand(() -> elbowReachedPos()),
         shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb2),
         elbowMoveTo(Constants.TrapConstants.kElbowPrepareToClimb2),
-        new WaitCommand(.2),
+        new WaitUntilCommand(() -> elbowReachedPos()),
         shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb3),
         elbowMoveTo(Constants.TrapConstants.kElbowPrepareToClimb3),
-        new WaitCommand(.2),
+        new WaitUntilCommand(() -> elbowReachedPos()),
         shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb4),
         elbowMoveTo(Constants.TrapConstants.kElbowPrepareToClimb4),
-        new WaitCommand(.2),
+        new WaitUntilCommand(() -> elbowReachedPos()),
         shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb5),
         elbowMoveTo(Constants.TrapConstants.kElbowPrepareToClimb5),
-        new WaitCommand(.2),
+        new WaitUntilCommand(() -> elbowReachedPos()),
         shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb6),
-        new WaitCommand(.2),
+        new WaitUntilCommand(() -> shoulderReachedPos()),
         this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristPrepareToClimb)));
   }
 
