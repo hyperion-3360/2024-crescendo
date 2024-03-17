@@ -10,15 +10,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 public final class Autos {
 
   public enum Mode {
-    TwoNotesMidField("2NotesClose"),
-    ThreeNotesMidField("3NotesClose"),
     FourNotesMidField("4NotesClose"),
-    TwoNotesCenterField("2NotesCenterField"),
-    ThreeNotesCenterField("3NotesCenterField"),
+    // TwoNotesCenterField("2NotesCenterField"),
+    // ThreeNotesCenterField("3NotesCenterField"),
     FourNotesCenterField("4NotesCenterField"),
-    TwoNotesCorridor1("2NotesCorridor1"),
     TwoNotesCorridor2("2NotesCorridor2"),
-    TwoNotesCorridor3("2NotesCorridor3"),
+    ThreeNotesCorridor3("3NotesCorridor3"),
     ThreeNotesCorridor1("3NotesCorridor1"),
     ShootCrossRobotZone("shootCrossRobotZone"),
     Nothing("nothing"),
@@ -44,18 +41,13 @@ public final class Autos {
   private static SendableChooser<Mode> autoChooser = new SendableChooser<>();
 
   public static void setShuffleboardOptions() {
-    autoChooser.setDefaultOption("score 2 notes mid field", Mode.TwoNotesMidField);
+    autoChooser.setDefaultOption("score 4 notes close", Mode.FourNotesMidField);
 
-    autoChooser.addOption("score 2 notes close", Mode.TwoNotesMidField);
-    autoChooser.addOption("score 3 notes close", Mode.ThreeNotesMidField);
     autoChooser.addOption("score 4 notes close", Mode.FourNotesMidField);
-    autoChooser.addOption("score 2 notes corridor 1", Mode.TwoNotesCorridor1);
-    autoChooser.addOption("score 2 notes corridor 2", Mode.TwoNotesCorridor2);
-    autoChooser.addOption("score 2 notes corridor 3", Mode.TwoNotesCorridor3);
     autoChooser.addOption("score 3 notes corridor 1", Mode.ThreeNotesCorridor1);
-    autoChooser.addOption("score 2 notes center field", Mode.TwoNotesCenterField);
-    autoChooser.addOption("score 3 notes center field", Mode.ThreeNotesCenterField);
-    autoChooser.addOption("score 4 notes center field", Mode.FourNotesCenterField);
+    autoChooser.addOption("score 2 notes corridor 2", Mode.TwoNotesCorridor2);
+    autoChooser.addOption("score 3 notes corridor 3", Mode.ThreeNotesCorridor3);
+    // autoChooser.addOption("score 4 notes center field (meh?)", Mode.FourNotesCenterField);
     autoChooser.addOption("shoot then cross the robot zone", Mode.ShootCrossRobotZone);
     autoChooser.addOption("straight line", Mode.StraightLine);
     autoChooser.addOption("do nothing", Mode.Nothing);
