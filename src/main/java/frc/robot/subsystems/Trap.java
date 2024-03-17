@@ -23,7 +23,7 @@ public class Trap extends SubsystemBase {
   private static final double kDt = 0.02;
 
   // shoulder joint control
-  private final double kshoulderDeadZoneEnd = 0.35;
+  private final double kshoulderDeadZoneEnd = 0.40;
   private final double kshoulderDeadZoneBegin = 0.07;
 
   private final double kP = 110;
