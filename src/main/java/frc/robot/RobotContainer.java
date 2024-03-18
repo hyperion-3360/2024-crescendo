@@ -210,7 +210,7 @@ public class RobotContainer {
         .onTrue(Sequences.elevatorFarHighFromAmp(m_elevator, m_shooter, m_led));
 
     m_coDriverController
-        .rightTrigger()
+        .rightBumper()
         .onTrue(Sequences.elevatorFarShootOneRobotDistance(m_elevator, m_shooter, m_led));
 
     m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
@@ -230,7 +230,7 @@ public class RobotContainer {
         .toggleOnTrue(m_shooter.vomit().finallyDo(() -> m_led.setState(State.IDLE)));
 
     m_coDriverController
-        .rightBumper()
+        .leftBumper()
         .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
 
     m_driverController.x().onTrue(changeCameraPerspective());
