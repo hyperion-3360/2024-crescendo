@@ -225,8 +225,8 @@ public class RobotContainer {
         .b()
         .toggleOnTrue(m_shooter.vomit().finallyDo(() -> m_led.setState(State.IDLE)));
 
-    m_driverController
-        .y()
+    m_coDriverController
+        .rightBumper()
         .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
 
     m_driverController.x().onTrue(changeCameraPerspective());
