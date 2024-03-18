@@ -65,6 +65,18 @@ public class Sequences {
                     new WaitCommand(1).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
+  public static Command elevatorFarShootOneRobotDistance(
+      Elevator elevator, Shooter shooter, LEDs leds) {
+    return Commands.sequence(
+        leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
+        elevator.extendTheElevator(elevatorHeight.AUTOFAR4),
+        shooter.setTargetLevel(levelSpeed.FAR_HIGH),
+        new WaitCommand(0.5),
+        shooter
+            .holdSpeed(levelSpeed.LOW)
+            .alongWith(new WaitCommand(1).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
+  }
+
   public static Command shoot(Shooter shooter, Elevator elevator, LEDs leds) {
     return Commands.sequence(
             shooter.hookRelease(),

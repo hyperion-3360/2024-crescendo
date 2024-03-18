@@ -209,6 +209,10 @@ public class RobotContainer {
         .rightBumper()
         .onTrue(Sequences.elevatorFarHighFromAmp(m_elevator, m_shooter, m_led));
 
+    m_coDriverController
+        .rightTrigger()
+        .onTrue(Sequences.elevatorFarShootOneRobotDistance(m_elevator, m_shooter, m_led));
+
     m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
 
     m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
