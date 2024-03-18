@@ -337,13 +337,34 @@ public class Shooter extends SubsystemBase {
 
   public Command eject() {
     return Commands.sequence(
-        hookRelease(),
-        setTargetLevel(levelSpeed.EJECT),
-        setSpeedWithTarget(),
-        waitForShot(),
-        setTargetLevel(levelSpeed.STOP),
-        setSpeedWithTarget(),
-        hookIntake());
+            hookRelease(),
+            new WaitCommand(0.7),
+            this.runOnce(
+                () -> {
+                  m_leftMaster.setOpenLoopRampRate(0.4);
+                  m_rightMaster.setOpenLoopRampRate(
+                      0.4); // emergency setting of the open loop ramp rate
+                }),
+            setTargetLevel(levelSpeed.EJECT),
+            setSpeedWithTarget(),
+            waitForShot(),
+            setTargetLevel(levelSpeed.STOP),
+            setSpeedWithTarget(),
+            this.runOnce(
+                () -> {
+                  m_leftMaster.setOpenLoopRampRate(rampRate);
+                  m_rightMaster.setOpenLoopRampRate(
+                      rampRate); // resetting the ramp rate to normal values
+                }),
+            hookIntake())
+        .handleInterrupt(
+            () ->
+                this.runOnce(
+                    () -> {
+                      m_leftMaster.setOpenLoopRampRate(rampRate);
+                      m_rightMaster.setOpenLoopRampRate(
+                          rampRate); // resetting the open loop ramp rate if interrupted
+                    }));
   }
 
   public Command holdSpeed(levelSpeed level) {
