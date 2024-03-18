@@ -103,26 +103,40 @@ public class SpeakerLock extends Command {
         MathUtil.applyDeadband(m_translationSup.getAsDouble(), Constants.stickDeadband);
 
     double strafeVal = MathUtil.applyDeadband(m_strafeSup.getAsDouble(), Constants.stickDeadband);
-
     double rotationVal = m_swerve.getRotation2d().getRadians();
 
     var cur_pos = m_swerve.getPose().getTranslation();
 
     if (m_aprilTagFieldLayout != null) {
 
-      if (m_isLocked) {
+      if (m_isLocked && m_vision.getPosition() != null) {
+        final var cameraPose2d = m_vision.getPosition();
+        var camTranslation = new Translation2d(cameraPose2d.getX(), cameraPose2d.getY());
+
         // compute rotation to apply to face the target
         Translation2d pointToFace = m_target;
+        // double tagOrientation = m_targetRotation;
+
+        // distance from camera to tag -- get distance from robot
+        final var dx = camTranslation.getX() - pointToFace.getX();
+        final var dy = camTranslation.getY() - pointToFace.getY();
+        final var hyp = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+        final var distanceFromTag = Math.sin(Constants.VisionConstants.kShooterCameraPitch) * hyp;
+
+        // Calulate the rotation needed to face the tag
+        // Correct for camera position. Anticlockwise rotatiozn
+        double camRot = cameraPose2d.getRotation().getRadians();
+        rotationVal = camRot + Constants.VisionConstants.kShooterCameraPitch;
+
         Rotation2d rotationNeeded =
             pointToFace.minus(m_swerve.getPose().getTranslation()).getAngle();
         rotationVal = rotationNeeded.getRadians();
 
         // compute elevator angle to shoot in target, assuming straightline not parabol
-        double distance2Target = cur_pos.getDistance(pointToFace);
-        if (distance2Target > Constants.ShooterConstants.kMaxShootingDistance)
+        if (distanceFromTag > Constants.ShooterConstants.kMaxShootingDistance)
           m_led.setState(LEDs.State.PREPARE_SHOT_SPEAKER);
         else {
-          double elevatorAngle = Math.atan2(m_targetHeight, distance2Target);
+          double elevatorAngle = Math.atan2(m_targetHeight, distanceFromTag);
           m_elevator.extendTheElevator(elevatorAngle);
           m_led.setState(LEDs.State.SHOOT_READY_SPEAKER);
         }

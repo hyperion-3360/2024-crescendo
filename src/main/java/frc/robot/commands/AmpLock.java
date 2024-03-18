@@ -117,7 +117,6 @@ public class AmpLock extends Command {
         SmartDashboard.putNumber("Distance from target", distanceFromTag);
         SmartDashboard.putNumber("Rotation needed (rad)", rotationVal);
 
-        // compute elevator angle to shoot in target, assuming straightline not parabol
         double distance2Target = distanceFromTag; // cur_pos.getDistance(pointToFace);
         if (distance2Target <= Constants.VisionConstants.kAmpRiseElevatorDistance) {
           m_elevator.extendTheElevator(Elevator.elevatorHeight.LOW);
