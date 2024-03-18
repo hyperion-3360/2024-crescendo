@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -102,39 +103,36 @@ public class Sequences {
   public static Command trapGetNote(Shooter m_shooter, Trap m_trap) {
     return Commands.sequence(
         m_trap.grabPosition(),
-        new WaitCommand(0.7),
         m_shooter.hookRelease(),
+        new WaitCommand(2.5),
         m_shooter.setTargetLevel(levelSpeed.TRAP),
         m_shooter.setSpeedWithTarget(),
         new WaitUntilCommand(m_trap::trapHasNote),
         m_trap.closeFinger(),
-        new WaitCommand(0.1),
+        new WaitCommand(0.3),
         m_shooter.stop(),
-        new WaitCommand(0.4),
+        new WaitCommand(0.3),
         m_trap.storeNote());
   }
 
   // // sequence to score note in trap
-  // public static Command trapScore(Trap m_trap) {
-  //   return Commands.sequence(
-  //       m_trap.dunkNote(),
-  //       new WaitCommand(1),
-  //       m_trap.prepareToDisable1(),
-  //       new WaitCommand(0.5),
-  //       m_trap.pushNote(),
-  //       new WaitCommand(0.5),
-  //       m_trap.prepareToDisable1(),
-  //       new WaitCommand(0.2),
-  //       m_trap.prepareToDisable2());
-  // }
+  public static Command trapScore(Trap m_trap) {
+    return Commands.sequence(
+        m_trap.dunkNote(), new WaitCommand(1), new PrintCommand("dunk")
+        // m_trap.prepareToDisable1()
+        // new WaitCommand(0.5),
+        // m_trap.prepareToDisable2()
+        );
+  }
 
   // sequence lift elevator and start wheels to climb !! wait will have to be modified !!
   // climb with the arm
   public static Command climbElevatorNote(Elevator elevator, Shooter shooter, Trap trap) {
     return Commands.sequence(
         trap.prepareToClimb(),
-        new WaitCommand(1),
+        new WaitCommand(3),
         elevator.extendTheElevator(elevatorHeight.HIGH),
+        shooter.holdSpeed(levelSpeed.CLIMB),
         new WaitCommand(1));
   }
 
@@ -145,9 +143,10 @@ public class Sequences {
   // climb without the arm
   public static Command climbElevator(Elevator elevator, Shooter shooter) {
     return Commands.sequence(
+        shooter.setTargetLevel(levelSpeed.CLIMB),
         elevator.extendTheElevator(elevatorHeight.HIGH),
         new WaitCommand(1),
-        shooter.holdSpeed(levelSpeed.CLIMB),
+        shooter.setSpeedWithTarget(),
         new WaitCommand(5),
         shooter.stop());
   }

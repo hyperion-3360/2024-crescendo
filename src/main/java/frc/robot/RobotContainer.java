@@ -32,6 +32,7 @@ import frc.robot.subsystems.Elevator.elevatorHeight;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.LEDs.State;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
@@ -47,7 +48,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final Swerve m_swerveDrive = new Swerve();
-  // private final Trap m_trap = new Trap();
+  private final Trap m_trap = new Trap();
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
   private final Climber m_climber = new Climber();
   public static final Elevator m_elevator = new Elevator();
@@ -94,6 +95,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     SmartDashboard.putData(m_vision);
+    SmartDashboard.putData(m_trap);
 
     m_camera1 = CameraServer.startAutomaticCapture(Constants.Camera.kCameraIntake);
     m_camera1.setVideoMode(
@@ -192,7 +194,12 @@ public class RobotContainer {
 
     // configureTrapDebugBindings();
 
-    m_coDriverController.povRight().onTrue(Sequences.climbElevator(m_elevator, m_shooter));
+    m_coDriverController.povDown().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
+    m_coDriverController.povRight().onTrue(m_trap.setZero());
+    m_coDriverController
+        .povLeft()
+        .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
+    m_coDriverController.povUp().onTrue(Sequences.trapScore(m_trap));
     m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
     m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
     m_coDriverController

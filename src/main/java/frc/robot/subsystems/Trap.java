@@ -37,7 +37,7 @@ public class Trap extends SubsystemBase {
       m_shoulder.getAbsoluteEncoder(Type.kDutyCycle);
 
   private final TrapezoidProfile m_shoulderProfile =
-      new TrapezoidProfile(new TrapezoidProfile.Constraints(0.4, 0.1));
+      new TrapezoidProfile(new TrapezoidProfile.Constraints(0.2, 0.1));
 
   private TrapezoidProfile.State m_shoulderGoal;
   private TrapezoidProfile.State m_shoulderSetpoint;
@@ -97,14 +97,22 @@ public class Trap extends SubsystemBase {
       m_shoulderSetpoint = m_shoulderProfile.calculate(kDt, m_shoulderSetpoint, m_shoulderGoal);
       m_shoulderVoltage =
           m_shoulderPid.calculate(m_shoulderEncoder.getPosition(), m_shoulderSetpoint.position);
-      m_shoulderVoltage = MathUtil.clamp(m_shoulderVoltage, -8, 8);
+      m_shoulderVoltage = MathUtil.clamp(m_shoulderVoltage, -10, 10);
       m_shoulder.setVoltage(m_shoulderVoltage);
 
       m_elbowSetpoint = m_elbowProfile.calculate(kDt, m_elbowSetpoint, m_elbowGoal);
       m_elbowVoltage = m_elbowPid.calculate(m_elbowEncoder.getPosition(), m_elbowSetpoint.position);
-      m_elbowVoltage = MathUtil.clamp(m_elbowVoltage, -8, 8);
+      m_elbowVoltage = MathUtil.clamp(m_elbowVoltage, -10, 10);
       m_elbow.setVoltage(m_elbowVoltage);
     }
+  }
+
+  public Boolean shoulderReachedPos() {
+    return Math.abs(m_shoulderEncoder.getPosition() - m_shoulderGoal.position) > 0.05;
+  }
+
+  public Boolean elbowReachedPos() {
+    return Math.abs(m_elbowEncoder.getPosition() - m_elbowGoal.position) > 0.05;
   }
 
   public Command elbowIncrease() {
@@ -185,11 +193,9 @@ public class Trap extends SubsystemBase {
     return Commands.sequence(
         shoulderMoveTo(Constants.TrapConstants.kShoulderSetZero),
         elbowMoveTo(Constants.TrapConstants.kElbowSetZero),
-        this.runOnce(() -> elbowMoveTo(Constants.TrapConstants.kElbowSetZero)),
         this.runOnce(() -> m_servoWrist.setZero()),
         new WaitCommand(m_servoWrist.travelTime()),
         this.runOnce(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerOpened)),
-        new WaitCommand(m_servoFinger.travelTime()),
         this.runOnce(() -> setZero = true));
   }
 
@@ -197,56 +203,16 @@ public class Trap extends SubsystemBase {
     return Commands.sequence(
         shoulderMoveTo(Constants.TrapConstants.kShoulderGrabPosition),
         elbowMoveTo(Constants.TrapConstants.kElbowGrabPosition),
+        new WaitCommand(1.0),
         this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristGrabPosition)));
   }
 
   public Command storeNote() {
     return Commands.sequence(
-        shoulderMoveTo(Constants.TrapConstants.kShoulderStoreNote),
         elbowMoveTo(Constants.TrapConstants.kElbowStoreNote),
-        this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kShoulderStoreNote)));
-  }
-
-  // TODO this also has to be modified
-  // position to store the note in the robot so robot can still pass under chain
-  // public Command storeNote() {
-  //   return this.runOnce(() -> shoulderMoveTo(Constants.TrapConstants.kShoulderStoreNote))
-  //       .andThen(() -> elbowMoveTo(Constants.TrapConstants.kElbowStoreNote))
-  //       .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristStoreNote))
-  //       .andThen(new WaitCommand(m_servoWrist.travelTime()))
-  //       .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerClosed));
-  // }
-
-  // test commands to test each motor one by one
-  public Command testShoulder() {
-    return this.runOnce(() -> shoulderMoveTo(0.1));
-  }
-
-  public Command testElbow() {
-    return this.runOnce(() -> elbowMoveTo(0.1));
-  }
-
-  public Command testWrist() {
-    return this.runOnce(() -> m_servoWrist.setAngle(0.0));
-  }
-
-  public Command testFinger() {
-    return this.runOnce(() -> m_servoFinger.setAngle(0.0));
-  }
-
-  // // position to grab note from intake.
-  // public Command grabPosition() {
-  //   return this.runOnce(() -> shoulderMoveTo(Constants.TrapConstants.kShoulderGrabPosition))
-  //       .andThen(() -> shoulderMoveTo(Constants.TrapConstants.kElbowGrabPosition))
-  //       .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristGrabPosition))
-  //       .andThen(new WaitCommand(m_servoWrist.travelTime()))
-  //       .andThen(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerOpened));
-  // }
-
-  public Command pushNote() {
-    return this.runOnce(() -> shoulderMoveTo(Constants.TrapConstants.kShoulderPushNote))
-        .andThen(() -> elbowMoveTo(Constants.TrapConstants.kElbowPushNote))
-        .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristPushNote));
+        new WaitCommand(0.1),
+        shoulderMoveTo(Constants.TrapConstants.kShoulderStoreNote),
+        this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristStoreNote)));
   }
 
   // command to close the finger in the sequence trapshoot if deleted finger will never close and
@@ -263,21 +229,15 @@ public class Trap extends SubsystemBase {
         this.runOnce(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerClosed)),
         shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb1),
         elbowMoveTo(Constants.TrapConstants.kElbowPrepareToClimb1),
-        new WaitCommand(.2),
         shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb2),
         elbowMoveTo(Constants.TrapConstants.kElbowPrepareToClimb2),
-        new WaitCommand(.2),
         shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb3),
         elbowMoveTo(Constants.TrapConstants.kElbowPrepareToClimb3),
-        new WaitCommand(.2),
         shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb4),
         elbowMoveTo(Constants.TrapConstants.kElbowPrepareToClimb4),
-        new WaitCommand(.2),
         shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb5),
         elbowMoveTo(Constants.TrapConstants.kElbowPrepareToClimb5),
-        new WaitCommand(.2),
         shoulderMoveTo(Constants.TrapConstants.kShoulderPrepareToClimb6),
-        new WaitCommand(.2),
         this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristPrepareToClimb)));
   }
 
@@ -286,7 +246,9 @@ public class Trap extends SubsystemBase {
     return Commands.sequence(
         shoulderMoveTo(Constants.TrapConstants.kShoulderDunkNote),
         elbowMoveTo(Constants.TrapConstants.kElbowDunkNote),
+        new WaitCommand(1),
         this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristDunkNote)),
+        new WaitCommand(2),
         this.runOnce(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerOpened)));
   }
 
@@ -294,24 +256,21 @@ public class Trap extends SubsystemBase {
   // anywhere.
   // // needs to be before the disable2 because it lifts the arm up before it folds the wrist and
   // // lowers the elbow in disable2
-  // public Command prepareToDisable1() {
-  //   return this.runOnce(
-  //           () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderdisable1))
-  //       .andThen(new WaitCommand(m_servoShoulder.travelTime()))
-  //       .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowdisable1))
-  //       .andThen(new WaitCommand(m_servoElbow.travelTime()))
-  //       .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristdisable1));
-  // }
+  public Command prepareToDisable1() {
+    return Commands.sequence(
+        shoulderMoveTo(Constants.TrapConstants.kShoulderDunkNote),
+        elbowMoveTo(Constants.TrapConstants.kElbowDunkNote),
+        this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristDisable1)));
+  }
 
   // // position that folds wrist and arm will rest on shooter.
-  // public Command prepareToDisable2() {
-  //   return this.runOnce(
-  //           () -> m_servoShoulder.setAngle(Constants.TrapConstants.kangleShoulderdisable2))
-  //       .andThen(new WaitCommand(m_servoShoulder.travelTime()))
-  //       .andThen(() -> m_servoElbow.setAngle(Constants.TrapConstants.kangleElbowdisable2))
-  //       .andThen(new WaitCommand(0.6))
-  //       .andThen(() -> m_servoWrist.setAngle(Constants.TrapConstants.kangleWristdisable2));
-  // }
+  public Command prepareToDisable2() {
+    return Commands.sequence(
+        shoulderMoveTo(Constants.TrapConstants.kShoulderDunkNote),
+        elbowMoveTo(Constants.TrapConstants.kElbowDunkNote),
+        new WaitCommand(0.6),
+        this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristDisable2)));
+  }
 
   // // manual control to fine tune arm positions using pov on joystick.
   // public Command manualControl(Joint j, boolean increase) {

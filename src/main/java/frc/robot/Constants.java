@@ -214,30 +214,27 @@ public final class Constants {
     public static final double kFingerClosed = 180.0; // angle of finger servo when closed/opened
     public static final double kFingerOpened = 90.0;
     // good
-    public static final double kShoulderSetZero = 0.41; // 0.41 SETZERO
-    public static final double kElbowSetZero = 0.05;
-    public static final double kWristSetZero = 155.0; // higher number = higher
+    public static final double kShoulderSetZero = 0.40; // SETZERO
+    public static final double kElbowSetZero = 0.08;
+    public static final double kWristSetZero = 160.0; // higher number = higher
     // good
     public static final double kShoulderGrabPosition = 0.16; // GRABPOSITION
-    public static final double kElbowGrabPosition = 0.23;
-    public static final double kWristGrabPosition = 200.0;
+    public static final double kElbowGrabPosition = 0.22;
+    public static final double kWristGrabPosition = 210.0;
 
     // good
-    public static final double kShoulderStoreNote = 0.41; // STORENOTE
-    public static final double kElbowStoreNote = 0.05;
-    public static final double kWristStoreNote = 160.0;
+    public static final double kShoulderStoreNote = 0.40; // STORENOTE
+    public static final double kElbowStoreNote = 0.07;
+    public static final double kWristStoreNote = 150.0;
 
     public static final double kShoulderPushNote = 0.0; // PUSHNOTE
     public static final double kElbowPushNote = 0.0;
     public static final double kWristPushNote = 100.0;
 
     // Shoulder moves first to its most vertical position  // DUNKNOTE + PUSH
-    public static final double kShoulderDunkNote = 0.10;
-    public static final double kElbowDunkNote = 30.0;
-    public static final double kWristDunkNote = 200.0;
-    // Try to drop the note into the trap by pushing down and moving up the wrist a bit
-    public static final double kWristFinalPush = 5.0;
-    public static final double kElbowFinalPush = 0.0;
+    public static final double kShoulderDunkNote = 0.05;
+    public static final double kElbowDunkNote = 0.35;
+    public static final double kWristDunkNote = 155.0;
 
     // in progress
     public static final double kShoulderDisable1 = 0.0; // PREPARETODISABLE1
@@ -256,7 +253,7 @@ public final class Constants {
     public static final double kShoulderPrepareToClimb3 = 0.23;
     public static final double kShoulderPrepareToClimb4 = 0.19;
     public static final double kShoulderPrepareToClimb5 = 0.14;
-    public static final double kShoulderPrepareToClimb6 = 0.10;
+    public static final double kShoulderPrepareToClimb6 = 0.12;
     public static final double kElbowPrepareToClimb1 = 0.15;
     public static final double kElbowPrepareToClimb2 = 0.20;
     public static final double kElbowPrepareToClimb3 = 0.25;
