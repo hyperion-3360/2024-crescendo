@@ -61,6 +61,7 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   private final CommandXboxController m_coDriverController = new CommandXboxController(1);
+  private final CommandXboxController m_pitController = new CommandXboxController(2);
 
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
@@ -193,10 +194,12 @@ public class RobotContainer {
   private void configureBindings() {
 
     // configureTrapDebugBindings();
-    // m_coDriverController.povDown().onTrue(m_trap.elbowIncrease());
-    // m_coDriverController.povUp().onTrue(m_trap.elbowDecrease());
-    // m_coDriverController.povRight().onTrue(m_trap.shoulderIncrease());
-    // m_coDriverController.povLeft().onTrue(m_trap.shoulderDecrease());
+    m_pitController.povUp().onTrue(m_trap.shoulderIncrease());
+    m_pitController.povDown().onTrue(m_trap.shoulderDecrease());
+    m_pitController.povLeft().onTrue(m_trap.elbowIncrease());
+    m_pitController.povRight().onTrue(m_trap.elbowDecrease());
+    m_coDriverController.povDown().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
+    m_coDriverController.povRight().onTrue(m_trap.setZeroGrab());
     m_coDriverController
         .povLeft()
         .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
