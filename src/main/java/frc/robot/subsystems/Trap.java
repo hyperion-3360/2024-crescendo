@@ -50,7 +50,7 @@ public class Trap extends SubsystemBase {
   private static final double kDt = 0.02;
 
   // shoulder joint control
-  private final double kshoulderDeadZoneEnd = 0.30;
+  private final double kshoulderDeadZoneEnd = 0.35;
   private final double kshoulderDeadZoneBegin = 0.07;
 
   private final double kP = 80;
@@ -275,8 +275,9 @@ public class Trap extends SubsystemBase {
 
   public Command grabPosition() {
     return Commands.sequence(
-        shoulderMoveTo(Constants.TrapConstants.kShoulderGrabPosition),
         elbowMoveTo(Constants.TrapConstants.kElbowGrabPosition),
+        new WaitCommand(0.5),
+        shoulderMoveTo(Constants.TrapConstants.kShoulderGrabPosition),
         new WaitCommand(1.0),
         this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristGrabPosition)));
   }
