@@ -366,17 +366,11 @@ public class Trap extends SubsystemBase {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.addDoubleProperty(
-        "Shoulder pos", () -> (m_shoulderEncoder.getPosition() - m_zeroPosShoulder) * 360, null);
+    builder.addDoubleProperty("Shoulder pos", () -> m_shoulderEncoder.getPosition(), null);
 
-    builder.addDoubleProperty(
-        "Shoulder target", () -> (m_shoulderSetpoint.position - m_zeroPosShoulder) * 360, null);
+    builder.addDoubleProperty("Shoulder target", () -> m_shoulderSetpoint.position, null);
 
-    builder.addDoubleProperty("Shoulder voltage", () -> m_shoulderVoltage, null);
-
-    builder.addDoubleProperty("Shoulder error", () -> m_shoulderPid.getPositionError() * 360, null);
     builder.addDoubleProperty("Elbow pos", () -> m_elbowEncoder.getPosition(), null);
-    builder.addDoubleProperty("Elbow target", () -> m_elbowGoal.position, null);
-    builder.addDoubleProperty("Elbow voltage", () -> m_elbowVoltage, null);
+    builder.addDoubleProperty("Elbow target", () -> m_elbowSetpoint.position, null);
   }
 }
