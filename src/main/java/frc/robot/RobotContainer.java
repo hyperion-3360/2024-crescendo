@@ -194,18 +194,26 @@ public class RobotContainer {
   private void configureBindings() {
 
     // configureTrapDebugBindings();
-    m_pitController.povUp().onTrue(m_trap.shoulderIncrease());
-    m_pitController.povDown().onTrue(m_trap.shoulderDecrease());
-    m_pitController.povLeft().onTrue(m_trap.elbowIncrease());
-    m_pitController.povRight().onTrue(m_trap.elbowDecrease());
+
+    // motors inverted so this one goes down even if command is increase
+    m_pitController.x().and(m_pitController.povDown()).onTrue(m_trap.shoulderIncrease());
+    m_pitController.x().and(m_pitController.povUp()).onTrue(m_trap.shoulderDecrease());
+    m_pitController.b().and(m_pitController.povUp()).onTrue(m_trap.elbowIncrease());
+    m_pitController.b().and(m_pitController.povDown()).onTrue(m_trap.elbowDecrease());
+
+    // povs for arm
     m_coDriverController.povDown().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
-    m_coDriverController.povRight().onTrue(m_trap.setZeroGrab());
     m_coDriverController
         .povLeft()
         .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
-    m_coDriverController.povRight().onTrue(m_trap.setZeroGrab());
-    m_coDriverController.povDown().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
     m_coDriverController.povUp().onTrue(Sequences.trapScore(m_trap));
+
+    // to put back to setZero !!ONLY FROM GRAB POSITION!! using both bumpers
+    m_driverController
+        .rightBumper()
+        .and(m_driverController.leftBumper())
+        .onTrue(m_trap.setZeroGrab());
+
     m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
     m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
     m_coDriverController
