@@ -5,9 +5,13 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,15 +24,40 @@ import frc.robot.Constants;
 
 public class Trap extends SubsystemBase {
 
+  DoubleLogEntry m_shoulderThetaCurrentLog;
+  DoubleLogEntry m_shoulderThetaComputedLog;
+
+  DoubleLogEntry m_shoulderOmegaCurrentLog;
+  DoubleLogEntry m_shoulderOmegaComputedLog;
+
+  DoubleLogEntry m_shoulderVoltageLog;
+
+  DoubleLogEntry m_elbowThetaCurrentLog;
+  DoubleLogEntry m_elbowThetaComputedLog;
+
+  DoubleLogEntry m_elbowOmegaComputedLog;
+  DoubleLogEntry m_elbowOmegaCurrentLog;
+
+  DoubleLogEntry m_elbowVoltageLog;
+
+  // the vertical position is 0.1394 substracting a quarter or a turn to get 0 deg parallel to
+  // ground in positive direction
+  private final double m_zeroPosShoulder = 0.1394 - 0.25;
+
+  private final double m_zeroPosElbow =
+      0.4770; // horizontal zero in absolution position of shoulder
+
   private static final double kDt = 0.02;
 
   // shoulder joint control
-  private final double kshoulderDeadZoneEnd = 0.40;
+  private final double kshoulderDeadZoneEnd = 0.30;
   private final double kshoulderDeadZoneBegin = 0.07;
 
-  private final double kP = 110;
+  private final double kP = 80;
   private final double kI = 50;
-  private final double kD = 2.6;
+  private final double kD = 2.0;
+  private final double sKv = 1 / 19;
+  private final double sKg = -2;
 
   private CANSparkMax m_shoulder =
       new CANSparkMax(Constants.TrapConstants.kShoulderId, MotorType.kBrushed);
@@ -37,11 +66,12 @@ public class Trap extends SubsystemBase {
       m_shoulder.getAbsoluteEncoder(Type.kDutyCycle);
 
   private final TrapezoidProfile m_shoulderProfile =
-      new TrapezoidProfile(new TrapezoidProfile.Constraints(0.2, 0.1));
+      new TrapezoidProfile(new TrapezoidProfile.Constraints(2, 0.5));
 
   private TrapezoidProfile.State m_shoulderGoal;
   private TrapezoidProfile.State m_shoulderSetpoint;
   private PIDController m_shoulderPid = new PIDController(kP, kI, kD);
+  private ArmFeedforward m_shoulderFF = new ArmFeedforward(0, sKg, sKv);
   private double m_shoulderVoltage;
 
   // elbow joint control
@@ -84,8 +114,31 @@ public class Trap extends SubsystemBase {
     m_elbowSetpoint = new TrapezoidProfile.State(m_elbowEncoder.getPosition(), 0);
     m_elbowGoal = new TrapezoidProfile.State(m_elbowEncoder.getPosition(), 0);
 
+    m_shoulderPid.setIZone(20.0 / 360.0);
+
     m_shoulder.setInverted(true);
     m_elbow.setInverted(true);
+
+    DataLogManager.start();
+
+    // Set up custom log entries
+    DataLog log = DataLogManager.getLog();
+
+    m_shoulderThetaCurrentLog = new DoubleLogEntry(log, "/Trap/CurrentShoulderTheta");
+    m_shoulderThetaComputedLog = new DoubleLogEntry(log, "/Trap/ComputedShoulderTheta");
+
+    m_shoulderOmegaCurrentLog = new DoubleLogEntry(log, "/Trap/CurrentShoulderOmega");
+    m_shoulderOmegaComputedLog = new DoubleLogEntry(log, "/Trap/ComputedShoulderOmega");
+
+    m_shoulderVoltageLog = new DoubleLogEntry(log, "/Trap/ShoulderVoltage");
+
+    m_elbowThetaCurrentLog = new DoubleLogEntry(log, "/Trap/CurrentElbowTheta");
+    m_elbowThetaComputedLog = new DoubleLogEntry(log, "/Trap/ComputedElbowTheta");
+
+    m_elbowOmegaCurrentLog = new DoubleLogEntry(log, "/Trap/CurrentElbowOmega");
+    m_elbowOmegaComputedLog = new DoubleLogEntry(log, "/Trap/ComputedElbowOmega");
+
+    m_elbowVoltageLog = new DoubleLogEntry(log, "/Trap/ElbowVoltage");
   }
 
   @Override
@@ -94,15 +147,38 @@ public class Trap extends SubsystemBase {
       setZero = false;
     } else {
 
+      m_shoulderThetaCurrentLog.append((m_shoulderEncoder.getPosition() - m_zeroPosShoulder) * 360);
+      m_shoulderOmegaCurrentLog.append(m_shoulderEncoder.getVelocity() * 360);
+
       m_shoulderSetpoint = m_shoulderProfile.calculate(kDt, m_shoulderSetpoint, m_shoulderGoal);
+      m_shoulderThetaComputedLog.append((m_shoulderSetpoint.position - m_zeroPosShoulder) * 360);
+      m_shoulderOmegaComputedLog.append(m_shoulderSetpoint.velocity * 360);
+
       m_shoulderVoltage =
           m_shoulderPid.calculate(m_shoulderEncoder.getPosition(), m_shoulderSetpoint.position);
+
+      //      m_shoulderVoltage += Math.signum(m_shoulderPid.getPositionError()) * 0.5;
+
+      m_shoulderVoltage +=
+          m_shoulderFF.calculate(
+              (m_shoulderSetpoint.position - m_zeroPosShoulder) * 360,
+              m_shoulderSetpoint.velocity * 360);
       m_shoulderVoltage = MathUtil.clamp(m_shoulderVoltage, -10, 10);
+      m_shoulderVoltageLog.append(m_shoulderVoltage);
       m_shoulder.setVoltage(m_shoulderVoltage);
 
+      // elbow joint
+
+      m_elbowThetaCurrentLog.append((m_elbowEncoder.getPosition() - m_zeroPosElbow) * 360);
+      m_elbowOmegaCurrentLog.append(m_elbowEncoder.getVelocity() * 360);
+
       m_elbowSetpoint = m_elbowProfile.calculate(kDt, m_elbowSetpoint, m_elbowGoal);
+      m_elbowThetaComputedLog.append((m_elbowSetpoint.position - m_zeroPosElbow) * 360);
+      m_elbowOmegaComputedLog.append(m_elbowSetpoint.velocity * 360);
+
       m_elbowVoltage = m_elbowPid.calculate(m_elbowEncoder.getPosition(), m_elbowSetpoint.position);
       m_elbowVoltage = MathUtil.clamp(m_elbowVoltage, -10, 10);
+      m_elbowVoltageLog.append(m_elbowVoltage);
       m_elbow.setVoltage(m_elbowVoltage);
     }
   }
@@ -166,10 +242,9 @@ public class Trap extends SubsystemBase {
   public Command shoulderMoveTo(double absolute) {
     return this.runOnce(
         () -> {
-          m_shoulderGoal.position =
-              ((absolute < kshoulderDeadZoneBegin) || (absolute > kshoulderDeadZoneEnd))
-                  ? m_shoulderGoal.position
-                  : absolute;
+          if (absolute < kshoulderDeadZoneBegin) m_shoulderGoal.position = kshoulderDeadZoneBegin;
+          else if (absolute > kshoulderDeadZoneEnd) m_shoulderGoal.position = kshoulderDeadZoneEnd;
+          else m_shoulderGoal.position = absolute;
         });
   }
 
@@ -180,10 +255,9 @@ public class Trap extends SubsystemBase {
   public Command elbowMoveTo(double absolute) {
     return this.runOnce(
         () -> {
-          m_elbowGoal.position =
-              ((absolute < kelbowDeadZoneBegin) || (absolute > kelbowDeadZoneEnd))
-                  ? m_elbowGoal.position
-                  : absolute;
+          if (absolute < kelbowDeadZoneBegin) m_elbowGoal.position = kelbowDeadZoneBegin;
+          else if (absolute > kelbowDeadZoneEnd) m_elbowGoal.position = kelbowDeadZoneEnd;
+          else m_elbowGoal.position = absolute;
         });
   }
 
@@ -292,11 +366,17 @@ public class Trap extends SubsystemBase {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.addDoubleProperty("Shoulder pos", () -> m_shoulderEncoder.getPosition(), null);
-    builder.addDoubleProperty("Elbow pos", () -> m_elbowEncoder.getPosition(), null);
-    builder.addDoubleProperty("Shoulder target", () -> m_shoulderGoal.position, null);
-    builder.addDoubleProperty("Elbow target", () -> m_elbowGoal.position, null);
+    builder.addDoubleProperty(
+        "Shoulder pos", () -> (m_shoulderEncoder.getPosition() - m_zeroPosShoulder) * 360, null);
+
+    builder.addDoubleProperty(
+        "Shoulder target", () -> (m_shoulderSetpoint.position - m_zeroPosShoulder) * 360, null);
+
     builder.addDoubleProperty("Shoulder voltage", () -> m_shoulderVoltage, null);
+
+    builder.addDoubleProperty("Shoulder error", () -> m_shoulderPid.getPositionError() * 360, null);
+    builder.addDoubleProperty("Elbow pos", () -> m_elbowEncoder.getPosition(), null);
+    builder.addDoubleProperty("Elbow target", () -> m_elbowGoal.position, null);
     builder.addDoubleProperty("Elbow voltage", () -> m_elbowVoltage, null);
   }
 }
