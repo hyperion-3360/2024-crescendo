@@ -73,7 +73,7 @@ public class Sequences {
         shooter.setTargetLevel(levelSpeed.FAR_HIGH),
         new WaitCommand(0.5),
         shooter
-            .holdSpeed(levelSpeed.LOW)
+            .holdSpeed(levelSpeed.FAR_HIGH)
             .alongWith(new WaitCommand(1).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
