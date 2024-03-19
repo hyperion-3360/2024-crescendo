@@ -3,7 +3,6 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -70,10 +69,9 @@ public class Sequences {
     return Commands.sequence(
         leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
         elevator.extendTheElevator(elevatorHeight.AUTOFAR4),
-        shooter.setTargetLevel(levelSpeed.FAR_HIGH),
         new WaitCommand(0.5),
         shooter
-            .holdSpeed(levelSpeed.LOW)
+            .holdSpeed(levelSpeed.FAR_HIGH)
             .alongWith(new WaitCommand(1).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
@@ -129,12 +127,7 @@ public class Sequences {
 
   // // sequence to score note in trap
   public static Command trapScore(Trap m_trap) {
-    return Commands.sequence(
-        m_trap.dunkNote(), new WaitCommand(1), new PrintCommand("dunk")
-        // m_trap.prepareToDisable1()
-        // new WaitCommand(0.5),
-        // m_trap.prepareToDisable2()
-        );
+    return Commands.sequence(m_trap.dunkNote(), new WaitCommand(1), m_trap.prepareToDisable());
   }
 
   // sequence lift elevator and start wheels to climb !! wait will have to be modified !!
@@ -142,15 +135,11 @@ public class Sequences {
   public static Command climbElevatorNote(Elevator elevator, Shooter shooter, Trap trap) {
     return Commands.sequence(
         trap.prepareToClimb(),
-        new WaitCommand(3),
+        new WaitCommand(2.0),
         elevator.extendTheElevator(elevatorHeight.HIGH),
         shooter.holdSpeed(levelSpeed.CLIMB),
         new WaitCommand(1));
   }
-
-  // shooter.holdSpeed(levelSpeed.CLIMB),
-  // new WaitCommand(5),
-  // shooter.stop());
 
   // climb without the arm
   public static Command climbElevator(Elevator elevator, Shooter shooter) {

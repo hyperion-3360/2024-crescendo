@@ -24,10 +24,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoCommands;
 import frc.robot.commands.Autos;
+import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Elevator.elevatorHeight;
 import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.LEDs.State;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.Vision;
@@ -190,50 +193,50 @@ public class RobotContainer {
   private void configureBindings() {
 
     // configureTrapDebugBindings();
-    m_coDriverController.povDown().onTrue(m_trap.elbowIncrease());
-    m_coDriverController.povUp().onTrue(m_trap.elbowDecrease());
-    m_coDriverController.povRight().onTrue(m_trap.shoulderIncrease());
-    m_coDriverController.povLeft().onTrue(m_trap.shoulderDecrease());
-    // m_coDriverController.povDown().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
-    // m_coDriverController.povRight().onTrue(m_trap.setZero());
-    // m_coDriverController
-    //     .povLeft()
-    //     .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
-    // m_coDriverController.povUp().onTrue(Sequences.trapScore(m_trap));
-    // m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
-    // m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
-    // m_coDriverController
-    //     .leftBumper()
-    //     .onTrue(Sequences.elevatorFarHighFromClimb(m_elevator, m_shooter, m_led));
-    // m_coDriverController
-    //     .rightBumper()
-    //     .onTrue(Sequences.elevatorFarHighFromAmp(m_elevator, m_shooter, m_led));
+    // m_coDriverController.povDown().onTrue(m_trap.elbowIncrease());
+    // m_coDriverController.povUp().onTrue(m_trap.elbowDecrease());
+    // m_coDriverController.povRight().onTrue(m_trap.shoulderIncrease());
+    // m_coDriverController.povLeft().onTrue(m_trap.shoulderDecrease());
+    m_coDriverController
+        .povLeft()
+        .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
+    m_coDriverController.povRight().onTrue(m_trap.setZeroGrab());
+    m_coDriverController.povDown().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
+    m_coDriverController.povUp().onTrue(Sequences.trapScore(m_trap));
+    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
+    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
+    m_coDriverController
+        .leftBumper()
+        .onTrue(Sequences.elevatorFarHighFromClimb(m_elevator, m_shooter, m_led));
+    m_coDriverController
+        .rightBumper()
+        .onTrue(Sequences.elevatorFarHighFromAmp(m_elevator, m_shooter, m_led));
 
-    // m_coDriverController
-    //     .rightBumper()
-    //     .onTrue(Sequences.elevatorFarShootOneRobotDistance(m_elevator, m_shooter, m_led));
+    m_coDriverController
+        .rightBumper()
+        .onTrue(Sequences.elevatorFarShootOneRobotDistance(m_elevator, m_shooter, m_led));
 
-    // m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
+    m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
 
-    // m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
+    m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
 
-    // m_driverController
-    //     .a()
-    //     .toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led, m_driverController));
-    // m_driverController
-    //     .start()
-    //     .and(m_driverController.back())
-    //     .onTrue(Sequences.blockShooterGears(m_shooter, m_led, m_driverController));
+    m_driverController
+        .a()
+        .toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led, m_driverController));
+    m_driverController
+        .start()
+        .and(m_driverController.back())
+        .onTrue(Sequences.blockShooterGears(m_shooter, m_led, m_driverController));
 
-    // m_driverController
-    //     .b()
-    //     .toggleOnTrue(m_shooter.vomit().finallyDo(() -> m_led.setState(State.IDLE)));
+    m_driverController
+        .b()
+        .toggleOnTrue(m_shooter.vomit().finallyDo(() -> m_led.setState(State.IDLE)));
 
-    // m_coDriverController
-    //     .leftBumper()
-    //     .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
+    m_coDriverController
+        .leftBumper()
+        .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
 
-    // m_driverController.x().onTrue(changeCameraPerspective());
+    m_driverController.x().onTrue(changeCameraPerspective());
 
     /** AMP LOCK -- TODO: map amp lock to a button * */
     // m_driverController.x().onTrue(new AmpLock(m_swerveDrive, m_elevator, m_led, m_vision));
