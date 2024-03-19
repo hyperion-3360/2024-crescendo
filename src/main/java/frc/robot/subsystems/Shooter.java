@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -149,7 +150,7 @@ public class Shooter extends SubsystemBase {
         break;
 
       case TRAP:
-        m_speed = trapSpeed;
+        m_speed = trapSpeed * 13.0 / RobotController.getBatteryVoltage();
         break;
 
       case INTAKE:
