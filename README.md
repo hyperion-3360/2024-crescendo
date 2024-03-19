@@ -1,4 +1,3 @@
-Neo 550 and Neo motors are CANSparkMax in code
 CODING STANDARDS:
 1. all constants start with a k (not capital)
 2. all members (ex motors, sensors, encoders, etc)
@@ -39,13 +38,6 @@ ID: 15 X: 182.73, Y: 177.10, Z: 52.00, ROTATION:120°
 
 ID: 16 X: 182.73, Y: 146.19, Z: 52.00, ROTATION:240°
 >>>>>>> odometry
-
->> AUTO INFO <<
-
-4NotesMidField works, does it fit time?
-4NotesFarShot could replace previous, to test
-
-center field autos need modifs so that far shot is possible
 
 # Shooting in motion 
 The whole idea behind this feature is to give the pilot the ability to keep the aim using odometry and Apriltag detection while moving the robot to avoid obstacles.
