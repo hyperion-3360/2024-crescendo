@@ -37,14 +37,14 @@ public class SpeakerLock extends Command {
   private boolean m_elevatorReady;
   private int m_rotDirection = 1; // Anticlockwise = 1; clockwise = -1;
 
-  private enum State{
+  private enum State {
     SEARCHING,
     CALCULATING,
     POSITIONING
   };
 
   private State m_state = State.SEARCHING;
-  
+
   /**
    * Command to keep the aiming at the speaker while keeping the robot in motion
    *
@@ -120,17 +120,13 @@ public class SpeakerLock extends Command {
   }
 
   @Override
-  public boolean isFinished(){
+  public boolean isFinished() {
     return m_isReady;
   }
 
   @Override
-  public void end(boolean interrupted){    
-    m_swerve.drive(
-                new Translation2d(0,0),
-                0,
-                false,
-                true);
+  public void end(boolean interrupted) {
+    m_swerve.drive(new Translation2d(0, 0), 0, false, true);
     m_elevator.extendTheElevator(Elevator.elevatorHeight.LOW);
     // m_led.setState(LEDs.State.IDLE);
   }
@@ -146,68 +142,71 @@ public class SpeakerLock extends Command {
     if (m_aprilTagFieldLayout != null) {
       SmartDashboard.putBoolean("Locked on speaker", m_isLocked);
       if (m_isLocked) {
-        if(m_vision.isValidPos() &&  m_state == State.CALCULATING){// TODO: recalculate everytime when an april tag is available 
+        if (m_vision.isValidPos()
+            && m_state
+                == State
+                    .CALCULATING) { // TODO: recalculate everytime when an april tag is available
           final var cameraPose2d = m_vision.getPosition();
           var camTranslation = new Translation2d(cameraPose2d.getX(), cameraPose2d.getY());
-        
+
           // compute rotation to apply to face the target
-          Translation2d pointToFace = new Translation2d(m_target.getX(), m_target.getY()).times(100);
-        
-          m_targetHeight = m_target.getZ();// - Constants.VisionConstants.kCameraHeight;
+          Translation2d pointToFace =
+              new Translation2d(m_target.getX(), m_target.getY()).times(100);
+
+          m_targetHeight = m_target.getZ(); // - Constants.VisionConstants.kCameraHeight;
 
           // distance from camera to tag -- get distance from robot
           final var dx = camTranslation.getX() - pointToFace.getX();
           final var dy = camTranslation.getY() - pointToFace.getY();
-          
+
           final var hyp = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-          m_distanceFromSpeaker = Math.cos(Constants.VisionConstants.kShooterCameraPitch) * hyp / 100; // in meters
-          final var wantedRot = Math.atan(Math.abs(dy)/Math.abs(dx));
+          m_distanceFromSpeaker =
+              Math.cos(Constants.VisionConstants.kShooterCameraPitch) * hyp / 100; // in meters
+          final var wantedRot = Math.atan(Math.abs(dy) / Math.abs(dx));
 
           // Calulate the rotation needed to face the tag
           // Correct for camera position. Anticlockwise rotation
           double camRot = cameraPose2d.getRotation().getRadians();
-          
-          rotationVal = camRot;// + Constants.VisionConstants.kShooterCameraPitch;
-          if(rotationVal > 0){
+
+          rotationVal = camRot; // + Constants.VisionConstants.kShooterCameraPitch;
+          if (rotationVal > 0) {
             m_rotDirection = -1;
           }
-          
 
-          rotationVal =
-              Math.abs(Math.abs(rotationVal) - Math.abs(wantedRot)) * m_rotDirection;
+          rotationVal = Math.abs(Math.abs(rotationVal) - Math.abs(wantedRot)) * m_rotDirection;
 
           // Convert to absolute rotation based on the odometry
           m_targetRot = m_swerve.getRotation2d().getRadians() + rotationVal;
 
-
           m_state = State.POSITIONING;
         }
-        if(m_state == State.POSITIONING){
+        if (m_state == State.POSITIONING) {
 
           var currentRot = m_swerve.getRotation2d().getRadians();
 
-          //TODO: stop if over rotated too. NEED TO CHECK DIRECTION OF MOVEMENT
-          if (Math.abs(Math.abs(currentRot)-Math.abs(m_targetRot)) < 0.05) { // ~3deg margin
+          // TODO: stop if over rotated too. NEED TO CHECK DIRECTION OF MOVEMENT
+          if (Math.abs(Math.abs(currentRot) - Math.abs(m_targetRot)) < 0.05) { // ~3deg margin
             m_isReady = true;
-          }else{
+          } else {
             m_isReady = false;
           }
-          
+
           // compute elevator angle to shoot in target, assuming straightline not parabol
           if (m_distanceFromSpeaker > Constants.ShooterConstants.kMaxShootingDistance)
             m_led.setState(LEDs.State.PREPARE_SHOT_SPEAKER);
-          else if(!m_elevatorReady){
+          else if (!m_elevatorReady) {
             // double elevatorAngle = Math.atan2(m_targetHeight, m_distanceFromSpeaker);
             // SmartDashboard.putNumber("Elevator Angle", elevatorAngle);
             // m_elevator.extendTheElevator(elevatorAngle);
-            
-            double elevatorPosition = 332.169-146.57*Math.pow(m_distanceFromSpeaker*100, 0.124133);
+
+            double elevatorPosition =
+                332.169 - 146.57 * Math.pow(m_distanceFromSpeaker * 100, 0.124133);
             m_elevator.rawPosition(elevatorPosition);
             m_led.setState(LEDs.State.SHOOT_READY_SPEAKER);
             m_elevatorReady = true;
           }
         }
-      
+
       } else { // don't have a lock yet so look at possible target from vision
         int selecteg_tag = -1;
         if (m_vision.isValidPos()) {
@@ -231,10 +230,11 @@ public class SpeakerLock extends Command {
 
       /* Rotate to face speaker */
       m_swerve.drive(
-                new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
-                (!m_isReady && m_state == State.POSITIONING ? m_rotDirection*0.2 : 0)  * Constants.Swerve.maxAngularVelocity, // constant speed
-                false,
-                true);
+          new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
+          (!m_isReady && m_state == State.POSITIONING ? m_rotDirection * 0.2 : 0)
+              * Constants.Swerve.maxAngularVelocity, // constant speed
+          false,
+          true);
     }
   }
 }

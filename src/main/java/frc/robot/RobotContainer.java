@@ -253,25 +253,33 @@ public class RobotContainer {
         .leftBumper()
         .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
 
-    m_coDriverController.rightTrigger().onTrue(Sequences.overRobotShot(m_shooter, m_elevator, m_led));
-    
+    m_coDriverController
+        .rightTrigger()
+        .onTrue(Sequences.overRobotShot(m_shooter, m_elevator, m_led));
+
     m_driverController.x().onTrue(changeCameraPerspective());
-    
+
     SmartDashboard.putBoolean("Locked on speaker", false);
-    final var speakerLockCommand = Sequences.speakerLockCmd(
-                m_swerveDrive,
-                m_elevator,
-                m_led,
-                m_vision,
-                m_shooter,
-                () -> conditionJoystick(translationAxis, translationLimiter, kJoystickDeadband),
-                () -> conditionJoystick(strafeAxis, strafeLimiter, kJoystickDeadband));
-    
+    final var speakerLockCommand =
+        Sequences.speakerLockCmd(
+            m_swerveDrive,
+            m_elevator,
+            m_led,
+            m_vision,
+            m_shooter,
+            () -> conditionJoystick(translationAxis, translationLimiter, kJoystickDeadband),
+            () -> conditionJoystick(strafeAxis, strafeLimiter, kJoystickDeadband));
+
     // Speaker lock semi-working....
+    m_driverController.rightTrigger().onTrue(speakerLockCommand);
     m_driverController
         .rightTrigger()
-        .onTrue(speakerLockCommand);
-    m_driverController.rightTrigger().onFalse(Commands.runOnce(()->{ CommandScheduler.getInstance().cancel(speakerLockCommand); System.out.println("Interrupting");}));
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  CommandScheduler.getInstance().cancel(speakerLockCommand);
+                  System.out.println("Interrupting");
+                }));
   }
 
   public Command changeCameraPerspective() {

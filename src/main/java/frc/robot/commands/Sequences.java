@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -18,6 +16,7 @@ import frc.robot.subsystems.Shooter.levelSpeed;
 import frc.robot.subsystems.Trap;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.swerve.Swerve;
+import java.util.function.DoubleSupplier;
 
 public class Sequences {
 
@@ -193,35 +192,32 @@ public class Sequences {
         .andThen(() -> controller.getHID().setRumble(RumbleType.kBothRumble, 0));
   }
 
-  public static Command overRobotShot(Shooter s_shooter, Elevator s_elevator, LEDs s_leds){
+  public static Command overRobotShot(Shooter s_shooter, Elevator s_elevator, LEDs s_leds) {
     return Commands.sequence(
-      s_leds.runOnce(() -> s_leds.setState(State.PREPARE_SHOT_SPEAKER)),
-      Commands.runOnce(()-> s_elevator.rawPosition(Constants.ElevatorConstants.kOverRobotElevatorTarget)),
-      new WaitCommand(0.5),
-      s_shooter
+        s_leds.runOnce(() -> s_leds.setState(State.PREPARE_SHOT_SPEAKER)),
+        Commands.runOnce(
+            () -> s_elevator.rawPosition(Constants.ElevatorConstants.kOverRobotElevatorTarget)),
+        new WaitCommand(0.5),
+        s_shooter
             .holdSpeed(levelSpeed.MAX)
-            .alongWith(new WaitCommand(1).andThen(() -> s_leds.setState(State.SHOOT_READY_SPEAKER)))
-    );
+            .alongWith(
+                new WaitCommand(1).andThen(() -> s_leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
-  public static Command speakerLockCmd(Swerve s_swerve,
+  public static Command speakerLockCmd(
+      Swerve s_swerve,
       Elevator s_elevator,
       LEDs s_led,
       Vision s_vision,
       Shooter s_shooter,
       DoubleSupplier translationSup,
-      DoubleSupplier strafeSup){
-    return Commands.sequence(new SpeakerLock(
-      s_swerve,
-      s_elevator,
-      s_led,
-      s_vision,
-      translationSup,
-      strafeSup),
-      new WaitCommand(0.5),
-      s_shooter
+      DoubleSupplier strafeSup) {
+    return Commands.sequence(
+        new SpeakerLock(s_swerve, s_elevator, s_led, s_vision, translationSup, strafeSup),
+        new WaitCommand(0.5),
+        s_shooter
             .holdSpeed(levelSpeed.MAX)
-            .alongWith(new WaitCommand(1).andThen(() -> s_led.setState(State.SHOOT_READY_SPEAKER)))
-      );
+            .alongWith(
+                new WaitCommand(1).andThen(() -> s_led.setState(State.SHOOT_READY_SPEAKER))));
   }
 }
