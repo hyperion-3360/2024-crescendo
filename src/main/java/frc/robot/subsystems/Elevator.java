@@ -187,14 +187,54 @@ public class Elevator extends SubsystemBase {
     return m_rightEncoder.getPosition() >= this.m_elevatorTarget;
   }
 
+  public void rawPosition(double target) {
+    // Safety clamping
+    if (target < Constants.ElevatorConstants.kIntakeTarget) {
+      target = Constants.ElevatorConstants.kIntakeTarget;
+    }
+    if (target > Constants.ElevatorConstants.kHighTarget) {
+      target = Constants.ElevatorConstants.kHighTarget;
+    }
+
+    this.m_elevatorTarget = target;
+  }
+
   /**
-   * Extend the elevator to a precise angle
+   * Extend the elevator to a precise angle TODO: Make sure this gives valid values...
    *
    * @param angle angle to set the elevator in radians
    */
   public void extendTheElevator(double angle) {
-    // TODO need to perform angle radians to absolute position conversion
-    this.m_elevatorTarget = 0.0;
+    angle = angle / Math.PI * 180; // convert to degrees
+
+    // clamp the target between the min and max valid values
+    if (angle < Constants.ElevatorConstants.kMinElevatorAngle) {
+      angle = Constants.ElevatorConstants.kMinElevatorAngle;
+    }
+    if (angle > Constants.ElevatorConstants.kMaxElevatorAngle) {
+      angle = Constants.ElevatorConstants.kMaxElevatorAngle;
+    }
+
+    var angleToExtend = angle - Constants.ElevatorConstants.kMinElevatorAngle;
+
+    final var valuesRange =
+        Constants.ElevatorConstants.kHighTarget - Constants.ElevatorConstants.kIntakeTarget;
+    final var anglesRange =
+        Constants.ElevatorConstants.kMaxElevatorAngle
+            - Constants.ElevatorConstants.kMinElevatorAngle;
+    final var multFactor = valuesRange / anglesRange;
+
+    var target = angleToExtend * multFactor + Constants.ElevatorConstants.kMinElevatorAngle;
+
+    // Safety clamping
+    if (target < Constants.ElevatorConstants.kIntakeTarget) {
+      target = Constants.ElevatorConstants.kIntakeTarget;
+    }
+    if (target > Constants.ElevatorConstants.kHighTarget) {
+      target = Constants.ElevatorConstants.kHighTarget;
+    }
+
+    this.m_elevatorTarget = target;
   }
 
   // extends the elevator to set target

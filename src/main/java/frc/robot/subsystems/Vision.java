@@ -137,7 +137,7 @@ public class Vision extends SubsystemBase {
   public void initSendable(SendableBuilder builder) {
     builder.setSmartDashboardType("Vision");
     builder.addBooleanProperty("Valid AprilTag", this::isValidPos, null);
-    if (m_currentPos != null) {
+    if (isValidPos()) {
       builder.addDoubleProperty("Rotation", () -> getPosition().getRotation().getDegrees(), null);
       builder.addDoubleProperty("Pose X", () -> getPosition().getX(), null);
       builder.addDoubleProperty("Pose Y", () -> getPosition().getY(), null);
