@@ -139,6 +139,8 @@ public class Trap extends SubsystemBase {
     m_elbowOmegaComputedLog = new DoubleLogEntry(log, "/Trap/ComputedElbowOmega");
 
     m_elbowVoltageLog = new DoubleLogEntry(log, "/Trap/ElbowVoltage");
+
+    m_servoWrist.setZero();
   }
 
   @Override
@@ -263,18 +265,10 @@ public class Trap extends SubsystemBase {
 
   // position throughout game
 
-  public Command setZeroClimb() {
+  public Command setZero() {
     return Commands.sequence(
-        elbowMoveTo(Constants.TrapConstants.kElbowSetZeroClimbSmall),
-        new WaitCommand(0.9),
-        shoulderMoveTo(Constants.TrapConstants.kShoulderSetZeroClimbSmall),
-        elbowMoveTo(Constants.TrapConstants.kElbowSetZeroClimb),
-        new WaitCommand(0.6),
-        shoulderMoveTo(Constants.TrapConstants.kShoulderSetZeroClimb),
-        this.runOnce(() -> m_servoWrist.setZero()),
-        new WaitCommand(m_servoWrist.travelTime()),
-        this.runOnce(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerOpened)),
-        this.runOnce(() -> setZero = true));
+        elbowMoveTo(Constants.TrapConstants.kElbowSetZero),
+        shoulderMoveTo(Constants.TrapConstants.kShoulderSetZero));
   }
 
   public Command setZeroGrab() {
@@ -346,6 +340,15 @@ public class Trap extends SubsystemBase {
         this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristDunkNote)),
         new WaitCommand(2),
         this.runOnce(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerOpened)));
+  }
+
+  public Command hitNote() {
+    return Commands.sequence(
+        this.runOnce(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerClosed)),
+        shoulderMoveTo(Constants.TrapConstants.kShoulderHitNote),
+        elbowMoveTo(Constants.TrapConstants.kElbowHitNote),
+        new WaitCommand(1),
+        this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristHitNote)));
   }
 
   // // position arm is in after dunking the note so it is ready to disable and doesn't hit

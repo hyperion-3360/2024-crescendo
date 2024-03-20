@@ -113,8 +113,8 @@ public class Sequences {
   public static Command trapGetNote(Shooter m_shooter, Trap m_trap) {
     return Commands.sequence(
         m_trap.grabPosition(),
+        new WaitCommand(2.0),
         m_shooter.hookRelease(),
-        new WaitCommand(2.5),
         m_shooter.setTargetLevel(levelSpeed.TRAP),
         m_shooter.setSpeedWithTarget(),
         new WaitUntilCommand(m_trap::trapHasNote),
@@ -127,7 +127,14 @@ public class Sequences {
 
   // // sequence to score note in trap
   public static Command trapScore(Trap m_trap) {
-    return Commands.sequence(m_trap.dunkNote(), new WaitCommand(1), m_trap.prepareToDisable());
+    return Commands.sequence(
+        m_trap.dunkNote(),
+        new WaitCommand(1),
+        m_trap.prepareToDisable(),
+        new WaitCommand(1),
+        m_trap.hitNote(),
+        new WaitCommand(1),
+        m_trap.prepareToDisable());
   }
 
   // sequence lift elevator and start wheels to climb !! wait will have to be modified !!

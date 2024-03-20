@@ -219,10 +219,8 @@ public final class Constants {
     public static final double kElbowSetZeroGrabSmall = 0.20;
     public static final double kWristSetZeroGrabSmall = 190.0;
 
-    public static final double kShoulderSetZeroClimb = 0.40; // SETZEROCLIMB
-    public static final double kElbowSetZeroClimb = 0.08;
-    public static final double kShoulderSetZeroClimbSmall = 0.20;
-    public static final double kElbowSetZeroClimbSmall = 0.20;
+    public static final double kShoulderSetZero = 0.40; // SETZERO
+    public static final double kElbowSetZero = 0.08;
     public static final double kWristSetZero = 160.0;
 
     public static final double kShoulderGrabPosition = 0.13; // GRABPOSITION
@@ -244,9 +242,13 @@ public final class Constants {
     public static final double kElbowDunkNote = 0.25;
     public static final double kWristDunkNote = 165.0;
 
-    public static final double kShoulderDisable = 0.05; // PREPARETODISABLE
+    public static final double kShoulderHitNote = 0.07; // HITNOTE
+    public static final double kElbowHitNote = 0.25;
+    public static final double kWristHitNote = 165.0;
+
+    public static final double kShoulderDisable = 0.06; // PREPARETODISABLE
     public static final double kElbowDisable = 0.45;
-    public static final double kWristDisable = 155.0;
+    public static final double kWristDisable = 95.0;
 
     // sorry for all the delayed in prepare to climb but they are needed to avoid the arm from
     // hitting everywhere.

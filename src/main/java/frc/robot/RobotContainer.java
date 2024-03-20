@@ -194,10 +194,10 @@ public class RobotContainer {
     // configureTrapDebugBindings();
 
     // motors inverted so this one goes down even if command is increase
-    m_pitController.x().and(m_pitController.povDown()).onTrue(m_trap.shoulderIncrease());
-    m_pitController.x().and(m_pitController.povUp()).onTrue(m_trap.shoulderDecrease());
-    m_pitController.b().and(m_pitController.povUp()).onTrue(m_trap.elbowIncrease());
-    m_pitController.b().and(m_pitController.povDown()).onTrue(m_trap.elbowDecrease());
+    m_pitController.rightTrigger().and(m_pitController.x()).whileTrue(m_trap.shoulderIncrease());
+    m_pitController.leftTrigger().and(m_pitController.x()).whileTrue(m_trap.shoulderDecrease());
+    m_pitController.rightTrigger().and(m_pitController.b()).whileTrue(m_trap.elbowDecrease());
+    m_pitController.leftTrigger().and(m_pitController.b()).whileTrue(m_trap.elbowIncrease());
 
     // povs for arm
     m_coDriverController.povDown().onTrue(Sequences.trapGetNote(m_shooter, m_trap));

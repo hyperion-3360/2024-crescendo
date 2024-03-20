@@ -9,7 +9,7 @@ public class TimedServo extends Servo {
   private double m_angularSpeed = 0.2;
   private long m_completedTime = 0;
   private double m_currentAngle = 0.0;
-  private double m_zero = 0.0;
+  private double m_zero = 155.0;
   private boolean m_homed = false;
   private long m_travelTime = 0;
   private final boolean m_debug = false;
