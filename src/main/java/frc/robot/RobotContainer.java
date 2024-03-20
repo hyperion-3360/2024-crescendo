@@ -278,7 +278,6 @@ public class RobotContainer {
             Commands.runOnce(
                 () -> {
                   CommandScheduler.getInstance().cancel(speakerLockCommand);
-                  System.out.println("Interrupting");
                 }));
   }
 
