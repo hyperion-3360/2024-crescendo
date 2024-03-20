@@ -27,9 +27,11 @@ public class Shooter extends SubsystemBase {
     STOP,
     VOMIT,
     EJECT,
-    CLIMB
+    CLIMB,
+    MAX,
   }
 
+  private static double maxSpeed = 1.0;
   private static double highSpeed = 0.8; // need to add perk to adjust speed according to distance
   private static double farHighSpeed = 0.90;
   private static double lowSpeed = 0.5; // requires testing
@@ -144,6 +146,9 @@ public class Shooter extends SubsystemBase {
         break;
       case FAR_HIGH:
         m_speed = farHighSpeed;
+        break;
+      case MAX:
+        m_speed = maxSpeed;
         break;
       case STOP:
         m_speed = stopSpeed;

@@ -74,7 +74,7 @@ public class Vision extends SubsystemBase {
       var position = Arrays.copyOfRange(info, kAprilTagPosStartIndex, kAprilTagRotStartIndex);
       var numTags = info.length - kAprilTagIdsStartIndex;
       var angles = Arrays.copyOfRange(info, kAprilTagAnglesStartIndex, kAprilTagIdsStartIndex);
-
+      
       // Relative orientation between the camera and the april tag
       // Rotation around the vertical axis is at index 1
       // TODO: Jetson script returns an average value of these orientatione.
@@ -137,7 +137,7 @@ public class Vision extends SubsystemBase {
   public void initSendable(SendableBuilder builder) {
     builder.setSmartDashboardType("Vision");
     builder.addBooleanProperty("Valid AprilTag", this::isValidPos, null);
-    if (m_currentPos != null) {
+    if (isValidPos()) {
       builder.addDoubleProperty("Rotation", () -> getPosition().getRotation().getDegrees(), null);
       builder.addDoubleProperty("Pose X", () -> getPosition().getX(), null);
       builder.addDoubleProperty("Pose Y", () -> getPosition().getY(), null);

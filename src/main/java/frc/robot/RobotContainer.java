@@ -17,6 +17,7 @@ import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -248,10 +249,29 @@ public class RobotContainer {
         .b()
         .toggleOnTrue(m_shooter.vomit().finallyDo(() -> m_led.setState(State.IDLE)));
 
-    m_driverController.x().onTrue(changeCameraPerspective());
+    m_coDriverController
+        .leftBumper()
+        .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
 
-    /** AMP LOCK -- TODO: map amp lock to a button * */
-    // m_driverController.x().onTrue(new AmpLock(m_swerveDrive, m_elevator, m_led, m_vision));
+    m_coDriverController.rightTrigger().onTrue(Sequences.overRobotShot(m_shooter, m_elevator, m_led));
+    
+    m_driverController.x().onTrue(changeCameraPerspective());
+    
+    SmartDashboard.putBoolean("Locked on speaker", false);
+    final var speakerLockCommand = Sequences.speakerLockCmd(
+                m_swerveDrive,
+                m_elevator,
+                m_led,
+                m_vision,
+                m_shooter,
+                () -> conditionJoystick(translationAxis, translationLimiter, kJoystickDeadband),
+                () -> conditionJoystick(strafeAxis, strafeLimiter, kJoystickDeadband));
+    
+    // Speaker lock semi-working....
+    m_driverController
+        .rightTrigger()
+        .onTrue(speakerLockCommand);
+    m_driverController.rightTrigger().onFalse(Commands.runOnce(()->{ CommandScheduler.getInstance().cancel(speakerLockCommand); System.out.println("Interrupting");}));
   }
 
   public Command changeCameraPerspective() {
