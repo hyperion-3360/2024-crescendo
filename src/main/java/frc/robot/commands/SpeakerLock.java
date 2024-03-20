@@ -40,7 +40,7 @@ public class SpeakerLock extends Command {
   private enum State{
     SEARCHING,
     CALCULATING,
-    POSITIONNING
+    POSITIONING
   };
 
   private State m_state = State.SEARCHING;
@@ -180,9 +180,9 @@ public class SpeakerLock extends Command {
           m_targetRot = m_swerve.getRotation2d().getRadians() + rotationVal;
 
 
-          m_state = State.POSITIONNING;
+          m_state = State.POSITIONING;
         }
-        if(m_state == State.POSITIONNING){
+        if(m_state == State.POSITIONING){
 
           var currentRot = m_swerve.getRotation2d().getRadians();
 
@@ -232,7 +232,7 @@ public class SpeakerLock extends Command {
       /* Rotate to face speaker */
       m_swerve.drive(
                 new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
-                (!m_isReady && m_state == State.POSITIONNING ? m_rotDirection*0.2 : 0)  * Constants.Swerve.maxAngularVelocity, // constant speed
+                (!m_isReady && m_state == State.POSITIONING ? m_rotDirection*0.2 : 0)  * Constants.Swerve.maxAngularVelocity, // constant speed
                 false,
                 true);
     }
