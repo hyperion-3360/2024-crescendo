@@ -128,12 +128,12 @@ public class Sequences {
   // // sequence to score note in trap
   public static Command trapScore(Trap m_trap) {
     return Commands.sequence(
-        m_trap.dunkNote(),
+        m_trap.dunkNote().withTimeout(0.5),
         new WaitCommand(1),
-        m_trap.prepareToDisable(),
-        new WaitCommand(1),
+        m_trap.between(),
+        new WaitCommand(1.5),
         m_trap.hitNote(),
-        new WaitCommand(1),
+        new WaitCommand(1.5),
         m_trap.prepareToDisable());
   }
 

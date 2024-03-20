@@ -267,6 +267,6 @@ public class RobotContainer {
         PathPlannerAuto.getStaringPoseFromAutoFile(Autos.getSelectedOption().toString()));
     return new PathPlannerAuto(Autos.getSelectedOption().toString())
         // this is to set zero at beginning of game without having it do it automatically in the pit
-        .alongWith(m_trap.setZeroGrab().unless(() -> m_trap.setZero));
+        .alongWith(m_trap.setZero().unless(() -> m_trap.setZero));
   }
 }

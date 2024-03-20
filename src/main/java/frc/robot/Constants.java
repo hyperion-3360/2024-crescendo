@@ -244,12 +244,15 @@ public final class Constants {
 
     public static final double kShoulderHitNote = 0.07; // HITNOTE
     public static final double kElbowHitNote = 0.25;
-    public static final double kWristHitNote = 165.0;
+    public static final double kWristHitNote = 160.0;
 
     public static final double kShoulderDisable = 0.06; // PREPARETODISABLE
     public static final double kElbowDisable = 0.45;
     public static final double kWristDisable = 95.0;
 
+    public static final double kShoulderBetween = 0.06; // BETWEEN
+    public static final double kElbowBetween = 0.30;
+    public static final double kWristBetween = 165.0;
     // sorry for all the delayed in prepare to climb but they are needed to avoid the arm from
     // hitting everywhere.
     public static final double kShoulderPrepareToClimb1 = 0.35;

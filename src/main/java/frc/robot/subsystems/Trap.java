@@ -338,17 +338,26 @@ public class Trap extends SubsystemBase {
         elbowMoveTo(Constants.TrapConstants.kElbowDunkNote),
         new WaitCommand(1),
         this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristDunkNote)),
-        new WaitCommand(2),
+        new WaitCommand(1),
         this.runOnce(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerOpened)));
   }
 
   public Command hitNote() {
     return Commands.sequence(
-        this.runOnce(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerClosed)),
+        this.runOnce(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerOpened)),
         shoulderMoveTo(Constants.TrapConstants.kShoulderHitNote),
         elbowMoveTo(Constants.TrapConstants.kElbowHitNote),
         new WaitCommand(1),
-        this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristHitNote)));
+        this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristSetZero)));
+  }
+
+  public Command between() {
+    return Commands.sequence(
+        this.runOnce(() -> m_servoFinger.setAngle(Constants.TrapConstants.kFingerOpened)),
+        shoulderMoveTo(Constants.TrapConstants.kShoulderBetween),
+        elbowMoveTo(Constants.TrapConstants.kElbowBetween),
+        new WaitCommand(1),
+        this.runOnce(() -> m_servoWrist.setAngle(Constants.TrapConstants.kWristBetween)));
   }
 
   // // position arm is in after dunking the note so it is ready to disable and doesn't hit
