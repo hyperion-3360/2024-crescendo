@@ -131,7 +131,6 @@ public class RobotContainer {
 
     m_climber.setDefaultCommand(m_climber.run(() -> m_climber.setSpeed()));
     m_shooter.setDefaultCommand(m_shooter.stop());
-    // m_trap.setDefaultCommand(m_trap.setZero().unless(() -> m_trap.setZero));
 
     NamedCommands.registerCommand("shootHigh", AutoCommands.autoShoot(m_elevator, m_shooter));
     NamedCommands.registerCommand("intake", m_shooter.intake().withTimeout(3));
@@ -200,25 +199,36 @@ public class RobotContainer {
     m_coDriverController
         .povLeft()
         .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
-    m_coDriverController.povRight().onTrue(m_trap.setZeroGrab());
+    m_coDriverController.povRight().onTrue(Sequences.climbElevator(m_elevator, m_shooter));
     m_coDriverController.povDown().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
     m_coDriverController.povUp().onTrue(Sequences.trapScore(m_trap));
-    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
-    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
     m_coDriverController
-        .leftBumper()
-        .onTrue(Sequences.elevatorFarHighFromClimb(m_elevator, m_shooter, m_led));
+        .y()
+        .onTrue(
+            Commands.runOnce(() -> m_videoServer.setSource(m_camera2))
+                .andThen(Sequences.elevatorHigh(m_elevator, m_shooter, m_led)));
+
+    m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
+
     m_coDriverController
-        .rightBumper()
-        .onTrue(Sequences.elevatorFarHighFromAmp(m_elevator, m_shooter, m_led));
+        .a()
+        .onTrue(
+            Commands.runOnce(() -> m_videoServer.setSource(m_camera2))
+                .andThen(Sequences.elevatorLow(m_elevator, m_shooter, m_led)));
+
+    m_coDriverController
+        .b()
+        .onTrue(
+            Sequences.shoot(m_shooter, m_elevator, m_led)
+                .andThen(() -> m_videoServer.setSource(m_camera1)));
 
     m_coDriverController
         .rightBumper()
         .onTrue(Sequences.elevatorFarShootOneRobotDistance(m_elevator, m_shooter, m_led));
 
-    m_coDriverController.b().onTrue(Sequences.shoot(m_shooter, m_elevator, m_led));
-
-    m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
+    m_coDriverController
+        .leftBumper()
+        .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
 
     m_driverController
         .a()
@@ -231,10 +241,6 @@ public class RobotContainer {
     m_driverController
         .b()
         .toggleOnTrue(m_shooter.vomit().finallyDo(() -> m_led.setState(State.IDLE)));
-
-    m_coDriverController
-        .leftBumper()
-        .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
 
     m_driverController.x().onTrue(changeCameraPerspective());
 
@@ -253,6 +259,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     m_swerveDrive.setPose(
         PathPlannerAuto.getStaringPoseFromAutoFile(Autos.getSelectedOption().toString()));
-    return new PathPlannerAuto(Autos.getSelectedOption().toString());
+    return new PathPlannerAuto(Autos.getSelectedOption().toString())
+        // this is to set zero at beginning of game without having it do it automatically in the pit
+        .alongWith(m_trap.setZeroGrab().unless(() -> m_trap.setZero));
   }
 }

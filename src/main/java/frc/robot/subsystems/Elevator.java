@@ -113,6 +113,7 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // System.out.println(!bottomlimitSwitch.get());
     if (!m_sysIdEnable) {
       // calculate speed with pid
       m_elevatorRightMaster.setVoltage(
