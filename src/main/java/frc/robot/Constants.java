@@ -213,23 +213,22 @@ public final class Constants {
 
     public static final double kFingerClosed = 180.0; // angle of finger servo when closed/opened
     public static final double kFingerOpened = 90.0;
-    // good
+
     public static final double kShoulderSetZeroGrab = 0.40; // SETZEROGRAB
     public static final double kElbowSetZeroGrab = 0.08;
     public static final double kElbowSetZeroGrabSmall = 0.20;
     public static final double kWristSetZeroGrabSmall = 190.0;
-    // good
+
     public static final double kShoulderSetZeroClimb = 0.40; // SETZEROCLIMB
     public static final double kElbowSetZeroClimb = 0.08;
     public static final double kShoulderSetZeroClimbSmall = 0.20;
     public static final double kElbowSetZeroClimbSmall = 0.20;
     public static final double kWristSetZero = 160.0;
-    // idk
+
     public static final double kShoulderGrabPosition = 0.13; // GRABPOSITION
     public static final double kElbowGrabPosition = 0.28;
     public static final double kWristGrabPosition = 210.0;
 
-    // good
     public static final double kShoulderStoreNote = 0.33; // STORENOTE
     public static final double kShoulderStoreNoteSmall = 0.16;
     public static final double kElbowStoreNoteSmall = 0.10;
@@ -240,19 +239,17 @@ public final class Constants {
     public static final double kElbowPushNote = 0.0;
     public static final double kWristPushNote = 100.0;
 
-    // Shoulder moves first to its most vertical position  // DUNKNOTE + PUSH
-    public static final double kShoulderDunkNote = 0.05;
-    public static final double kElbowDunkNote = 0.35;
-    public static final double kWristDunkNote = 155.0;
+    // Shoulder moves first to its most vertical position  // DUNKNOTE
+    public static final double kShoulderDunkNote = 0.07;
+    public static final double kElbowDunkNote = 0.25;
+    public static final double kWristDunkNote = 165.0;
 
-    // in progress
-    public static final double kShoulderDisable = 0.12; // PREPARETODISABLE
+    public static final double kShoulderDisable = 0.05; // PREPARETODISABLE
     public static final double kElbowDisable = 0.45;
     public static final double kWristDisable = 155.0;
 
     // sorry for all the delayed in prepare to climb but they are needed to avoid the arm from
-    // hitting everywhere and they also make it less hard for servos to get from one position to
-    // the other
+    // hitting everywhere.
     public static final double kShoulderPrepareToClimb1 = 0.35;
     public static final double kShoulderPrepareToClimb2 = 0.28;
     public static final double kShoulderPrepareToClimb3 = 0.23;

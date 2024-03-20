@@ -28,7 +28,6 @@ import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Elevator.elevatorHeight;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.LEDs.State;
 import frc.robot.subsystems.Shooter;
@@ -61,6 +60,7 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   private final CommandXboxController m_coDriverController = new CommandXboxController(1);
+  private final CommandXboxController m_pitController = new CommandXboxController(2);
 
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
@@ -192,24 +192,30 @@ public class RobotContainer {
   private void configureBindings() {
 
     // configureTrapDebugBindings();
-    // m_coDriverController.povDown().onTrue(m_trap.elbowIncrease());
-    // m_coDriverController.povUp().onTrue(m_trap.elbowDecrease());
-    // m_coDriverController.povRight().onTrue(m_trap.shoulderIncrease());
-    // m_coDriverController.povLeft().onTrue(m_trap.shoulderDecrease());
+
+    // motors inverted so this one goes down even if command is increase
+    m_pitController.x().and(m_pitController.povDown()).onTrue(m_trap.shoulderIncrease());
+    m_pitController.x().and(m_pitController.povUp()).onTrue(m_trap.shoulderDecrease());
+    m_pitController.b().and(m_pitController.povUp()).onTrue(m_trap.elbowIncrease());
+    m_pitController.b().and(m_pitController.povDown()).onTrue(m_trap.elbowDecrease());
+
+    // povs for arm
+    m_coDriverController.povDown().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
     m_coDriverController
         .povLeft()
         .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
     m_coDriverController.povRight().onTrue(Sequences.climbElevator(m_elevator, m_shooter));
     m_coDriverController.povDown().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
     m_coDriverController.povUp().onTrue(Sequences.trapScore(m_trap));
-    m_coDriverController
-        .y()
-        .onTrue(
-            Commands.runOnce(() -> m_videoServer.setSource(m_camera2))
-                .andThen(Sequences.elevatorHigh(m_elevator, m_shooter, m_led)));
 
-    m_coDriverController.x().onTrue(m_elevator.extendTheElevator(elevatorHeight.INTAKE));
+    // to put back to setZero !!ONLY FROM GRAB POSITION!! using both bumpers
+    m_driverController
+        .rightBumper()
+        .and(m_driverController.leftBumper())
+        .onTrue(m_trap.setZeroGrab());
 
+    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
+    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
     m_coDriverController
         .a()
         .onTrue(

@@ -51,7 +51,7 @@ public class Trap extends SubsystemBase {
 
   // shoulder joint control
   private final double kshoulderDeadZoneEnd = 0.35;
-  private final double kshoulderDeadZoneBegin = 0.07;
+  private final double kshoulderDeadZoneBegin = 0.05;
 
   private final double kP = 80;
   private final double kI = 50;
