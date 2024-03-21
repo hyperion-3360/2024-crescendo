@@ -11,6 +11,7 @@ public final class Autos {
 
   public enum Mode {
     FourNotesMidField("4NotesClose"),
+    FourNotesMidFieldAndPickup("4NotesCloseAndPickup"),
     // TwoNotesCenterField("2NotesCenterField"),
     // ThreeNotesCenterField("3NotesCenterField"),
     FourNotesCenterField("4NotesCenterField"),
@@ -44,6 +45,7 @@ public final class Autos {
     autoChooser.setDefaultOption("score 4 notes close", Mode.FourNotesMidField);
 
     autoChooser.addOption("score 4 notes close", Mode.FourNotesMidField);
+    autoChooser.addOption("score 4 notes & gtfo", Mode.FourNotesMidFieldAndPickup);
     autoChooser.addOption("score 3 notes corridor 1", Mode.ThreeNotesCorridor1);
     autoChooser.addOption("score 2 notes corridor 2", Mode.TwoNotesCorridor2);
     autoChooser.addOption("score 3 notes corridor 3", Mode.ThreeNotesCorridor3);
