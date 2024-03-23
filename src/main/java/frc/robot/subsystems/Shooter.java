@@ -33,7 +33,7 @@ public class Shooter extends SubsystemBase {
 
   private static double maxSpeed = 1.0;
   private static double highSpeed = 0.8; // need to add perk to adjust speed according to distance
-  private static double farHighSpeed = 0.90;
+  private static double farHighSpeed = 0.95;
   private static double lowSpeed = 0.5; // requires testing
   private static double intakeSpeed = 0.4;
   private static double trapSpeed = 0.17; // requires testing
@@ -182,7 +182,7 @@ public class Shooter extends SubsystemBase {
 
   // stop the motors
   public Command stop() {
-    return this.runOnce(() -> this.setSpeedFor(levelSpeed.STOP));
+    return this.runOnce(() -> this.setSpeedFor(levelSpeed.STOP)).andThen(hookIntake());
   }
 
   // shoot to desired level
@@ -343,34 +343,13 @@ public class Shooter extends SubsystemBase {
 
   public Command eject() {
     return Commands.sequence(
-            hookRelease(),
-            new WaitCommand(0.7),
-            this.runOnce(
-                () -> {
-                  m_leftMaster.setOpenLoopRampRate(0.4);
-                  m_rightMaster.setOpenLoopRampRate(
-                      0.4); // emergency setting of the open loop ramp rate
-                }),
-            setTargetLevel(levelSpeed.EJECT),
-            setSpeedWithTarget(),
-            waitForShot(),
-            setTargetLevel(levelSpeed.STOP),
-            setSpeedWithTarget(),
-            this.runOnce(
-                () -> {
-                  m_leftMaster.setOpenLoopRampRate(rampRate);
-                  m_rightMaster.setOpenLoopRampRate(
-                      rampRate); // resetting the ramp rate to normal values
-                }),
-            hookIntake())
-        .handleInterrupt(
-            () ->
-                this.runOnce(
-                    () -> {
-                      m_leftMaster.setOpenLoopRampRate(rampRate);
-                      m_rightMaster.setOpenLoopRampRate(
-                          rampRate); // resetting the open loop ramp rate if interrupted
-                    }));
+        hookRelease(),
+        setTargetLevel(levelSpeed.EJECT),
+        setSpeedWithTarget(),
+        new WaitCommand(2),
+        setTargetLevel(levelSpeed.STOP),
+        setSpeedWithTarget(),
+        hookIntake());
   }
 
   public Command holdSpeed(levelSpeed level) {

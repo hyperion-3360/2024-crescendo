@@ -226,8 +226,8 @@ public final class Constants {
     public static final double kElbowSetZero = 0.08;
     public static final double kWristSetZero = 160.0;
 
-    public static final double kShoulderGrabPosition = 0.13; // GRABPOSITION
-    public static final double kElbowGrabPosition = 0.28;
+    public static final double kShoulderGrabPosition = 0.105; // GRABPOSITION - 0.025
+    public static final double kElbowGrabPosition = 0.28; // was 0.275
     public static final double kWristGrabPosition = 210.0;
 
     public static final double kShoulderStoreNote = 0.33; // STORENOTE

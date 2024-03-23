@@ -17,7 +17,6 @@ import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -29,6 +28,7 @@ import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Elevator.elevatorHeight;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.LEDs.State;
 import frc.robot.subsystems.Shooter;
@@ -215,8 +215,11 @@ public class RobotContainer {
         .and(m_driverController.leftBumper())
         .onTrue(m_trap.setZeroGrab());
 
-    m_coDriverController.y().onTrue(Sequences.elevatorHigh(m_elevator, m_shooter, m_led));
-    m_coDriverController.a().onTrue(Sequences.elevatorLow(m_elevator, m_shooter, m_led));
+    m_coDriverController
+        .y()
+        .onTrue(
+            Commands.runOnce(() -> m_videoServer.setSource(m_camera2))
+                .andThen(Sequences.elevatorHigh(m_elevator, m_shooter, m_led)));
     m_coDriverController
         .a()
         .onTrue(
@@ -230,24 +233,11 @@ public class RobotContainer {
                 .andThen(() -> m_videoServer.setSource(m_camera1)));
 
     m_coDriverController
-        .rightBumper()
-        .onTrue(Sequences.elevatorFarShootOneRobotDistance(m_elevator, m_shooter, m_led));
-
-    m_coDriverController
-        .leftBumper()
-        .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
-
-    m_driverController
-        .a()
-        .toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led, m_driverController));
-    m_driverController
-        .start()
-        .and(m_driverController.back())
-        .onTrue(Sequences.blockShooterGears(m_shooter, m_led, m_driverController));
-
-    m_driverController
-        .b()
-        .toggleOnTrue(m_shooter.vomit().finallyDo(() -> m_led.setState(State.IDLE)));
+        .x()
+        .onTrue(
+            m_elevator
+                .extendTheElevator(elevatorHeight.INTAKE)
+                .andThen(() -> m_led.setState(State.IDLE)));
 
     m_coDriverController
         .leftBumper()
@@ -257,28 +247,41 @@ public class RobotContainer {
         .rightTrigger()
         .onTrue(Sequences.overRobotShot(m_shooter, m_elevator, m_led));
 
+    m_driverController
+        .a()
+        .toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led, m_driverController));
+
+    m_driverController
+        .start()
+        .and(m_driverController.back())
+        .onTrue(Sequences.blockShooterGears(m_shooter, m_led, m_driverController));
+
+    m_driverController
+        .b()
+        .toggleOnTrue(m_shooter.vomit().finallyDo(() -> m_led.setState(State.IDLE)));
+
     m_driverController.x().onTrue(changeCameraPerspective());
 
-    SmartDashboard.putBoolean("Locked on speaker", false);
-    final var speakerLockCommand =
-        Sequences.speakerLockCmd(
-            m_swerveDrive,
-            m_elevator,
-            m_led,
-            m_vision,
-            m_shooter,
-            () -> conditionJoystick(translationAxis, translationLimiter, kJoystickDeadband),
-            () -> conditionJoystick(strafeAxis, strafeLimiter, kJoystickDeadband));
+    // SmartDashboard.putBoolean("Locked on speaker", false);
+    // final var speakerLockCommand =
+    //     Sequences.speakerLockCmd(
+    //         m_swerveDrive,
+    //         m_elevator,
+    //         m_led,
+    //         m_vision,
+    //         m_shooter,
+    //         () -> conditionJoystick(translationAxis, translationLimiter, kJoystickDeadband),
+    //         () -> conditionJoystick(strafeAxis, strafeLimiter, kJoystickDeadband));
 
-    // Speaker lock semi-working....
-    m_driverController.rightTrigger().onTrue(speakerLockCommand);
-    m_driverController
-        .rightTrigger()
-        .onFalse(
-            Commands.runOnce(
-                () -> {
-                  CommandScheduler.getInstance().cancel(speakerLockCommand);
-                }));
+    // // Speaker lock semi-working....
+    // m_driverController.rightTrigger().onTrue(speakerLockCommand);
+    // m_driverController
+    //     .rightTrigger()
+    //     .onFalse(
+    //         Commands.runOnce(
+    //             () -> {
+    //               CommandScheduler.getInstance().cancel(speakerLockCommand);
+    //             }));
   }
 
   public Command changeCameraPerspective() {

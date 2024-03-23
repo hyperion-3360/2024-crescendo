@@ -13,7 +13,7 @@ public final class Autos {
     FourNotesMidField("4NotesClose"),
     FourNotesMidFieldAndPickup("4NotesCloseAndPickup"),
     // TwoNotesCenterField("2NotesCenterField"),
-    // ThreeNotesCenterField("3NotesCenterField"),
+    ThreeNotesCenterField("3NotesCenterField"),
     FourNotesCenterField("4NotesCenterField"),
     TwoNotesCorridor2("2NotesCorridor2"),
     ThreeNotesCorridor3("3NotesCorridor3"),
@@ -49,7 +49,7 @@ public final class Autos {
     autoChooser.addOption("score 3 notes corridor 1", Mode.ThreeNotesCorridor1);
     autoChooser.addOption("score 2 notes corridor 2", Mode.TwoNotesCorridor2);
     autoChooser.addOption("score 3 notes corridor 3", Mode.ThreeNotesCorridor3);
-    // autoChooser.addOption("score 4 notes center field (meh?)", Mode.FourNotesCenterField);
+    autoChooser.addOption("score 3 notes center field (meh?)", Mode.ThreeNotesCenterField);
     autoChooser.addOption("shoot then cross the robot zone", Mode.ShootCrossRobotZone);
     autoChooser.addOption("straight line", Mode.StraightLine);
     autoChooser.addOption("do nothing", Mode.Nothing);

@@ -53,7 +53,7 @@ public class Sequences {
             shooter
                 .holdSpeed(levelSpeed.FAR_HIGH)
                 .alongWith(
-                    new WaitCommand(1).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
+                    new WaitCommand(1.5).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
   public static Command elevatorLow(Elevator elevator, Shooter shooter, LEDs leds) {
