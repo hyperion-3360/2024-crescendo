@@ -15,7 +15,6 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.util.PixelFormat;
 // import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -32,8 +31,6 @@ import frc.robot.subsystems.Elevator.elevatorHeight;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.LEDs.State;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Trap;
-import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.swerve.CTREConfigs;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -48,20 +45,20 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final Swerve m_swerveDrive = new Swerve();
-  private final Trap m_trap = new Trap();
+  // private final Trap m_trap = new Trap();
   public static final CTREConfigs ctreConfigs = new CTREConfigs();
   private final Climber m_climber = new Climber();
   public static final Elevator m_elevator = new Elevator();
   private static final Shooter m_shooter = new Shooter();
   private static final LEDs m_led = LEDs.getInstance();
-  private static final Vision m_vision = new Vision();
+  //   private static final Vision m_vision = new Vision();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   private final CommandXboxController m_coDriverController = new CommandXboxController(1);
-  private final CommandXboxController m_pitController = new CommandXboxController(2);
+  //   private final CommandXboxController m_pitController = new CommandXboxController(2);
 
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
@@ -95,8 +92,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    SmartDashboard.putData(m_vision);
-    SmartDashboard.putData(m_trap);
 
     m_camera1 = CameraServer.startAutomaticCapture(Constants.Camera.kCameraIntake);
     m_camera1.setVideoMode(
@@ -195,25 +190,25 @@ public class RobotContainer {
     // configureTrapDebugBindings();
 
     // motors inverted so this one goes down even if command is increase
-    m_pitController.rightTrigger().and(m_pitController.x()).whileTrue(m_trap.shoulderIncrease());
-    m_pitController.leftTrigger().and(m_pitController.x()).whileTrue(m_trap.shoulderDecrease());
-    m_pitController.rightTrigger().and(m_pitController.b()).whileTrue(m_trap.elbowDecrease());
-    m_pitController.leftTrigger().and(m_pitController.b()).whileTrue(m_trap.elbowIncrease());
+    // m_pitController.rightTrigger().and(m_pitController.x()).whileTrue(m_trap.shoulderIncrease());
+    // m_pitController.leftTrigger().and(m_pitController.x()).whileTrue(m_trap.shoulderDecrease());
+    // m_pitController.rightTrigger().and(m_pitController.b()).whileTrue(m_trap.elbowDecrease());
+    // m_pitController.leftTrigger().and(m_pitController.b()).whileTrue(m_trap.elbowIncrease());
 
-    // povs for arm
-    m_coDriverController.povDown().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
-    m_coDriverController
-        .povLeft()
-        .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
-    m_coDriverController.povRight().onTrue(Sequences.climbElevator(m_elevator, m_shooter));
-    m_coDriverController.povDown().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
-    m_coDriverController.povUp().onTrue(Sequences.trapScore(m_trap));
+    // // povs for arm
+    // m_coDriverController.povDown().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
+    // m_coDriverController
+    //     .povLeft()
+    //     .onTrue(Sequences.climbElevatorNote(m_elevator, m_shooter, m_trap));
+    // m_coDriverController.povRight().onTrue(Sequences.climbElevator(m_elevator, m_shooter));
+    // m_coDriverController.povDown().onTrue(Sequences.trapGetNote(m_shooter, m_trap));
+    // m_coDriverController.povUp().onTrue(Sequences.trapScore(m_trap));
 
-    // to put back to setZero !!ONLY FROM GRAB POSITION!! using both bumpers
-    m_driverController
-        .rightBumper()
-        .and(m_driverController.leftBumper())
-        .onTrue(m_trap.setZeroGrab());
+    // // to put back to setZero !!ONLY FROM GRAB POSITION!! using both bumpers
+    // m_driverController
+    //     .rightBumper()
+    //     .and(m_driverController.leftBumper())
+    //     .onTrue(m_trap.setZeroGrab());
 
     m_coDriverController
         .y()
@@ -295,8 +290,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     m_swerveDrive.setPose(
         PathPlannerAuto.getStaringPoseFromAutoFile(Autos.getSelectedOption().toString()));
-    return new PathPlannerAuto(Autos.getSelectedOption().toString())
-        // this is to set zero at beginning of game without having it do it automatically in the pit
-        .alongWith(m_trap.setZero().unless(() -> m_trap.setZero));
+    return new PathPlannerAuto(Autos.getSelectedOption().toString());
+    // this is to set zero at beginning of game without having it do it automatically in the pit
+    // .alongWith(m_trap.setZero().unless(() -> m_trap.setZero));
   }
 }
