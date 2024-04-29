@@ -29,6 +29,7 @@ public class Shooter extends SubsystemBase {
     EJECT,
     CLIMB,
     MAX,
+    crowd
   }
 
   private static double maxSpeed = 1.0;
@@ -137,6 +138,9 @@ public class Shooter extends SubsystemBase {
   // switch case for different speeds according to the level
   private void setSpeedFor(levelSpeed shoot) {
     switch (shoot) {
+      case crowd:
+        m_speed = 0.3;
+        break;
       case LOW:
         m_speed = lowSpeed;
         break;

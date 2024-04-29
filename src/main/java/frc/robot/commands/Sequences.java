@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.elevatorHeight;
 import frc.robot.subsystems.LEDs;
@@ -68,14 +67,13 @@ public class Sequences {
                     new WaitCommand(1).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
-  public static Command elevatorFarShootOneRobotDistance(
-      Elevator elevator, Shooter shooter, LEDs leds) {
+  public static Command crowdShot(Elevator elevator, Shooter shooter, LEDs leds) {
     return Commands.sequence(
         leds.runOnce(() -> leds.setState(State.PREPARE_SHOT_SPEAKER)),
         elevator.extendTheElevator(elevatorHeight.AUTOFAR4),
         new WaitCommand(0.5),
         shooter
-            .holdSpeed(levelSpeed.FAR_HIGH)
+            .holdSpeed(levelSpeed.crowd)
             .alongWith(new WaitCommand(1).andThen(() -> leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
@@ -190,18 +188,6 @@ public class Sequences {
     return Commands.run(() -> controller.getHID().setRumble(RumbleType.kBothRumble, 0.2))
         .withTimeout(5)
         .andThen(() -> controller.getHID().setRumble(RumbleType.kBothRumble, 0));
-  }
-
-  public static Command overRobotShot(Shooter s_shooter, Elevator s_elevator, LEDs s_leds) {
-    return Commands.sequence(
-        s_leds.runOnce(() -> s_leds.setState(State.PREPARE_SHOT_SPEAKER)),
-        Commands.runOnce(
-            () -> s_elevator.rawPosition(Constants.ElevatorConstants.kOverRobotElevatorTarget)),
-        new WaitCommand(0.5),
-        s_shooter
-            .holdSpeed(levelSpeed.MAX)
-            .alongWith(
-                new WaitCommand(1).andThen(() -> s_leds.setState(State.SHOOT_READY_SPEAKER))));
   }
 
   public static Command speakerLockCmd(

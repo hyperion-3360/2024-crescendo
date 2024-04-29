@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoSink;
@@ -17,11 +15,9 @@ import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.AutoCommands;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Sequences;
 import frc.robot.commands.TeleopSwerve;
@@ -56,9 +52,6 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
-
-  private final CommandXboxController m_coDriverController = new CommandXboxController(1);
-  //   private final CommandXboxController m_pitController = new CommandXboxController(2);
 
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
@@ -127,14 +120,6 @@ public class RobotContainer {
 
     m_climber.setDefaultCommand(m_climber.run(() -> m_climber.setSpeed()));
     m_shooter.setDefaultCommand(m_shooter.stop());
-
-    NamedCommands.registerCommand("shootHigh", AutoCommands.autoShoot(m_elevator, m_shooter));
-    NamedCommands.registerCommand("intake", m_shooter.intake().withTimeout(3));
-    NamedCommands.registerCommand("farShootA", AutoCommands.autoFarShoot1(m_elevator, m_shooter));
-    NamedCommands.registerCommand("farShootB", AutoCommands.autoFarShoot2(m_elevator, m_shooter));
-    NamedCommands.registerCommand("farShootC", AutoCommands.autoFarShoot3(m_elevator, m_shooter));
-    NamedCommands.registerCommand("farShootD", AutoCommands.autoFarShoot4(m_elevator, m_shooter));
-    NamedCommands.registerCommand("wait", new WaitCommand(1));
 
     configureBindings();
 
@@ -210,46 +195,39 @@ public class RobotContainer {
     //     .and(m_driverController.leftBumper())
     //     .onTrue(m_trap.setZeroGrab());
 
-    m_coDriverController
-        .y()
+    m_driverController
+        .povUp()
         .onTrue(
             Commands.runOnce(() -> m_videoServer.setSource(m_camera2))
                 .andThen(Sequences.elevatorHigh(m_elevator, m_shooter, m_led)));
-    m_coDriverController
-        .a()
+    m_driverController
+        .povDown()
         .onTrue(
             Commands.runOnce(() -> m_videoServer.setSource(m_camera2))
                 .andThen(Sequences.elevatorLow(m_elevator, m_shooter, m_led)));
 
-    m_coDriverController
-        .b()
+    m_driverController
+        .rightBumper()
         .onTrue(
             Sequences.shoot(m_shooter, m_elevator, m_led)
                 .andThen(() -> m_videoServer.setSource(m_camera1)));
 
-    m_coDriverController
-        .x()
+    m_driverController.povRight().onTrue(Sequences.crowdShot(m_elevator, m_shooter, m_led));
+
+    m_driverController
+        .leftBumper()
         .onTrue(
             m_elevator
                 .extendTheElevator(elevatorHeight.INTAKE)
                 .andThen(() -> m_led.setState(State.IDLE)));
 
-    m_coDriverController
-        .leftBumper()
+    m_driverController
+        .x()
         .toggleOnTrue(m_shooter.eject().finallyDo(() -> m_led.setState(State.IDLE)));
-
-    m_coDriverController
-        .rightTrigger()
-        .onTrue(Sequences.overRobotShot(m_shooter, m_elevator, m_led));
 
     m_driverController
         .a()
         .toggleOnTrue(Sequences.intakeSequence(m_shooter, m_led, m_driverController));
-
-    m_driverController
-        .start()
-        .and(m_driverController.back())
-        .onTrue(Sequences.blockShooterGears(m_shooter, m_led, m_driverController));
 
     m_driverController
         .b()
@@ -288,10 +266,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    m_swerveDrive.setPose(
-        PathPlannerAuto.getStaringPoseFromAutoFile(Autos.getSelectedOption().toString()));
-    return new PathPlannerAuto(Autos.getSelectedOption().toString());
-    // this is to set zero at beginning of game without having it do it automatically in the pit
-    // .alongWith(m_trap.setZero().unless(() -> m_trap.setZero));
+    return null;
   }
 }
