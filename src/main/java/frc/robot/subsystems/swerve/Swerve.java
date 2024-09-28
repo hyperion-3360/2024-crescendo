@@ -30,7 +30,7 @@ public class Swerve extends SubsystemBase {
   private final AHRS m_gyro;
   private final Field2d m_field2d;
   public SwerveDriveOdometry m_odometry;
-  private boolean m_debug = false;
+  private boolean m_debug = true;
 
   public Swerve() {
     // TODO get good port
